@@ -9,6 +9,7 @@ import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
+import { FloatingCTA } from "@/components/floating-cta";
 
 export default function LandingPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
@@ -16,6 +17,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
 
   return (
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/30">
+      <FloatingCTA lang={lang} label={dict.landing.cta_button} />
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between">
           <Link className="flex items-center justify-center gap-2 group" href={`/${lang}`}>
@@ -38,7 +40,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
         </div>
       </header>
       <main className="flex-1">
-        <section className="relative w-full py-20 md:py-32 lg:py-40 overflow-hidden">
+        <section className="relative w-full py-12 md:py-24 lg:py-32 overflow-hidden">
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <motion.div
               animate={{
@@ -86,7 +88,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-5xl font-heading font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl leading-[0.85] text-foreground"
+                  className="text-5xl font-heading font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-8xl leading-[0.85] text-foreground"
                 >
                   {dict.landing.hero_title}
                 </motion.h1>
@@ -107,7 +109,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto"
               >
                 <Link href={`/${lang}/assessment`}>
-                  <Button size="lg" className="h-16 px-12 text-xl font-black w-full sm:w-auto shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-transform">
+                  <Button size="lg" className="h-16 px-12 text-xl font-black w-full sm:w-auto shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms]">
                     {dict.landing.cta_button}
                   </Button>
                 </Link>
@@ -204,6 +206,13 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                       <span className="text-sm font-bold uppercase tracking-widest opacity-60">{tag}</span>
                     </div>
                   ))}
+                </div>
+                <div className="pt-6">
+                  <Link href={`/${lang}/assessment`}>
+                    <Button variant="default" className="font-bold gap-2">
+                      {dict.landing.cta_button} <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
                 </div>
               </div>
               <div className="bg-background/40 backdrop-blur-3xl p-10 rounded-[3rem] border border-white/5 shadow-3xl">
