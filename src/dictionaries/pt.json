@@ -1,0 +1,77 @@
+{
+    "common": {
+        "title": "STATUS CORE",
+        "tagline": "Diagnóstico de Estado Emocional",
+        "loading": "Carregando...",
+        "back": "Voltar",
+        "next": "Próximo",
+        "finish": "Finalizar"
+    },
+    "header": {
+        "methodology": "Metodologia",
+        "for_companies": "Para Empresas",
+        "pricing": "Preços",
+        "login": "Login"
+    },
+    "footer": {
+        "terms": "Termos de Uso",
+        "privacy": "Política de Privacidade",
+        "contact": "Contato"
+    },
+    "landing": {
+        "hero_badge": "Status Core V1.0",
+        "hero_title": "Clareza Radical para o seu Caos Interno",
+        "hero_subtitle": "O STATUS CORE identifica precisamente seu estado mental e emocional atual para desbloquear seu próximo nível de performance.",
+        "hero_anonymous": "100% Anônimo & Seguro • Sem necessidade de cadastro inicial",
+        "cta_button": "Iniciar Diagnóstico Gratuito",
+        "demo_link": "Ver Exemplo de Relatório",
+        "how_it_works_title": "Como Funciona",
+        "how_it_works_subtitle": "Três passos para entender o que está travando o seu potencial.",
+        "step1_title": "01. Diagnóstico",
+        "step1_desc": "16 perguntas profundas baseadas em ciência cognitiva e performance de alto nível.",
+        "step2_title": "02. Perfil Core",
+        "step2_desc": "Identificamos qual dos 8 estados operacionais você se encontra através do nosso motor de análise.",
+        "step3_title": "03. Plano de Saída",
+        "step3_desc": "Relatório detalhado com ações práticas imediatas para restaurar seu alinhamento."
+    },
+    "assessment": {
+        "title": "Diagnóstico de Estado",
+        "progress": "Progresso",
+        "question": "Pergunta",
+        "never": "Nunca",
+        "rarely": "Raramente",
+        "sometimes": "Às vezes",
+        "often": "Frequentemente",
+        "always": "Sempre",
+        "qualitative_title": "Contexto Adicional",
+        "qualitative_desc": "Descreva livremente como você se sente hoje ou qual situação está drenando sua energia.",
+        "qualitative_placeholder": "Escreva aqui..."
+    },
+    "preview": {
+        "title": "Seu Status",
+        "diagnosed": "Diagnóstico Concluído",
+        "confidence": "Score de Confiança",
+        "what_is_next": "O que vem no Relatório:",
+        "unlock_button": "Desbloquear Relatório Completo",
+        "demo_button": "Demo: Ir ao Dashboard"
+    },
+    "report": {
+        "title": "Relatório Completo",
+        "analysis": "Análise de Estado",
+        "meaning": "O que isso significa",
+        "characteristics": "Características Observadas",
+        "risk": "Risco Primário",
+        "focus": "Foco Recomendado",
+        "next_step": "Próximo Passo Sugerido",
+        "tactical_exit_plan": "Plano de Saída Tático",
+        "immediate_win": "Ganho Imediato",
+        "no_to_say": "O 'Não' para Dizer",
+        "mindset_shift": "Mudança de Mentalidade",
+        "mandatory": "Obrigatoriedade",
+        "strategy": "Estratégia",
+        "general_next_step": "Próximo Passo Geral",
+        "qualitative_analysis": "Análise de Contexto Pessoal",
+        "stoic_wisdom": "Sabedoria Estoica",
+        "stoic_lesson": "Lição para o seu Estado"
+    }
+}

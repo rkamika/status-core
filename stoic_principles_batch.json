@@ -1,0 +1,121 @@
+{
+    "OVERLOAD": {
+        "pt": [
+            "Não é nobre ser superior aos outros. A verdadeira nobreza está em ser superior ao seu eu anterior.",
+            "O homem sábio não se sobrecarrega com o que não pode controlar.",
+            "Menos, mas melhor. Esta é a essência da sabedoria."
+        ],
+        "en": [
+            "It is not noble to be superior to others. True nobility is being superior to your former self.",
+            "The wise man does not burden himself with what he cannot control.",
+            "Less, but better. This is the essence of wisdom."
+        ],
+        "es": [
+            "No es noble ser superior a los demás. La verdadera nobleza está en ser superior a tu yo anterior.",
+            "El hombre sabio no se sobrecarga con lo que no puede controlar.",
+            "Menos, pero mejor. Esta es la esencia de la sabiduría."
+        ]
+    },
+    "REACTIVITY": {
+        "pt": [
+            "Entre estímulo e resposta há um espaço. Nesse espaço está o seu poder.",
+            "A raiva é uma punição que você dá a si mesmo pelo erro de outro.",
+            "Não é o que acontece com você, mas como você reage que importa."
+        ],
+        "en": [
+            "Between stimulus and response there is a space. In that space is your power.",
+            "Anger is a punishment you give yourself for someone else's mistake.",
+            "It's not what happens to you, but how you react that matters."
+        ],
+        "es": [
+            "Entre estímulo y respuesta hay un espacio. En ese espacio está tu poder.",
+            "La ira es un castigo que te das a ti mismo por el error de otro.",
+            "No es lo que te sucede, sino cómo reaccionas lo que importa."
+        ]
+    },
+    "UNCERTAINTY": {
+        "pt": [
+            "A ação cura o medo. A inação o alimenta.",
+            "Não espere o momento perfeito. Tome o momento e o torne perfeito.",
+            "O obstáculo não está no caminho. O obstáculo é o caminho."
+        ],
+        "en": [
+            "Action cures fear. Inaction feeds it.",
+            "Don't wait for the perfect moment. Take the moment and make it perfect.",
+            "The obstacle is not in the way. The obstacle is the way."
+        ],
+        "es": [
+            "La acción cura el miedo. La inacción lo alimenta.",
+            "No esperes el momento perfecto. Toma el momento y hazlo perfecto.",
+            "El obstáculo no está en el camino. El obstáculo es el camino."
+        ]
+    },
+    "DISCONNECTION": {
+        "pt": [
+            "A vida sem propósito é como um navio sem leme.",
+            "Não é a duração da vida que importa, mas a profundidade dela.",
+            "Quem tem um porquê para viver pode suportar quase qualquer como."
+        ],
+        "en": [
+            "Life without purpose is like a ship without a rudder.",
+            "It's not the length of life that matters, but the depth of it.",
+            "He who has a why to live can bear almost any how."
+        ],
+        "es": [
+            "La vida sin propósito es como un barco sin timón.",
+            "No es la duración de la vida lo que importa, sino la profundidad de ella.",
+            "Quien tiene un porqué para vivir puede soportar casi cualquier cómo."
+        ]
+    },
+    "STAGNATION": {
+        "pt": [
+            "O conforto é o inimigo do progresso.",
+            "Se você não está crescendo, está morrendo.",
+            "A zona de conforto é um lugar bonito, mas nada cresce lá."
+        ],
+        "en": [
+            "Comfort is the enemy of progress.",
+            "If you're not growing, you're dying.",
+            "The comfort zone is a beautiful place, but nothing grows there."
+        ],
+        "es": [
+            "La comodidad es el enemigo del progreso.",
+            "Si no estás creciendo, estás muriendo.",
+            "La zona de confort es un lugar hermoso, pero nada crece allí."
+        ]
+    },
+    "CLARITY": {
+        "pt": [
+            "A clareza de mente é a base de toda grande realização.",
+            "Simplicidade é a sofisticação máxima.",
+            "O sábio não busca mais, mas melhor."
+        ],
+        "en": [
+            "Clarity of mind is the foundation of all great achievement.",
+            "Simplicity is the ultimate sophistication.",
+            "The wise don't seek more, but better."
+        ],
+        "es": [
+            "La claridad mental es la base de todo gran logro.",
+            "La simplicidad es la máxima sofisticación.",
+            "El sabio no busca más, sino mejor."
+        ]
+    },
+    "ALIGNMENT": {
+        "pt": [
+            "Viva em harmonia com a natureza e você viverá em harmonia consigo mesmo.",
+            "O sucesso não é fazer mais, mas estar em paz com o que você faz.",
+            "Quando você está alinhado, o esforço se torna fluxo."
+        ],
+        "en": [
+            "Live in harmony with nature and you will live in harmony with yourself.",
+            "Success is not doing more, but being at peace with what you do.",
+            "When you are aligned, effort becomes flow."
+        ],
+        "es": [
+            "Vive en armonía con la naturaleza y vivirás en armonía contigo mismo.",
+            "El éxito no es hacer más, sino estar en paz con lo que haces.",
+            "Cuando estás alineado, el esfuerzo se convierte en flujo."
+        ]
+    }
+}

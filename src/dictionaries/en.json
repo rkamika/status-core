@@ -1,0 +1,77 @@
+{
+    "common": {
+        "title": "STATUS CORE",
+        "tagline": "Emotional State Diagnosis",
+        "loading": "Loading...",
+        "back": "Back",
+        "next": "Next",
+        "finish": "Finish"
+    },
+    "header": {
+        "methodology": "Methodology",
+        "for_companies": "For Companies",
+        "pricing": "Pricing",
+        "login": "Login"
+    },
+    "footer": {
+        "terms": "Terms of Use",
+        "privacy": "Privacy Policy",
+        "contact": "Contact"
+    },
+    "landing": {
+        "hero_badge": "Status Core V1.0",
+        "hero_title": "Radical Clarity for Your Internal Chaos",
+        "hero_subtitle": "STATUS CORE precisely identifies your current mental and emotional state to unlock your next level of performance.",
+        "hero_anonymous": "100% Anonymous & Secure • No initial registration required",
+        "cta_button": "Start Free Diagnosis",
+        "demo_link": "See Example Report",
+        "how_it_works_title": "How it Works",
+        "how_it_works_subtitle": "Three steps to understand what is blocking your potential.",
+        "step1_title": "01. Diagnosis",
+        "step1_desc": "16 deep questions based on cognitive science and high-level performance.",
+        "step2_title": "02. Core Profile",
+        "step2_desc": "We identify which of the 8 operational states you are in through our analysis engine.",
+        "step3_title": "03. Exit Plan",
+        "step3_desc": "Detailed report with immediate practical actions to restore your alignment."
+    },
+    "assessment": {
+        "title": "State Diagnosis",
+        "progress": "Progress",
+        "question": "Question",
+        "never": "Never",
+        "rarely": "Rarely",
+        "sometimes": "Sometimes",
+        "often": "Often",
+        "always": "Always",
+        "qualitative_title": "Additional Context",
+        "qualitative_desc": "Describe freely how you feel today or what situation is currently draining your energy.",
+        "qualitative_placeholder": "Write here..."
+    },
+    "preview": {
+        "title": "Your Status",
+        "diagnosed": "Diagnosis Completed",
+        "confidence": "Confidence Score",
+        "what_is_next": "What's in the Report:",
+        "unlock_button": "Unlock Full Report",
+        "demo_button": "Demo: Go to Dashboard"
+    },
+    "report": {
+        "title": "Full Report",
+        "analysis": "State Analysis",
+        "meaning": "What this means",
+        "characteristics": "Observed Characteristics",
+        "risk": "Primary Risk",
+        "focus": "Recommended Focus",
+        "next_step": "Suggested Next Step",
+        "tactical_exit_plan": "Tactical Exit Plan",
+        "immediate_win": "Immediate Win",
+        "no_to_say": "The 'No' to Say",
+        "mindset_shift": "Mindset Shift",
+        "mandatory": "Mandatory",
+        "strategy": "Strategy",
+        "general_next_step": "General Next Step",
+        "qualitative_analysis": "Personal Context Analysis",
+        "stoic_wisdom": "Stoic Wisdom",
+        "stoic_lesson": "Lesson for your State"
+    }
+}
