@@ -82,6 +82,17 @@ export function unlockDiagnosis(id: string): void {
     }
 }
 
+// Update a diagnosis with new data (like AI insights)
+export function updateDiagnosis(id: string, updates: Partial<SavedDiagnosis>): void {
+    const storage = getStorage();
+    const index = storage.diagnoses.findIndex(d => d.id === id);
+
+    if (index !== -1) {
+        storage.diagnoses[index] = { ...storage.diagnoses[index], ...updates };
+        setStorage(storage);
+    }
+}
+
 // Delete diagnosis
 export function deleteDiagnosis(id: string): void {
     const storage = getStorage();

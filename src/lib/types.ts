@@ -18,6 +18,18 @@ export interface Dimension {
     color: string;
 }
 
+export interface V3Insights {
+    antifragilityScore: number;
+    bottleneckLabel: string;
+    correlations: string[];
+    archetype: string;
+    aiAnalysis?: {
+        executiveSummary: string;
+        sevenDayPlan: { day: string; action: string; pilar: string }[];
+        stoicRefinement: string;
+    };
+}
+
 export interface SavedDiagnosis {
     id: string;
     timestamp: number;
@@ -40,6 +52,9 @@ export interface SavedDiagnosis {
     // Access control
     isUnlocked: boolean;
     unlockedAt?: number;
+
+    // V3 Intelligence
+    v3Insights?: V3Insights;
 }
 
 export interface UserStorage {

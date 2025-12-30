@@ -32,7 +32,11 @@
         "step2_title": "02. Perfil Core",
         "step2_desc": "Identificamos qual dos 8 estados operacionais você se encontra através do nosso motor de análise.",
         "step3_title": "03. Plano de Saída",
-        "step3_desc": "Relatório detalhado com ações práticas imediatas para restaurar seu alinhamento."
+        "step3_desc": "Relatório detalhado com ações práticas imediatas para restaurar seu alinhamento.",
+        "methodology_title": "A Ciência dos 7 Pilares",
+        "methodology_desc": "Não é apenas um questionário. É um algoritmo sistêmico que avalia a interconexão entre Saúde, Trabalho, Relações, Finanças, Identidade, Lazer e Sentido.",
+        "enterprise_title": "STATUS CORE para Times de Elite",
+        "enterprise_desc": "Reduza o burnout e maximize a clareza operacional. Diagnósticos anônimos para grupos de alta performance que buscam o próximo nível de alinhamento."
     },
     "assessment": {
         "title": "Diagnóstico de Estado",
@@ -73,5 +77,14 @@
         "qualitative_analysis": "Análise de Contexto Pessoal",
         "stoic_wisdom": "Sabedoria Estoica",
         "stoic_lesson": "Lição para o seu Estado"
+    },
+    "pillars": {
+        "health": "Saúde",
+        "work": "Trabalho",
+        "relationships": "Relacionamentos",
+        "finances": "Financeiro",
+        "identity": "Identidade",
+        "leisure": "Lazer",
+        "spirituality": "Sentido"
     }
 }

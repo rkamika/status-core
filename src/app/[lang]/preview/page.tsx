@@ -10,10 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { calculateDiagnosis, Locale, STATE_CONFIGS } from "@/lib/diagnostic";
+import { RadarChart } from "@/components/ui/radar-chart";
+import { calculateDiagnosis, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { saveDiagnosis, generateId } from "@/lib/storage";
-import { SavedDiagnosis, Dimension } from "@/lib/types";
+import { SavedDiagnosis } from "@/lib/types";
 
 export default function PreviewPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -35,40 +36,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
     }
 
     const diagnosis = calculateDiagnosis(answers, lang);
-    const { label: statusLabel, color: statusColor, confidence, one_liner } = diagnosis;
-
-    // Generate dimension scores based on answers
-    const generateDimensions = (): Dimension[] => {
-        // Calculate scores for each dimension based on related questions
-        const focusScore = Math.round((
-            (answers[2] || 0) +
-            (answers[14] || 0)
-        ) / 2 * 20);
-
-        const clarityScore = Math.round((
-            (5 - (answers[3] || 0)) +
-            (5 - (answers[4] || 0))
-        ) / 2 * 20);
-
-        const energyScore = Math.round((
-            (5 - (answers[1] || 0)) +
-            (5 - (answers[15] || 0))
-        ) / 2 * 20);
-
-        const emotionScore = Math.round((
-            (5 - (answers[5] || 0)) +
-            (5 - (answers[8] || 0))
-        ) / 2 * 20);
-
-        return [
-            { label: "Foco", value: Math.min(100, Math.max(0, focusScore)), color: "#3b82f6" },
-            { label: "Clareza", value: Math.min(100, Math.max(0, clarityScore)), color: "#a855f7" },
-            { label: "Energia", value: Math.min(100, Math.max(0, energyScore)), color: "#f59e0b" },
-            { label: "Emoção", value: Math.min(100, Math.max(0, emotionScore)), color: "#f43f5e" }
-        ];
-    };
-
-    const dimensions = generateDimensions();
+    const { label: statusLabel, color: statusColor, confidence, one_liner, pillarScores } = diagnosis;
 
     // Save diagnosis to localStorage on mount
     useEffect(() => {
@@ -89,14 +57,19 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
             label: statusLabel,
             color: statusColor,
             oneLiner: one_liner,
-            dimensions,
-            isUnlocked: false
+            dimensions: pillarScores,
+            isUnlocked: false,
+            v3Insights: diagnosis.v3Insights
         };
 
-        saveDiagnosis(savedData);
-        setDiagnosisId(newId);
+        try {
+            saveDiagnosis(savedData);
+            setDiagnosisId(newId);
+        } catch (e) {
+            console.error('Error saving diagnosis:', e);
+        }
         setIsLoading(false);
-    }, []);
+    }, [lang, answersParam, qualitativeContext]);
 
     if (Object.keys(answers).length === 0) {
         return (
@@ -117,7 +90,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
     return (
         <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
             {/* Dynamic Glassmorphic Background */}
-            <div className="fixed inset-0 z-0">
+            <div className="fixed inset-0 z-0 pointer-events-none">
                 <motion.div
                     animate={{
                         scale: [1, 1.2, 1],
@@ -148,91 +121,124 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                 </div>
             </header>
 
-            <main className="flex-1 relative z-10 flex flex-col items-center justify-center p-4">
-                <div className="w-full max-w-4xl space-y-8 text-center py-4">
+            <main className="flex-1 relative z-10 flex flex-col items-center p-4 lg:p-8">
+                <div className="w-full max-w-6xl space-y-12">
+                    {/* Header Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="space-y-6"
+                        className="text-center space-y-6"
                     >
                         <Badge variant="outline" className="px-4 py-1 text-xs uppercase tracking-widest border-primary/20 text-primary bg-background/50 backdrop-blur-sm">
                             {dict.preview.diagnosed}
                         </Badge>
                         <div className="space-y-1">
                             <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-medium">{dict.preview.title}</span>
-                            <h1 className="text-5xl md:text-7xl font-bold font-heading tracking-tighter text-primary">
+                            <h1 className="text-5xl md:text-8xl font-bold font-heading tracking-tighter text-foreground decoration-primary/30 decoration-8 underline-offset-8">
                                 {statusLabel}
                             </h1>
                         </div>
-                        <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                            <CheckCircle2 className="h-4 w-4 text-primary" />
-                            <span>{dict.preview.confidence}: <strong>{confidence}%</strong></span>
+                        <div className="flex items-center justify-center gap-6 text-sm">
+                            <div className="flex items-center gap-2 text-primary font-bold">
+                                <CheckCircle2 className="h-4 w-4" />
+                                <span>{dict.preview.confidence}: {confidence}%</span>
+                            </div>
+                            <div className="w-px h-4 bg-border" />
+                            <div className="text-muted-foreground font-medium">
+                                7 Pilares da Experiência Humana
+                            </div>
                         </div>
                     </motion.div>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="space-y-8"
-                    >
-                        <div className="p-8 rounded-3xl bg-card/70 dark:bg-card/30 backdrop-blur-md border border-border dark:border-white/10 shadow-2xl relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <p className="text-xl md:text-2xl font-medium leading-relaxed max-w-2xl mx-auto italic text-foreground/90 dark:text-foreground">
-                                "{one_liner}"
-                            </p>
-                        </div>
-
-                        {/* Dimension Bars */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-                            {dimensions.map((dim, i) => (
-                                <div key={i} className="space-y-2 text-left">
-                                    <div className="flex justify-between text-[10px] uppercase font-bold tracking-tighter text-muted-foreground mr-1">
-                                        <span>{dim.label}</span>
-                                        <span>{dim.value}%</span>
-                                    </div>
-                                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: `${dim.value}%` }}
-                                            transition={{ delay: 0.5 + i * 0.1, duration: 1, ease: "easeOut" }}
-                                            className="h-full rounded-full"
-                                            style={{ backgroundColor: dim.color }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-2 gap-6 pt-8">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Radar Chart Section */}
                         <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.4 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2 }}
                             className="flex justify-center"
                         >
-                            <Card className="bg-background/40 backdrop-blur border-border/40 text-center h-full max-w-sm w-full">
-                                <CardContent className="p-8 space-y-4 flex flex-col items-center">
-                                    <h3 className="text-lg font-bold font-heading flex items-center gap-2">
-                                        <Star className="h-5 w-5 text-primary" />
-                                        {dict.preview.what_is_next}
-                                    </h3>
-                                    <ul className="space-y-3 text-sm text-muted-foreground text-left mx-auto">
-                                        <li className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {dict.report.meaning}
+                            <div className="relative group p-4 rounded-full">
+                                <div className="absolute inset-0 bg-primary/10 rounded-full blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity duration-1000" />
+                                <RadarChart data={pillarScores.length > 0 ? pillarScores : []} size={420} />
+                            </div>
+                        </motion.div>
+
+                        {/* Summary & Pillars Section */}
+                        <div className="space-y-8">
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="p-8 rounded-3xl bg-card/70 dark:bg-card/40 backdrop-blur-xl border border-border shadow-2xl space-y-4"
+                            >
+                                <p className="text-2xl md:text-3xl font-medium leading-relaxed italic text-foreground tracking-tight">
+                                    "{one_liner}"
+                                </p>
+                                <div className="h-px w-20 bg-primary/50" />
+                                <p className="text-muted-foreground text-sm uppercase tracking-widest font-bold">
+                                    Visão Geral dos Pilares
+                                </p>
+                            </motion.div>
+
+                            {/* Dimension Progress Mini-Bars */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                                {pillarScores.map((dim, i) => (
+                                    <motion.div
+                                        key={i}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.4 + i * 0.05 }}
+                                        className="space-y-1.5"
+                                    >
+                                        <div className="flex justify-between text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+                                            <span>{dim.label}</span>
+                                            <span style={{ color: dim.color }}>{dim.value}%</span>
+                                        </div>
+                                        <div className="h-1.5 w-full bg-muted/50 rounded-full overflow-hidden border border-border/10">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                animate={{ width: `${dim.value}%` }}
+                                                transition={{ delay: 0.6 + i * 0.1, duration: 1.2, ease: "circOut" }}
+                                                className="h-full rounded-full"
+                                                style={{ backgroundColor: dim.color }}
+                                            />
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom CTA Section */}
+                    <div className="grid md:grid-cols-2 gap-6 pt-12 max-w-5xl mx-auto">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                        >
+                            <Card className="bg-background/40 backdrop-blur-md border-border/40 hover:border-border transition-colors group h-full">
+                                <CardContent className="p-8 space-y-6">
+                                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <Star className="h-6 w-6 text-primary" />
+                                    </div>
+                                    <h3 className="text-xl font-bold font-heading">{dict.preview.what_is_next}</h3>
+                                    <ul className="space-y-3 text-sm text-muted-foreground">
+                                        <li className="flex items-center gap-3">
+                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
+                                            <span>Significado Profundo (v2)</span>
                                         </li>
-                                        <li className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {dict.report.characteristics}
+                                        <li className="flex items-center gap-3">
+                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
+                                            <span>Causas Raiz nos 7 Pilares</span>
                                         </li>
-                                        <li className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {dict.report.risk}
+                                        <li className="flex items-center gap-3">
+                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
+                                            <span>Plano de Ação Transversal</span>
                                         </li>
-                                        <li className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {dict.report.next_step}
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-primary" /> {dict.report.stoic_wisdom}
+                                        <li className="flex items-center gap-3">
+                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
+                                            <span>Sabedoria Estoica Aplicada</span>
                                         </li>
                                     </ul>
                                 </CardContent>
@@ -240,35 +246,36 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                         </motion.div>
 
                         <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.5 }}
-                            className="flex justify-center"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7 }}
                         >
-                            <Card className="bg-primary border-transparent text-primary-foreground text-center h-full max-w-sm w-full overflow-hidden relative">
-                                <div className="absolute top-0 right-0 p-4 opacity-20">
-                                    <Lock className="h-12 w-12" />
+                            <Card className="bg-card/40 dark:bg-zinc-900/40 border-primary/20 text-card-foreground shadow-2xl shadow-primary/10 h-full overflow-hidden relative group backdrop-blur-xl">
+                                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform">
+                                    <Lock className="h-24 w-24 text-primary" />
                                 </div>
-                                <CardContent className="p-8 space-y-6 flex flex-col items-center justify-between h-full relative z-10">
-                                    <div className="space-y-2">
-                                        <h3 className="text-xl font-bold font-heading">{dict.report.title}</h3>
-                                        <p className="text-sm opacity-90 leading-relaxed">
-                                            Desbloqueie a análise completa do seu estado com estratégias personalizadas e sabedoria estoica.
+                                <CardContent className="p-8 space-y-8 flex flex-col justify-between h-full relative z-10">
+                                    <div className="space-y-4">
+                                        <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">PREMIUM v2</Badge>
+                                        <h3 className="text-2xl font-bold font-heading">{dict.report.title}</h3>
+                                        <p className="text-muted-foreground leading-relaxed font-medium">
+                                            Acesse o diagnóstico existencial completo dos seus 7 pilares com ações práticas, sabedoria estoica profunda e análise neural de impacto.
                                         </p>
                                     </div>
-                                    <div className="space-y-3 w-full">
+                                    <div className="space-y-4">
                                         {diagnosisId && (
-                                            <Link href={`/${lang}/checkout/${diagnosisId}`} className="block w-full">
-                                                <Button className="w-full bg-background text-primary hover:bg-background/90 font-bold group" size="lg">
+                                            <Link href={`/${lang}/checkout/${diagnosisId}`} className="block">
+                                                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-black h-14 text-lg shadow-xl" size="lg">
                                                     {dict.preview.unlock_button}
-                                                    <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                                    <ChevronRight className="ml-2 h-5 w-5" />
                                                 </Button>
                                             </Link>
                                         )}
-                                        <Link href={`/${lang}/report/demo`} className="block w-full">
-                                            <Button variant="ghost" className="w-full text-primary-foreground hover:bg-white/10 hover:text-primary-foreground border border-white/20 gap-2">
-                                                <LayoutDashboard className="h-4 w-4" />
-                                                {dict.preview.demo_button}
+                                        <Link href={`/${lang}/report/demo`} className="block">
+                                            <Button variant="ghost" className="w-full text-foreground/70 hover:bg-primary/10 hover:text-primary border border-border h-14 font-bold">
+                                                <LayoutDashboard className="mr-2 h-5 w-5" />
+                                                Ver Demo v2
                                             </Button>
                                         </Link>
                                     </div>

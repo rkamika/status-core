@@ -9,12 +9,23 @@ interface RadarChartProps {
         color: string; // HEX or CSS variable
     }[];
     size?: number;
+    showBenchmark?: boolean;
 }
 
-export function RadarChart({ data, size = 320 }: RadarChartProps) {
+export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChartProps) {
     const center = size / 2;
     const radius = (size / 2) * 0.75;
-    const angleStep = (Math.PI * 2) / data.length;
+    const angleStep = data.length > 0 ? (Math.PI * 2) / data.length : 0;
+
+    // Ideal Benchmark Points (Fixed at 85%)
+    const benchmarkPoints = data.map((_, i) => {
+        const angle = i * angleStep - Math.PI / 2;
+        const distance = 0.85 * radius;
+        return {
+            x: center + Math.cos(angle) * distance,
+            y: center + Math.sin(angle) * distance
+        };
+    });
 
     const points = data.map((d, i) => {
         const angle = i * angleStep - Math.PI / 2;
@@ -63,6 +74,20 @@ export function RadarChart({ data, size = 320 }: RadarChartProps) {
                         />
                     );
                 })}
+
+                {/* Benchmark Radar (Ideal State - Ghost Mode) */}
+                {showBenchmark && (
+                    <motion.polygon
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.1 }}
+                        points={benchmarkPoints.map(p => `${p.x},${p.y}`).join(" ")}
+                        fill="currentColor"
+                        className="text-primary no-print"
+                        stroke="currentColor"
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                    />
+                )}
 
                 {/* Axis & Section Wedges */}
                 {points.map((p, i) => {

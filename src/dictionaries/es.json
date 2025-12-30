@@ -21,7 +21,7 @@
     "landing": {
         "hero_badge": "Status Core V1.0",
         "hero_title": "Claridad Radical para tu Caos Interno",
-        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental y emocional actual para desbloquear tu próximo nivel de performance.",
+        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental y emocional actual para desbloquear tu próximo nível de performance.",
         "hero_anonymous": "100% Anónimo & Seguro • Sin necesidad de registro inicial",
         "cta_button": "Iniciar Diagnóstico Gratuito",
         "demo_link": "Ver Ejemplo de Informe",
@@ -53,7 +53,7 @@
         "confidence": "Score de Confianza",
         "what_is_next": "Qué viene en el Informe:",
         "unlock_button": "Desbloquear Informe Completo",
-        "demo_button": "Demo: Ir al Dashboard"
+        "demo_button": "Demo: Ir ao Dashboard"
     },
     "report": {
         "title": "Informe Completo",
@@ -73,5 +73,14 @@
         "qualitative_analysis": "Análisis de Contexto Personal",
         "stoic_wisdom": "Sabiduría Estoica",
         "stoic_lesson": "Lección para tu Estado"
+    },
+    "pillars": {
+        "health": "Salud",
+        "work": "Trabajo",
+        "relationships": "Relaciones",
+        "finances": "Finanzas",
+        "identity": "Identidad",
+        "leisure": "Lazer",
+        "spirituality": "Sentido"
     }
 }

@@ -17,7 +17,6 @@ import {
     AlertTriangle,
     FileText,
     User,
-    Settings,
     LogOut,
     Sparkles,
     Inbox
@@ -26,6 +25,8 @@ import { getAllDiagnoses, getCurrentDiagnosisId } from "@/lib/storage";
 import { SavedDiagnosis } from "@/lib/types";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Locale } from "@/lib/diagnostic";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageSelector } from "@/components/language-selector";
 
 export default function DashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -47,22 +48,8 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-background flex">
-                <aside className="w-64 border-r border-border hidden md:flex flex-col p-6 sticky top-0 h-screen bg-card/50 backdrop-blur-xl z-40">
-                    <Skeleton className="h-8 w-40 mb-12" />
-                    <div className="space-y-2">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                    </div>
-                </aside>
-                <main className="flex-1 flex flex-col min-w-0 relative z-10">
-                    <header className="h-14 border-b border-border flex items-center justify-between px-6 lg:px-8 bg-background/95 backdrop-blur sticky top-0 z-40">
-                        <Skeleton className="h-6 w-32" />
-                    </header>
-                    <div className="flex-1 p-6 lg:px-8 space-y-8 max-w-5xl mx-auto w-full">
-                        <Skeleton className="h-96 w-full" />
-                    </div>
-                </main>
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
             </div>
         );
     }
@@ -78,12 +65,12 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                 >
                     <Inbox className="h-20 w-20 mx-auto text-muted-foreground opacity-50" />
                     <div className="space-y-2">
-                        <h2 className="text-3xl font-bold">Nenhum Diagnóstico</h2>
-                        <p className="text-muted-foreground">Você ainda não fez nenhum assessment. Comece agora para descobrir seu estado atual.</p>
+                        <h2 className="text-3xl font-bold font-heading">Nenhum Diagnóstico</h2>
+                        <p className="text-muted-foreground">Você ainda não fez nenhum assessment. Comece agora para descobrir seu estado atual em 7 pilares.</p>
                     </div>
                     <Link href={`/${lang}/assessment`}>
-                        <Button size="lg" className="gap-2">
-                            Iniciar Assessment
+                        <Button size="lg" className="gap-2 font-bold px-8 shadow-xl shadow-primary/20">
+                            Iniciar Avaliação v2
                             <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
@@ -103,67 +90,51 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
     };
 
     return (
-        <div className="min-h-screen bg-background flex">
+        <div className="min-h-screen bg-background flex flex-col">
             {/* Premium Deep Background - Ultra Subtle Glow */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <div className="fixed inset-0 z-0 pointer-events-none">
-                    <div
-                        className="absolute top-[-10%] right-[-5%] w-[1000px] h-[1000px] rounded-full blur-[220px] opacity-[0.1] dark:opacity-[0.15]"
-                        style={{ backgroundColor: currentDiagnosis.color }}
-                    />
-                    <div
-                        className="absolute bottom-[-10%] left-[-5%] w-[800px] h-[800px] rounded-full blur-[220px] opacity-[0.05] dark:opacity-[0.08]"
-                        style={{ backgroundColor: currentDiagnosis.color }}
-                    />
-                </div>
+                <div
+                    className="absolute top-[-10%] right-[-5%] w-[1000px] h-[1000px] rounded-full blur-[220px] opacity-[0.1] dark:opacity-[0.15]"
+                    style={{ backgroundColor: currentDiagnosis.color }}
+                />
+                <div
+                    className="absolute bottom-[-10%] left-[-5%] w-[800px] h-[800px] rounded-full blur-[220px] opacity-[0.05] dark:opacity-[0.08]"
+                    style={{ backgroundColor: currentDiagnosis.color }}
+                />
             </div>
 
-            {/* Sidebar (Desktop) */}
-            <aside className="w-64 border-r border-border hidden md:flex flex-col p-6 sticky top-0 h-screen bg-card/60 dark:bg-card/40 backdrop-blur-xl z-40">
-                <Link className="flex items-center gap-2 mb-12" href={`/${lang}`}>
-                    <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
-                        <div className="w-2 h-2 bg-primary-foreground rounded-full" />
-                    </div>
-                    <span className="font-heading font-bold text-lg tracking-tight">STATUS CORE</span>
-                </Link>
-                <nav className="flex-1 space-y-2">
-                    <Link href={`/${lang}/dashboard`} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium border border-primary/20 shadow-sm">
-                        <BarChart3 className="h-4 w-4" /> Dashboard
-                    </Link>
-                    <Link href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-300">
-                        <History className="h-4 w-4" /> Histórico
-                    </Link>
-                    <Link href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-300">
-                        <User className="h-4 w-4" /> Perfil
-                    </Link>
-                </nav>
-                <div className="border-t border-border pt-4 mt-auto">
-                    <Link href="/login" className="flex items-center gap-3 px-3 py-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-300">
-                        <LogOut className="h-4 w-4" /> Sair
-                    </Link>
-                </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0 relative z-10">
-                <header className="h-14 border-b border-border flex items-center justify-between px-6 lg:px-8 bg-background/95 backdrop-blur sticky top-0 z-40">
-                    <h1 className="font-heading font-bold text-xl">Dashboard</h1>
-                    <div className="flex items-center gap-4">
-                        <Button variant="outline" size="sm" asChild className="rounded-full hidden sm:flex border-border bg-background hover:bg-accent transition-colors">
-                            <Link href={`/${lang}/assessment`}>Novo Diagnóstico</Link>
-                        </Button>
-                        <div className="h-8 w-8 rounded-full bg-muted border border-border flex items-center justify-center">
-                            <User className="h-4 w-4 text-muted-foreground" />
+            <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
+                <div className="container mx-auto flex items-center justify-between">
+                    <Link className="flex items-center justify-center gap-2" href={`/${lang}`}>
+                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                            <div className="w-3 h-3 bg-background rounded-full" />
                         </div>
+                        <span className="font-heading font-bold text-xl tracking-tight">STATUS CORE</span>
+                    </Link>
+                    <div className="flex items-center gap-2">
+                        <ThemeToggle />
+                        <LanguageSelector currentLang={lang} />
+                        <Button variant="ghost" size="icon" className="h-9 w-9">
+                            <User className="h-4 w-4" />
+                        </Button>
                     </div>
-                </header>
+                </div>
+            </header>
 
-                <div className="flex-1 p-6 lg:p-8 space-y-8 max-w-5xl mx-auto w-full">
+            <main className="flex-1 p-4 md:p-8 relative z-10">
+                <div className="container mx-auto max-w-6xl space-y-12">
                     {/* Current Status Hero */}
-                    <section className="space-y-4">
+                    <section className="space-y-6">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Diagnóstico Atual</h2>
-                            <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-wider">Ativo</Badge>
+                            <div className="space-y-1">
+                                <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Diagnóstico Atual</h2>
+                                <p className="text-2xl font-bold font-heading">Visão Geral v2</p>
+                            </div>
+                            <Link href={`/${lang}/assessment`}>
+                                <Button variant="outline" size="sm" className="rounded-full border-primary/20 hover:border-primary transition-colors font-bold px-6">
+                                    Novo Diagnóstico
+                                </Button>
+                            </Link>
                         </div>
 
                         <motion.div
@@ -171,92 +142,89 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                             animate={{ opacity: 1, y: 0 }}
                             className="relative"
                         >
-                            <Card className="border-border bg-card/70 dark:bg-zinc-900/30 backdrop-blur-xl shadow-2xl overflow-hidden group hover:border-primary/20 transition-all duration-700">
-                                {/* Subtle inner glow */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] opacity-0 group-hover:opacity-30 transition-opacity duration-1000" />
-
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6 border-b border-border relative z-10">
-                                    <div className="space-y-2">
-                                        <CardTitle className="text-5xl font-heading font-black tracking-tighter text-primary leading-none">
-                                            {currentDiagnosis.state}
+                            <Card className="border-border bg-card/70 dark:bg-zinc-900/40 backdrop-blur-xl shadow-2xl overflow-hidden group hover:border-primary/10 transition-all duration-700 rounded-[2.5rem]">
+                                <CardHeader className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 pb-10 border-b border-border/40 p-10">
+                                    <div className="space-y-3">
+                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">Ativo v2</Badge>
+                                        <CardTitle className="text-6xl md:text-8xl font-heading font-black tracking-tighter text-foreground leading-[0.8] py-2">
+                                            {currentDiagnosis.label}
                                         </CardTitle>
-                                        <CardDescription className="flex items-center gap-2 text-muted-foreground font-medium">
-                                            <Clock className="h-3 w-3" /> Realizado em {formatDate(currentDiagnosis.timestamp)}
+                                        <CardDescription className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
+                                            <Clock className="h-4 w-4" /> Realizado em {formatDate(currentDiagnosis.timestamp)}
                                         </CardDescription>
                                     </div>
-                                    <div className="text-right">
-                                        <div className="text-4xl font-black text-primary">{currentDiagnosis.confidence}%</div>
-                                        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-black">Confiança</div>
+                                    <div className="flex flex-row md:flex-col gap-8 md:gap-4 items-center md:items-end">
+                                        <div className="flex items-center md:items-end flex-col gap-1">
+                                            <div className="text-5xl md:text-6xl font-black text-primary leading-none">{currentDiagnosis.confidence}%</div>
+                                            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">Confiança Neural</div>
+                                        </div>
+                                        {currentDiagnosis.isUnlocked && currentDiagnosis.v3Insights && (
+                                            <div className="flex items-center md:items-end flex-col gap-1">
+                                                <div className="text-3xl md:text-4xl font-black text-foreground leading-none">{currentDiagnosis.v3Insights.antifragilityScore}%</div>
+                                                <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">Antifragilidade</div>
+                                            </div>
+                                        )}
                                     </div>
                                 </CardHeader>
 
-                                <CardContent className="pt-8 space-y-8 relative z-10">
-                                    <blockquote className="text-2xl md:text-3xl font-medium leading-snug italic text-foreground/90 border-l-4 border-primary/40 pl-6">
+                                <CardContent className="p-10 space-y-12">
+                                    <blockquote className="text-2xl md:text-4xl font-medium leading-tight italic text-foreground/90 border-l-4 border-primary/40 pl-8 py-2">
                                         "{currentDiagnosis.oneLiner}"
                                     </blockquote>
 
-                                    {/* Dimension Scores */}
-                                    <div className="space-y-3 pt-4">
-                                        <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Análise Dimensional</h3>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                    {/* Dimension Scores v2 (7 Pillars) */}
+                                    <div className="space-y-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-px flex-1 bg-border/40" />
+                                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black whitespace-nowrap">Análise dos 7 Pilares</h3>
+                                            <div className="h-px flex-1 bg-border/40" />
+                                        </div>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                             {currentDiagnosis.dimensions.map((dim, i) => (
                                                 <motion.div
                                                     key={i}
                                                     initial={{ opacity: 0, y: 10 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    transition={{ delay: i * 0.1 }}
-                                                    className="space-y-2"
+                                                    transition={{ delay: i * 0.05 }}
+                                                    className="space-y-3 p-6 rounded-2xl bg-muted/20 border border-border/40"
                                                 >
                                                     <div className="flex items-center justify-between">
-                                                        <span className="text-xs font-bold">{dim.label}</span>
-                                                        <span className="text-xs font-black" style={{ color: dim.color }}>{dim.value}%</span>
+                                                        <span className="text-xs font-black uppercase tracking-tighter">{dim.label}</span>
+                                                        <span className="text-sm font-black" style={{ color: dim.color }}>{dim.value}%</span>
                                                     </div>
-                                                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                                                    <div className="h-1.5 bg-muted/50 rounded-full overflow-hidden">
                                                         <motion.div
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${dim.value}%` }}
-                                                            transition={{ duration: 1, delay: i * 0.1 + 0.3, ease: "easeOut" }}
-                                                            className="h-full rounded-full"
-                                                            style={{
-                                                                backgroundColor: dim.color,
-                                                                boxShadow: `0 0 12px ${dim.color}20`
-                                                            }}
+                                                            transition={{ duration: 1.2, delay: i * 0.1, ease: "circOut" }}
+                                                            className="h-full rounded-full shadow-[0_0_8px_rgba(var(--primary),0.3)]"
+                                                            style={{ backgroundColor: dim.color }}
                                                         />
                                                     </div>
                                                 </motion.div>
                                             ))}
                                         </div>
                                     </div>
-
-                                    {/* Locked Content Preview - Only show if NOT unlocked */}
-                                    {!currentDiagnosis.isUnlocked && (
-                                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 pt-4">
-                                            {[
-                                                { label: "Significado", icon: FileText },
-                                                { label: "Características", icon: CheckCircle2 },
-                                                { label: "Risco Primário", icon: AlertTriangle },
-                                                { label: "Recomendações", icon: Sparkles },
-                                            ].map((item, i) => (
-                                                <div key={i} className="flex flex-col items-center p-6 rounded-2xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 text-center space-y-3 opacity-60 hover:opacity-100 transition-all">
-                                                    <item.icon className="h-6 w-6 text-muted-foreground" />
-                                                    <span className="text-xs font-bold uppercase tracking-wider">{item.label}</span>
-                                                    <Padlock className="h-4 w-4 text-muted-foreground/30" />
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                 </CardContent>
 
-                                <CardFooter className="bg-primary/5 p-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
-                                    <p className="text-sm text-muted-foreground max-w-sm font-medium">
-                                        {currentDiagnosis.isUnlocked
-                                            ? "Sua análise completa está disponível com insights profundos e estratégias."
-                                            : "Desbloqueie o relatório completo para acessar análises profundas, planos de ação e sabedoria estoica."}
-                                    </p>
-                                    <Button size="lg" className="rounded-full shadow-lg shadow-primary/20 w-full sm:w-auto font-bold" asChild>
+                                <CardFooter className="bg-primary/5 p-10 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
+                                    <div className="flex items-center gap-4 text-muted-foreground font-medium">
+                                        {currentDiagnosis.isUnlocked ? (
+                                            <div className="flex items-center gap-2 text-primary">
+                                                <CheckCircle2 className="h-5 w-5" />
+                                                <span>Relatório v2 Desbloqueado</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <Padlock className="h-5 w-5" />
+                                                <span>Recursos Premium Ocultos</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <Button size="lg" className="rounded-full shadow-xl shadow-primary/20 w-full sm:w-auto font-black h-14 px-10 text-lg group" asChild>
                                         <Link href={currentDiagnosis.isUnlocked ? `/${lang}/report/${currentDiagnosis.id}` : `/${lang}/checkout/${currentDiagnosis.id}`}>
-                                            {currentDiagnosis.isUnlocked ? "Ver Relatório" : "Desbloquear Agora"}
-                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                            {currentDiagnosis.isUnlocked ? "Ver Relatório Completo" : "Desbloquear Plano v2"}
+                                            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                         </Link>
                                     </Button>
                                 </CardFooter>
@@ -265,42 +233,45 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                     </section>
 
                     {/* History Snippet */}
-                    <section className="space-y-4">
-                        <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Histórico Recente</h2>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            {history.map((item, i) => (
-                                <motion.div
-                                    key={item.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                >
-                                    <Link href={`/${lang}/report/${item.id}`}>
-                                        <Card className="border-border bg-card/40 dark:bg-zinc-900/20 backdrop-blur-sm hover:bg-card/80 dark:hover:bg-zinc-900/30 hover:border-primary/20 transition-all duration-500 cursor-pointer group shadow-sm hover:shadow-md">
-                                            <CardContent className="p-6 flex items-center justify-between">
-                                                <div className="space-y-1">
-                                                    <div className="text-lg font-black font-heading tracking-tight flex items-center gap-2">
-                                                        {item.label}
-                                                        {item.isUnlocked && (
-                                                            <Sparkles className="h-3 w-3 text-primary animate-pulse" />
-                                                        )}
+                    {history.length > 0 && (
+                        <section className="space-y-6">
+                            <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Histórico de Estados</h2>
+                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                {history.map((item, i) => (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: i * 0.05 }}
+                                    >
+                                        <Link href={`/${lang}/report/${item.id}`}>
+                                            <Card className="border-border bg-card/40 hover:bg-card/80 dark:bg-zinc-900/10 dark:hover:bg-zinc-900/30 transition-all duration-500 cursor-pointer group shadow-sm hover:shadow-md rounded-3xl overflow-hidden">
+                                                <CardContent className="p-8 flex items-center justify-between">
+                                                    <div className="space-y-2">
+                                                        <div className="text-2xl font-black font-heading tracking-tighter flex items-center gap-2">
+                                                            {item.label}
+                                                            {item.isUnlocked && (
+                                                                <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                                                            )}
+                                                        </div>
+                                                        <div className="text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black opacity-60 underline underline-offset-4 decoration-primary/30">{formatDate(item.timestamp)}</div>
                                                     </div>
-                                                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{formatDate(item.timestamp)}</div>
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    {item.isUnlocked ? (
-                                                        <Badge variant="outline" className="text-[10px] font-black border-primary/30 text-primary bg-primary/5">PREMIUM</Badge>
-                                                    ) : (
-                                                        <Badge variant="outline" className="text-[10px] font-black border-border opacity-70">{item.confidence}%</Badge>
-                                                    )}
-                                                </div>
-                                            </CardContent>
-                                        </Card>
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </section>
+                                                    <div className="flex items-center gap-3">
+                                                        {item.isUnlocked && (
+                                                            <Badge variant="outline" className="text-[10px] font-black border-primary/30 text-primary bg-primary/5 px-2 py-0.5">PREMIUM</Badge>
+                                                        )}
+                                                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                                                            <ArrowRight className="h-4 w-4" />
+                                                        </div>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </Link>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </div>
             </main>
         </div>

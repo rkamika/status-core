@@ -10,6 +10,12 @@ export type DiagnosisState =
 
 export type Locale = "pt" | "en" | "es";
 
+export interface PillarScore {
+    label: string;
+    value: number; // 0 to 100
+    color: string;
+}
+
 export interface ReportContent {
     meaning: string;
     characteristics: string[];
@@ -35,6 +41,18 @@ export interface DiagnosisResult {
     confidence: number;
     one_liner: string;
     report?: ReportContent;
+    pillarScores: PillarScore[];
+    v3Insights?: {
+        antifragilityScore: number;
+        bottleneckLabel: string;
+        correlations: string[];
+        archetype: string;
+        aiAnalysis?: {
+            executiveSummary: string;
+            sevenDayPlan: { day: string; action: string; pilar: string }[];
+            stoicRefinement: string;
+        };
+    };
 }
 
 export const STATE_CONFIGS: Record<DiagnosisState, StateConfig> = {
@@ -74,538 +92,563 @@ export const STATE_CONFIGS: Record<DiagnosisState, StateConfig> = {
 
 export const QUESTIONS: Record<Locale, Array<{ id: number, text: string }>> = {
     pt: [
-        { id: 1, text: "Sinto que minha lista de tarefas é maior do que as horas úteis do meu dia." },
-        { id: 2, text: "Sei exatamente qual é a minha prioridade #1 hoje e por que ela importa." },
-        { id: 3, text: "Começo várias tarefas ao mesmo tempo, mas tenho dificuldade em terminar qualquer uma." },
-        { id: 4, text: "Sinto que estou 'apagando incêndios' o tempo todo em vez de focar no planejado." },
-        { id: 5, text: "Minhas reações a pequenos problemas são mais intensas do que deveriam." },
-        { id: 6, text: "Sinto-me entusiasmado e 'em fluxo' (flow) durante a maior parte do meu trabalho." },
-        { id: 7, text: "Faço o que precisa ser feito, mas me sinto emocionalmente distante dos resultados." },
-        { id: 8, text: "Uma pequena crítica ao meu trabalho parece um ataque pessoal direto." },
-        { id: 9, text: "Adio decisões importantes porque sinto que ainda faltam informações cruciais." },
-        { id: 10, text: "Sinto que estou no mesmo lugar de 6 meses atrás, apesar de estar ocupado." },
-        { id: 11, text: "Minhas ações atuais estão perfeitamente alinhadas com meus objetivos de longo prazo." },
-        { id: 12, text: "Sinto um frio na barriga de insegurança ao pensar nos próximos passos da minha carreira." },
-        { id: 13, text: "Sinto que meu potencial está sendo desperdiçado em tarefas repetitivas." },
-        { id: 14, text: "Termino o dia com a sensação de dever cumprido, mesmo cansado." },
-        { id: 15, text: "Meu corpo apresenta sinais físicos de cansaço (sono, dores) persistentes." },
-        { id: 16, text: "Sinto que não tenho permissão para parar e descansar, mesmo quando terminaria tudo." },
+        // Saúde
+        { id: 1, text: "Sinto que tenho energia física suficiente para realizar minhas atividades sem exaustão extrema." },
+        { id: 2, text: "Tenho tido uma boa qualidade de sono e acordo sentindo que meu corpo descansou." },
+        { id: 3, text: "Consigo manter o equilíbrio emocional mesmo diante de imprevistos estressantes." },
+        // Trabalho
+        { id: 4, text: "Sinto que meu trabalho atual tem um sentido claro e contribui para algo maior." },
+        { id: 5, text: "Tenho clareza sobre minhas próximas metas de crescimento profissional." },
+        { id: 6, text: "Sinto-me entusiasmado e desafiado na medida certa durante minha rotina de trabalho." },
+        // Relacionamentos
+        { id: 7, text: "Sinto que tenho um sistema de apoio sólido em meus relacionamentos." },
+        { id: 8, text: "Consigo expressar minhas necessidades e sentimentos de forma clara nas minhas relações." },
+        { id: 9, text: "Sinto-me pertencente e aceito nos grupos sociais que frequento." },
+        // Financeiro
+        { id: 10, text: "Tenho tranquilidade em relação à minha estabilidade financeira atual." },
+        { id: 11, text: "Sinto que tenho autonomia para tomar decisões financeiras sem medo excessivo do futuro." },
+        { id: 12, text: "Minha vida financeira está organizada o suficiente para não gerar ansiedade constante." },
+        // Identidade
+        { id: 13, text: "Tenho clareza sobre meus valores fundamentais e ajo de acordo com eles." },
+        { id: 14, text: "Sinto-me autoconfiante em relação às minhas capacidades e ao meu valor pessoal." },
+        { id: 15, text: "Pratico o autorespeito e sei impor limites saudáveis para proteger minha identidade." },
+        // Lazer
+        { id: 16, text: "Consigo me desconectar totalmente do trabalho durante meus momentos de descanso." },
+        { id: 17, text: "Tenho hobbies ou atividades de lazer que me trazem diversão e alegria genuína." },
+        { id: 18, text: "Sinto que minha vida pessoal é diversificada e leve, além das responsabilidades." },
+        // Espiritualidade
+        { id: 19, text: "Sinto uma conexão com algo maior ou com um propósito existencial que me guia." },
+        { id: 20, text: "Minha vida faz sentido para mim em um nível profundo, além do sucesso material." },
+        { id: 21, text: "Pratico momentos de reflexão, meditação ou conexão interior com regularidade." },
     ],
     en: [
-        { id: 1, text: "I feel my to-do list is longer than the productive hours in my day." },
-        { id: 2, text: "I know exactly what my #1 priority is today and why it matters." },
-        { id: 3, text: "I start multiple tasks at once but struggle to finish any." },
-        { id: 4, text: "I feel like I'm 'putting out fires' all the time instead of focusing on plans." },
-        { id: 5, text: "My reactions to small problems are more intense than they should be." },
-        { id: 6, text: "I feel enthusiastic and 'in flow' during most of my work." },
-        { id: 7, text: "I do what needs to be done, but I feel emotionally distant from the results." },
-        { id: 8, text: "A small critique of my work feels like a direct personal attack." },
-        { id: 9, text: "I postpone important decisions because I feel crucial information is missing." },
-        { id: 10, text: "I feel like I'm in the same place as 6 months ago, despite being busy." },
-        { id: 11, text: "My current actions are perfectly aligned with my long-term goals." },
-        { id: 12, text: "I feel a knot of insecurity when thinking about my next career steps." },
-        { id: 13, text: "I feel my potential is being wasted on repetitive tasks." },
-        { id: 14, text: "I end the day with a sense of accomplishment, even if tired." },
-        { id: 15, text: "My body shows physical signs of persistent fatigue (sleep, aches)." },
-        { id: 16, text: "I feel I don't have permission to stop and rest, even when everything is done." },
+        { id: 1, text: "I feel I have enough physical energy to perform my activities without extreme exhaustion." },
+        { id: 2, text: "I have been getting good quality sleep and wake up feeling that my body has rested." },
+        { id: 3, text: "I can maintain emotional balance even when faced with stressful setbacks." },
+        { id: 4, text: "I feel that my current work has a clear meaning and contributes to something larger." },
+        { id: 5, text: "I am clear about my next professional growth goals." },
+        { id: 6, text: "I feel enthusiastic and appropriately challenged during my work routine." },
+        { id: 7, text: "I feel I have a solid support system in my relationships (family/friends)." },
+        { id: 8, text: "I can express my needs and feelings clearly in my relationships." },
+        { id: 9, text: "I feel a sense of belonging and acceptance in the social groups I frequent." },
+        { id: 10, text: "I have peace of mind regarding my current financial stability." },
+        { id: 11, text: "I feel I have the autonomy to make financial decisions without excessive fear of the future." },
+        { id: 12, text: "My financial life is organized enough not to generate constant anxiety." },
+        { id: 13, text: "I am clear about my core values and act in accordance with them." },
+        { id: 14, text: "I feel self-confident about my capabilities and personal worth." },
+        { id: 15, text: "I practice self-respect and know how to set healthy boundaries to protect my identity." },
+        { id: 16, text: "I can fully disconnect from work and obligations during my downtime." },
+        { id: 17, text: "I have hobbies or leisure activities that bring me genuine fun and joy." },
+        { id: 18, text: "I feel my personal life is diverse and light, beyond responsibilities." },
+        { id: 19, text: "I feel a connection with something larger or an existential purpose that guides me." },
+        { id: 20, text: "My life makes sense to me on a deep level, beyond material success." },
+        { id: 21, text: "I regularly practice moments of reflection, meditation, or inner connection." },
     ],
     es: [
-        { id: 1, text: "Siento que mi lista de tareas es más larga que las horas productivas de mi día." },
-        { id: 2, text: "Sé exactamente cuál es mi prioridad #1 hoy y por qué es importante." },
-        { id: 3, text: "Empiezo múltiples tareas a la vez pero me cuesta terminar alguna." },
-        { id: 4, text: "Siento que estoy 'apagando incendios' todo el tiempo en lugar de enfocarme en lo planeado." },
-        { id: 5, text: "Mis reacciones a pequeños problemas son más intensas de lo que deberían ser." },
-        { id: 6, text: "Me siento entusiasmado y 'en flujo' durante la mayor parte de mi trabajo." },
-        { id: 7, text: "Hago lo que hay que hacer, pero me siento emocionalmente distante de los resultados." },
-        { id: 8, text: "Una pequeña crítica a mi trabajo se siente como un ataque personal directo." },
-        { id: 9, text: "Pospongo decisiones importantes porque siento que falta información crucial." },
-        { id: 10, text: "Siento que estoy en el mismo lugar que hace 6 meses, a pesar de estar ocupado." },
-        { id: 11, text: "Mis acciones actuales están perfectamente alineadas con mis metas a largo plazo." },
-        { id: 12, text: "Siento un nudo de inseguridad al pensar en los próximos pasos de mi carrera." },
-        { id: 13, text: "Siento que mi potencial se está desperdiciando en tareas repetitivas." },
-        { id: 14, text: "Termino el día con una sensación de logro, incluso si estoy cansado." },
-        { id: 15, text: "Mi cuerpo muestra signos físicos de fatiga persistente (sueño, dolores)." },
-        { id: 16, text: "Siento que no tengo permiso para parar y descansar, incluso cuando todo está terminado." },
+        { id: 1, text: "Siento que tengo suficiente energía física para realizar mis actividades sin un agotamiento extremo." },
+        { id: 2, text: "He tenido una buena calidad de sueño y me despierto sintiendo que mi cuerpo ha descansado." },
+        { id: 3, text: "Puedo mantener el equilibrio emocional incluso ante contratiempos estresantes." },
+        { id: 4, text: "Siento que mi trabajo actual tiene un sentido claro y contribuye a algo más grande." },
+        { id: 5, text: "Tengo claridad sobre mis próximas metas de crecimiento profesional." },
+        { id: 6, text: "Me siento entusiasmado y adecuadamente desafiado durante mi rutina laboral." },
+        { id: 7, text: "Siento que tengo un sistema de apoyo sólido en mis relaciones (familia/amigos)." },
+        { id: 8, text: "Puedo expresar mis necesidades y sentimientos con claridad en mis relaciones." },
+        { id: 9, text: "Me siento integrado y aceptado en los grupos sociales que frecuento." },
+        { id: 10, text: "Tengo tranquilidad con respecto a mi estabilidad financiera actual." },
+        { id: 11, text: "Siento que tengo autonomía para tomar decisiones financieras sin un miedo excesivo al futuro." },
+        { id: 12, text: "Mi vida financiera está lo suficientemente organizada como para no generar ansiedad constante." },
+        { id: 13, text: "Tengo claridad sobre mi valores fundamentales y actúo de acuerdo con ellos." },
+        { id: 14, text: "Me seguro de mis capacidades y de mi valor personal." },
+        { id: 15, text: "Practico el autorespeto y sé poner límites saludables para proteger mi identidad." },
+        { id: 16, text: "Puedo desconectarme totalmente del trabajo y las obligaciones durante mi tiempo libre." },
+        { id: 17, text: "Tengo pasatiempos o actividades de ocio que me brindan diversión y alegría genuinas." },
+        { id: 18, text: "Siento que mi vida personal es diversa y liviana, más allá de las responsabilidades." },
+        { id: 19, text: "Siento una conexión con algo más grande o con un propósito existencial que me guía." },
+        { id: 20, text: "Mi vida tiene sentido para mí a un nivel profundo, más allá del éxito material." },
+        { id: 21, text: "Practico momentos de reflexión, meditación o conexión interior con regularidade." },
     ]
 };
 
 const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, report: ReportContent }>> = {
     CONFUSION: {
         pt: {
-            one_liner: "Dificuldade em organizar sinais internos em prioridades claras.",
+            one_liner: "Sinais mistos entre seus pilares estão gerando neblina mental.",
             report: {
-                meaning: "O estado de Confusão ocorre quando há excesso de informação sem um filtro de relevância ativo.",
-                characteristics: ["Indecisão sobre pequenos passos", "Sensação de névoa mental", "Troca constante de foco"],
-                primary_risk: "Paralisia por análise ou gasto de energia em tarefas irrelevantes.",
-                recommended_focus: ["Simplificação radical", "Escrita analítica", "Isolamento de variáveis"],
-                next_step: "Escolha uma única tarefa de 15 minutos e ignore todo o resto.",
-                immediate_win: "Esvazie a mente: anote absolutamente tudo o que está te preocupando em um papel por 10 minutos.",
-                the_no_to_say: "Diga NÃO a novos inputs: feche abas extras, silencie notificações e não abra novos projetos hoje.",
-                mindset_shift: "De 'Eu preciso resolver tudo' para 'Eu só preciso ver o próximo passo nítido'.",
-                stoic_lesson: "A felicidade da sua vida depende da qualidade dos seus pensamentos. Se a mente está confusa, simplifique a percepção.",
-                stoic_principles: [
-                    "Viva em harmonia com a natureza e você viverá em harmonia consigo mesmo.",
-                    "O sucesso não é fazer mais, mas estar em paz com o que você faz.",
-                    "Quando você está alinhado, o esforço se torna fluxo."
-                ],
-                stoic_principles: [
-                    "A clareza de mente é a base de toda grande realização.",
-                    "Simplicidade é a sofisticação máxima.",
-                    "O sábio não busca mais, mas melhor."
-                ],
-                stoic_principles: [
-                    "O conforto é o inimigo do progresso.",
-                    "Se você não está crescendo, está morrendo.",
-                    "A zona de conforto é um lugar bonito, mas nada cresce lá."
-                ],
-                stoic_principles: [
-                    "A vida sem propósito é como um navio sem leme.",
-                    "Não é a duração da vida que importa, mas a profundidade dela.",
-                    "Quem tem um porquê para viver pode suportar quase qualquer como."
-                ],
-                stoic_principles: [
-                    "A ação cura o medo. A inação o alimenta.",
-                    "Não espere o momento perfeito. Tome o momento e o torne perfeito.",
-                    "O obstáculo não está no caminho. O obstáculo é o caminho."
-                ],
-                stoic_principles: [
-                    "Entre estímulo e resposta há um espaço. Nesse espaço está o seu poder.",
-                    "A raiva é uma punição que você dá a si mesmo pelo erro de outro.",
-                    "Não é o que acontece com você, mas como você reage que importa."
-                ],
-                stoic_principles: [
-                    "Não é nobre ser superior aos outros. A verdadeira nobreza está em ser superior ao seu eu anterior.",
-                    "O homem sábio não se sobrecarrega com o que não pode controlar.",
-                    "Menos, mas melhor. Esta é a essência da sabedoria."
-                ],
-                stoic_principles: [
-                    "Não é a quantidade de informação que importa, mas a qualidade da sua atenção.",
-                    "A sabedoria não está em saber tudo, mas em saber o que ignorar.",
-                    "Quando tudo parece urgente, nada é realmente importante."
-                ]
+                meaning: "A Confusão v2 ocorre quando os pilares de Identidade e Espiritualidade estão desalinhados, impedindo uma visão clara do todo.",
+                characteristics: ["Dificuldade em priorizar qual pilar focar", "Sentimento de estar perdido mesmo agindo", "Conflito entre valores e ações diárias"],
+                primary_risk: "Gasto de energia em áreas que não trazem realização real.",
+                recommended_focus: ["Revisão de valores (Identidade)", "Meditação (Espiritualidade)", "Journaling"],
+                next_step: "Escolha um pilar para ignorar por 24h e um para focar 100%.",
+                immediate_win: "Defina seus 3 valores não-negociáveis agora.",
+                the_no_to_say: "Diga NÃO a compromissos que agridem sua identidade.",
+                mindset_shift: "De 'Eu preciso de mais dados' para 'Eu preciso de mais silêncio'.",
+                stoic_lesson: "A clareza não vem de fora, mas de organizar o que já está dentro.",
+                stoic_principles: ["Escute sua voz interior", "Defina o que é essencial", "Aja com integridade"]
             }
         },
         en: {
-            one_liner: "Difficulty organizing internal signals into clear priorities.",
+            one_liner: "Mixed signals between your pillars are generating mental fog.",
             report: {
-                meaning: "Confusion occurs when there is an information overload without an active relevance filter.",
-                characteristics: ["Indecision over small steps", "Brain fog sensation", "Constant focus switching"],
-                primary_risk: "Analysis paralysis or wasting energy on irrelevant tasks.",
-                recommended_focus: ["Radical simplification", "Analytical writing", "Isolation of variables"],
-                next_step: "Choose a single 15-minute task and ignore everything else.",
-                immediate_win: "Brain dump: write down absolutely everything on your mind for 10 minutes.",
-                the_no_to_say: "Say NO to new inputs: close extra tabs, mute notifications, and don't start new projects today.",
-                mindset_shift: "From 'I need to solve everything' to 'I just need to see the next clear step'.",
-                stoic_lesson: "The happiness of your life depends upon the quality of your thoughts. If the mind is confused, simplify the perception.",
-                stoic_principles: [
-                    "It's not the quantity of information that matters, but the quality of your attention.",
-                    "Wisdom is not knowing everything, but knowing what to ignore.",
-                    "When everything seems urgent, nothing is truly important."
-                ]
+                meaning: "Confusion v2 occurs when the Identity and Spirituality pillars are misaligned, preventing a clear view of the whole.",
+                characteristics: ["Difficulty prioritizing which pillar to focus on", "Feeling lost despite taking action", "Conflict between values and daily actions"],
+                primary_risk: "Wasting energy on areas that do not bring real fulfillment.",
+                recommended_focus: ["Value review (Identity)", "Meditation (Spirituality)", "Journaling"],
+                next_step: "Choose one pillar to ignore for 24h and one to focus on 100%.",
+                immediate_win: "Define your 3 non-negotiable values now.",
+                the_no_to_say: "Say NO to commitments that harm your identity.",
+                mindset_shift: "From 'I need more data' to 'I need more silence'.",
+                stoic_lesson: "Clarity doesn't come from outside, but from organizing what is already inside.",
+                stoic_principles: ["Listen to your inner voice", "Define what is essential", "Act with integrity"]
             }
         },
         es: {
-            one_liner: "Dificultad para organizar señales internas en prioridades claras.",
+            one_liner: "Las señales mixtas entre tus pilares están generando niebla mental.",
             report: {
-                meaning: "La confusión ocurre cuando hay un exceso de información sin un filtro de relevancia activo.",
-                characteristics: ["Indecisión sobre pequeños pasos", "Sensación de niebla mental", "Cambio constante de enfoque"],
-                primary_risk: "Parálisis por análisis o gasto de energía en tareas ilevantes.",
-                recommended_focus: ["Simplificación radical", "Escritura analítica", "Aislamiento de variables"],
-                next_step: "Elige una sola tarea de 15 minutos e ignora todo lo demás.",
-                immediate_win: "Vacía tu mente: anota absolutamente todo lo que te preocupa en un papel durante 10 minutos.",
-                the_no_to_say: "Di NO a nuevas entradas: cierra pestañas adicionales, silencia notificaciones y no abras nuevos proyectos hoy.",
-                mindset_shift: "De 'Necesito resolver todo' a 'Solo necesito ver el siguiente paso claro'.",
-                stoic_lesson: "La felicidad de tu vida depende de la calidad de tus pensamientos. Si la mente está confundida, simplifica la percepción.",
-                stoic_principles: [
-                    "No es la cantidad de información lo que importa, sino la calidad de tu atención.",
-                    "La sabiduría no está en saberlo todo, sino en saber qué ignorar.",
-                    "Cuando todo parece urgente, nada es realmente importante."
-                ]
+                meaning: "La Confusión v2 ocurre cuando los pilares de Identidad y Espiritualidad están desalineados, impidiendo una visión clara del todo.",
+                characteristics: ["Dificultad para priorizar en qué pilar enfocarse", "Sentimiento de estar perdido a pesar de actuar", "Conflicto entre valores y acciones diarias"],
+                primary_risk: "Gasto de energía en áreas que no aportan una realización real.",
+                recommended_focus: ["Revisión de valores (Identidad)", "Meditación (Espiritualidad)", "Journaling"],
+                next_step: "Elige un pilar para ignorar por 24h y uno para enfocarte al 100%.",
+                immediate_win: "Define tus 3 valores no negociables ahora.",
+                the_no_to_say: "Di NO a los compromisos que agreden tu identidad.",
+                mindset_shift: "De 'Necesito más datos' a 'Necesito más silencio'.",
+                stoic_lesson: "La claridad no viene de fuera, sino de organizar lo que ya está dentro.",
+                stoic_principles: ["Escucha tu voz interior", "Define lo que es esencial", "Actúa con integridad"]
             }
         }
     },
     OVERLOAD: {
         pt: {
-            one_liner: "Capacidade de processamento atingida por excesso de volume operacional.",
+            one_liner: "Os pilares de Saúde e Lazer estão sendo drenados pelo Trabalho.",
             report: {
-                meaning: "Sobrecarga é um estado quantitativo. Não é falta de clareza, é falta de espaço.",
-                characteristics: ["Velocidade mental alta", "Cansaço físico evidente", "Memória de curto prazo falha"],
-                primary_risk: "Burnout agudo ou erros críticos por desatenção.",
-                recommended_focus: ["Delegação agressiva", "Pausas de silêncio", "Redução de input"],
-                next_step: "Cancele ou adie duas reuniões nas próximas 24 horas.",
-                immediate_win: "Haz un 'hard reset': 5 minutos de respiración profunda en silencio total, sin pantallas.",
-                the_no_to_say: "Di NO a tareas de 'baja densidad': delega agresivamente cualquier cosa que no requiera estrictamente tu talento único.",
-                mindset_shift: "De 'Mantén los engranajes girando' a '¿Qué passa si suelto este peso?'.",
-                stoic_lesson: "Não é por as coisas serem difíceis que não ousamos; é por não ousarmos que elas são difíceis. Reduza o volume para recuperar a coragem.",
-                stoic_principles: [
-                    "Não é nobre ser superior aos outros. A verdadeira nobreza está em ser superior ao seu eu anterior.",
-                    "O homem sábio não se sobrecarrega com o que não pode controlar.",
-                    "Menos, mas melhor. Esta é a essência da sabedoria."
-                ]
+                meaning: "A Sobrecarga v2 é um desequilíbrio sistêmico onde o volume de um pilar asfixia os outros.",
+                characteristics: ["Fadiga persistente", "Falta de tempo para si mesmo", "Negligência com a saúde física"],
+                primary_risk: "Colapso físico ou burnout por falta de recuperação.",
+                recommended_focus: ["Restabelecimento do sono", "Limites no trabalho", "Lazer obrigatório"],
+                next_step: "Agende uma hora de lazer inegociável para hoje.",
+                immediate_win: "Durma 1 hora mais cedo esta noite.",
+                the_no_to_say: "Diga NÃO a horas extras e tarefas secundárias.",
+                mindset_shift: "De 'Eu sou uma máquina' para 'Eu sou um sistema biológico que precisa de recarga'.",
+                stoic_lesson: "Aquele que está em todo lugar, não está em lugar nenhum.",
+                stoic_principles: ["Proteja sua paz", "Recupere o fôlego", "Limite o campo de batalha"]
             }
         },
         en: {
-            one_liner: "Processing capacity reached due to excessive operational volume.",
+            one_liner: "Health and Leisure pillars are being drained by Work.",
             report: {
-                meaning: "Overload is a quantitative state. It's not a lack of clarity, but a lack of space.",
-                characteristics: ["High mental speed", "Evident physical fatigue", "Short-term memory failure"],
-                primary_risk: "Acute burnout or critical errors due to inattention.",
-                recommended_focus: ["Aggressive delegation", "Periods of silence", "Input reduction"],
-                next_step: "Cancel or postpone two meetings in the next 24 hours.",
-                immediate_win: "Hard reset: 5 minutes of deep breathing in total silence, no screens.",
-                the_no_to_say: "Say NO to low-density tasks: aggressively delegate anything that doesn't strictly require your unique talent.",
-                mindset_shift: "From 'Keep the gears turning' to 'What happens if I let this weight go?'.",
-                stoic_lesson: "It is not because things are difficult that we do not dare; it is because we do not dare that they are difficult. Reduce the volume to recover your courage."
+                meaning: "Overload v2 is a systemic imbalance where the volume of one pillar suffocates the others.",
+                characteristics: ["Persistent fatigue", "Lack of time for oneself", "Neglect of physical health"],
+                primary_risk: "Physical collapse or burnout due to lack of recovery.",
+                recommended_focus: ["Sleep restoration", "Work boundaries", "Mandatory leisure"],
+                next_step: "Schedule an unconditional hour of leisure for today.",
+                immediate_win: "Sleep 1 hour earlier tonight.",
+                the_no_to_say: "Say NO to overtime and secondary tasks.",
+                mindset_shift: "From 'I am a machine' to 'I am a biological system that needs recharging'.",
+                stoic_lesson: "He who is everywhere is nowhere.",
+                stoic_principles: ["Protect your peace", "Catch your breath", "Limit the battlefield"]
             }
         },
         es: {
-            one_liner: "Capacidad de procesamiento alcanzada por exceso de volumen operativo.",
+            one_liner: "Los pilares de Salud y Ocio están siendo drenados por el Trabajo.",
             report: {
-                meaning: "La sobrecarga es un estado cuantitativo. No é falta de claridad, sino falta de espacio.",
-                characteristics: ["Velocidad mental alta", "Cansancio físico evidente", "Fallo de memoria a corto plazo"],
-                primary_risk: "Burnout agudo o errores críticos por desatención.",
-                recommended_focus: ["Delegación agresiva", "Pausas de silencio", "Reducción de entrada"],
-                next_step: "Cancela o pospone dos reuniones en las próximas 24 horas.",
-                immediate_win: "Haz un 'hard reset': 5 minutos de respiración profunda en silencio total, sin pantallas.",
-                the_no_to_say: "Di NO a tareas de 'baja densidad': delega agresivamente cualquier cosa que no requiera estrictamente tu talento único.",
-                mindset_shift: "De 'Mantén los engranajes girando' a '¿Qué pasa si suelto este peso?'.",
-                stoic_lesson: "No es porque las cosas sean difíciles que no nos atrevemos; es porque no nos atrevemos que son difíciles. Reduce el volumen para recuperar la valentía."
+                meaning: "La Sobrecarga v2 es un desequilibrio sistémico donde el volumen de un pilar asfixia a los demás.",
+                characteristics: ["Fatiga persistente", "Falta de tiempo para uno mismo", "Negligencia con la salud física"],
+                primary_risk: "Colapso físico o burnout por falta de recuperación.",
+                recommended_focus: ["Restablecimiento del sueño", "Límites en el trabajo", "Ocio obligatorio"],
+                next_step: "Programa una hora de ocio innegociable para hoy.",
+                immediate_win: "Duerme 1 hora más temprano esta noche.",
+                the_no_to_say: "Di NO a las horas extras y tareas secundarias.",
+                mindset_shift: "De 'Soy una máquina' a 'Soy un sistema biológico que necesita recarga'.",
+                stoic_lesson: "Quien está en todas partes, no está en ninguna parte.",
+                stoic_principles: ["Protege tu paz", "Recupera el aliento", "Limita el campo de batalla"]
             }
         }
     },
     REACTIVITY: {
         pt: {
-            one_liner: "Esgotamento da regulação emocional e resposta defensiva.",
+            one_liner: "Conflitos no pilar de Relacionamentos estão gerando gatilhos emocionais.",
             report: {
-                meaning: "Reatividade é quando o sistema nervoso assume o controle para proteção imediata.",
-                characteristics: ["Respostas ríspidas", "Sensação de estar 'por um fio'", "Falta de paciência"],
-                primary_risk: "Conflitos interpessoais e decisões impulsivas.",
-                recommended_focus: ["Regulação do sono", "Atividade física moderada", "Distanciamento breve"],
-                next_step: "Saia para uma caminhada de 20 minutos sem celular agora.",
-                immediate_win: "Mude de ambiente físico: vá para outro cômodo, café ou parque para quebrar o ciclo de estresse.",
-                the_no_to_say: "Diga NÃO a conversas difíceis: adie qualquer feedback ou DR para amanhã, quando estiver regulado.",
-                mindset_shift: "De 'Eles estão contra mim' para 'Meu sistema está interpretando perigo onde há apenas ruído'.",
-                stoic_lesson: "Você tem poder sobre sua mente - não sobre eventos externos. Perceba isso e você encontrará força.",
-                stoic_principles: [
-                    "Entre estímulo e resposta há um espaço. Nesse espaço está o seu poder.",
-                    "A raiva é uma punição que você dá a si mesmo pelo erro de outro.",
-                    "Não é o que acontece com você, mas como você reage que importa."
-                ]
+                meaning: "A Reatividade v2 indica que sua segurança emocional nos relacionamentos está fragilizada.",
+                characteristics: ["Paciência curta com pessoas próximas", "Sentimento de isolamento", "Defensividade excessiva"],
+                primary_risk: "Ruptura de laços importantes e solidão.",
+                recommended_focus: ["Comunicação não-violenta", "Escuta ativa", "Perdão"],
+                next_step: "Tenha uma conversa honesta de 5 min com alguém querido.",
+                immediate_win: "Ouça alguém hoje sem interromper ou julgar.",
+                the_no_to_say: "Diga NÃO a discussões reativas por impulso.",
+                mindset_shift: "De 'Eles me atacam' para 'Eu estou sem suporte emocional'.",
+                stoic_lesson: "A melhor vingança é não ser como quem te feriu.",
+                stoic_principles: ["Empatia como escudo", "Controle sua resposta", "Busque conexão real"]
             }
         },
         en: {
-            one_liner: "Emotional regulation depletion and defensive response.",
+            one_liner: "Conflicts in the Relationships pillar are generating emotional triggers.",
             report: {
-                meaning: "Reactivity is when the nervous system takes control for immediate protection.",
-                characteristics: ["Short responses", "Feeling 'on edge'", "Lack of patience"],
-                primary_risk: "Interpersonal conflicts and impulsive decisions.",
-                recommended_focus: ["Sleep regulation", "Moderate physical activity", "Brief distancing"],
-                next_step: "Go for a 20-minute walk without your phone now.",
-                immediate_win: "Change your physical environment: move to another room, cafe, or park to break the stress cycle.",
-                the_no_to_say: "Say NO to difficult conversations: postpone any feedback or heavy talks until tomorrow when you're regulated.",
-                mindset_shift: "From 'They are against me' to 'My system is interpreting danger where there is only noise'.",
-                stoic_lesson: "You have power over your mind - not outside events. Realize this, and you will find strength."
+                meaning: "Reactivity v2 indicates that your emotional security in relationships is fragile.",
+                characteristics: ["Short patience with close ones", "Feeling of isolation", "Excessive defensiveness"],
+                primary_risk: "Breakdown of important bonds and loneliness.",
+                recommended_focus: ["Non-violent communication", "Active listening", "Forgiveness"],
+                next_step: "Have a 5-min honest conversation with a loved one.",
+                immediate_win: "Listen to someone today without interrupting or judging.",
+                the_no_to_say: "Say NO to impulsive reactive arguments.",
+                mindset_shift: "From 'They are attacking me' to 'I am lacking emotional support'.",
+                stoic_lesson: "The best revenge is to not be like him who performed the injury.",
+                stoic_principles: ["Empathy as a shield", "Control your response", "Seek real connection"]
             }
         },
         es: {
-            one_liner: "Agotamiento de la regulación emocional y respuesta defensiva.",
+            one_liner: "Conflictos en el pilar de Relaciones están generando disparadores emocionales.",
             report: {
-                meaning: "La reactividad es cuando el sistema nervioso toma el control para protección inmediata.",
-                characteristics: ["Respuestas cortantes", "Sensación de estar 'al límite'", "Falta de paciencia"],
-                primary_risk: "Conflictos interpersonales y decisiones impulsivas.",
-                recommended_focus: ["Regulación del sueño", "Actividad física moderada", "Distanciamiento breve"],
-                next_step: "Sal a caminar 20 minutos sin el celular ahora.",
-                immediate_win: "Cambia tu entorno físico: ve a otra habitación, café o parque para romper el ciclo de estrés.",
-                the_no_to_say: "Di NO a conversaciones difíciles: pospone cualquier feedback o charla pesada para mañana, cuando estés regulado.",
-                mindset_shift: "De 'Están contra mí' a 'Mi sistema está interpretando peligro donde solo hay ruido'.",
-                stoic_lesson: "Tienes poder sobre tu mente, no sobre los eventos externos. Date cuenta de esto y encontrarás la fuerza."
+                meaning: "La Reactividad v2 indica que tu seguridad emocional en las relaciones está debilitada.",
+                characteristics: ["Poca paciencia con los allegados", "Sentimiento de aislamiento", "Defensividad excesiva"],
+                primary_risk: "Ruptura de vínculos importantes y soledad.",
+                recommended_focus: ["Comunicación no violenta", "Escucha activa", "Perdón"],
+                next_step: "Ten una charla honesta de 5 min con un ser querido.",
+                immediate_win: "Escucha a alguien hoy sin interrumpir ni juzgar.",
+                the_no_to_say: "Di NO a discusiones reactivas por impulso.",
+                mindset_shift: "De 'Ellos me atacan' a 'Me falta apoyo emocional'.",
+                stoic_lesson: "La mejor venganza es no ser como quien te hirió.",
+                stoic_principles: ["Empatía como escudo", "Controla tu respuesta", "Busca conexión real"]
             }
         }
     },
     UNCERTAINTY: {
         pt: {
-            one_liner: "Falta de dados futuristas gerando hesitação no presente.",
+            one_liner: "Instabilidade no pilar Financeiro gera medo do futuro.",
             report: {
-                meaning: "Incerteza é a ausência de uma âncora de decisão clara.",
-                characteristics: ["Busca por validação externa", "Procrastinação de decisões", "Ansiedade"],
-                primary_risk: "Perda de oportunidades por hesitação.",
-                recommended_focus: ["Definição de premissas mínimas", "Testes de validação", "Aceitação do risco"],
-                next_step: "Defina um prazo final hoje para aquela decisão pendente.",
-                immediate_win: "Tome uma decisão irreversível mas pequena: compre o ingresso, mande o convite, defina a data.",
-                the_no_to_say: "Diga NÃO a mais pesquisas: você já tem 80% dos dados, os outros 20% só virão com a ação.",
-                mindset_shift: "De 'Eu preciso ter certeza' para 'Eu preciso ter coragem para errar rápido'.",
-                stoic_lesson: "Não espere que as coisas aconteçam como você deseja, mas deseje que elas aconteçam como acontecem, e você será feliz.",
-                stoic_principles: [
-                    "A ação cura o medo. A inação o alimenta.",
-                    "Não espere o momento perfeito. Tome o momento e o torne perfeito.",
-                    "O obstáculo não está no caminho. O obstáculo é o caminho."
-                ]
+                meaning: "A Incerteza v2 está ligada à falta de uma rede de segurança material ou plano futuro.",
+                characteristics: ["Preocupação excessiva com dinheiro", "Hesitação em investir em si", "Medo da escassez"],
+                primary_risk: "Paralisia e perda de autonomia.",
+                recommended_focus: ["Planejamento financeiro", "Reserva de emergência", "Crescimento profissional"],
+                next_step: "Anote todos os seus custos fixos hoje.",
+                immediate_win: "Economize ou gere um valor simbólico hoje.",
+                the_no_to_say: "Diga NÃO a gastos impulsivos por ansiedade.",
+                mindset_shift: "De 'Eu vou quebrar' para 'Eu estou construindo minha base'.",
+                stoic_lesson: "A pobreza não é a falta de bens, mas a ânsia de ter mais. Foque na estabilidade interna.",
+                stoic_principles: ["Frugalidade sábia", "Prepare-se para o inverno", "A riqueza está na liberdade"]
             }
         },
         en: {
-            one_liner: "Lack of futuristic data generating hesitation in the present.",
+            one_liner: "Instability in the Financial pillar generates fear of the future.",
             report: {
-                meaning: "Uncertainty is the absence of a clear decision anchor.",
-                characteristics: ["Seeking external validation", "Decision procrastination", "Anxiety"],
-                primary_risk: "Loss of opportunities due to hesitation.",
-                recommended_focus: ["Defining minimum premises", "Validation tests", "Risk acceptance"],
-                next_step: "Set a final deadline today for that pending decision.",
-                immediate_win: "Make a small, irreversible decision: buy the ticket, send the invite, set the date.",
-                the_no_to_say: "Say NO to more research: you already have 80% of the data; the other 20% will only come through action.",
-                mindset_shift: "From 'I need to be sure' to 'I need the courage to fail fast'.",
-                stoic_lesson: "Don't seek for everything to happen as you wish it would, but rather wish that everything happens as it actually will—then your life will flow well."
+                meaning: "Uncertainty v2 is linked to the lack of a material safety net or future plan.",
+                characteristics: ["Excessive worry about money", "Hesitation to invest in oneself", "Fear of scarcity"],
+                primary_risk: "Paralysis and loss of autonomy.",
+                recommended_focus: ["Financial planning", "Emergency fund", "Professional growth"],
+                next_step: "Write down all your fixed costs today.",
+                immediate_win: "Save or generate a symbolic amount today.",
+                the_no_to_say: "Say NO to impulsive spending due to anxiety.",
+                mindset_shift: "From 'I will go broke' to 'I am building my foundation'.",
+                stoic_lesson: "Poverty is not the lack of possessions, but the greedy longing for more. Focus on internal stability.",
+                stoic_principles: ["Wise frugality", "Prepare for winter", "Wealth lies in freedom"]
             }
         },
         es: {
-            one_liner: "Falta de datos futuristas que generan dudas en el presente.",
+            one_liner: "Inestabilidad en el pilar Financiero genera miedo al futuro.",
             report: {
-                meaning: "La incertidumbre es la ausencia de un ancla de decisión clara.",
-                characteristics: ["Búsqueda de validación externa", "Procrastinación de decisiones", "Ansiedad"],
-                primary_risk: "Pérdida de oportunidades por vacilación.",
-                recommended_focus: ["Definición de premisas mínimas", "Pruebas de validación", "Aceptación del riesgo"],
-                next_step: "Establece una fecha límite hoy para esa decisión pendiente.",
-                immediate_win: "Toma una decisión pequeña pero irreversible: compra la entrada, envía la invitación, fija la fecha.",
-                the_no_to_say: "Di NO a más investigación: ya tienes el 80% de los datos; el otro 20% solo vendrá con la acción.",
-                mindset_shift: "De 'Necesito estar seguro' a 'Necesito tener el coraje de equivocarme rápido'.",
-                stoic_lesson: "No busques que todo suceda como deseas, sino desea que todo suceda como realmente sucederá; entonces tu vida fluirá bien."
+                meaning: "La Incertidumbre v2 está ligada a la falta de una red de seguridad material o un plan futuro.",
+                characteristics: ["Preocupación excesiva por el dinero", "Dudas para invertir en uno mismo", "Miedo a la escasez"],
+                primary_risk: "Parálisis y pérdida de autonomía.",
+                recommended_focus: ["Planificación financiera", "Reserva de emergencia", "Crecimiento profesional"],
+                next_step: "Anota todos tus costos fijos hoy.",
+                immediate_win: "Ahorra o genera un valor simbólico hoy.",
+                the_no_to_say: "Di NO a gastos impulsivos por ansiedad.",
+                mindset_shift: "De 'Voy a quebrar' a 'Estoy construyendo mi base'.",
+                stoic_lesson: "La pobreza no es la falta de bienes, sino el ansia de tener más. Enfócate en la estabilidad interna.",
+                stoic_principles: ["Frugalidad sabia", "Prepárate para el invierno", "La riqueza está en la libertad"]
             }
         }
     },
     DISCONNECTION: {
         pt: {
-            one_liner: "Afastamento dos propósitos centrais e pilotagem automática.",
+            one_liner: "O pilar de Espiritualidade e Sentido está em erosão.",
             report: {
-                meaning: "Desconexão é a perda do 'porquê'. As tarefas são feitas mecanicamente.",
-                characteristics: ["Cinismo ou apatia", "Execução mecânica", "Sentimento de vazio"],
-                primary_risk: "Burnout silencioso ou crise de identidade.",
-                recommended_focus: ["Revisão de valores", "Feedback de mentores", "Hobby novo"],
-                next_step: "Revisite seus objetivos de 1 ano agora.",
-                immediate_win: "Ligue (não mande áudio) para uma pessoa que te inspira ou que você ajudou recentemente.",
-                the_no_to_say: "Diga NÃO a tarefas 'pão com manteiga' por um momento: pare de fazer o básico por inércia e procure o que te faz brilhar os olhos.",
-                mindset_shift: "De 'Eu só preciso terminar isso' para 'Por que eu comecei tudo isso mesmo?'.",
-                stoic_lesson: "Muitas vezes sofremos mais na imaginação do que na realidade. Reconecte-se com o presente e com o que realmente importa.",
-                stoic_principles: [
-                    "A vida sem propósito é como um navio sem leme.",
-                    "Não é a duração da vida que importa, mas a profundidade dela.",
-                    "Quem tem um porquê para viver pode suportar quase qualquer como."
-                ]
+                meaning: "A Desconexão v2 é o vazio existencial. Você está fazendo, mas não está 'sendo'.",
+                characteristics: ["Sentimento de inutilidade", "Apatia espiritual", "Falta de conexão com algo maior"],
+                primary_risk: "Depressão situacional ou crise de meia idade.",
+                recommended_focus: ["Retiro ou silêncio", "Contribuição social", "Filosofia"],
+                next_step: "Faça algo por alguém sem esperar nada em troca.",
+                immediate_win: "Passe 15 minutos olhando para o céu ou para a natureza, sem pensar.",
+                the_no_to_say: "Diga NÃO ao materialismo vazio.",
+                mindset_shift: "De 'O que eu ganho com isso?' para 'Como eu sirvo ao mundo?'.",
+                stoic_lesson: "Nós somos parte de um todo maior. Reencontre seu lugar no cosmos.",
+                stoic_principles: ["Cosmopolitismo", "Amor Fati", "Conexão Universal"]
             }
         },
         en: {
-            one_liner: "Detachment from core purposes and autopilot behavior.",
+            one_liner: "The Spirituality and Meaning pillar is eroding.",
             report: {
-                meaning: "Disconnection is the loss of the 'why'. Tasks are done mechanically.",
-                characteristics: ["Cynicism or apathy", "Mechanical execution", "Sense of emptiness"],
-                primary_risk: "Silent burnout or identity crisis.",
-                recommended_focus: ["Value review", "Mentor feedback", "New hobby"],
-                next_step: "Revisit your 1-year goals now.",
-                immediate_win: "Call (don't voice note) someone who inspires you or someone you helped recently.",
-                the_no_to_say: "Say NO to 'autopilot' tasks for a moment: stop doing the basics by inertia and seek what truly excites you.",
-                mindset_shift: "From 'I just need to finish this' to 'Wait, why did I start all of this in the first place?'.",
-                stoic_lesson: "We suffer more often in imagination than in reality. Reconnect with the present and what truly matters."
+                meaning: "Disconnection v2 is existential emptiness. You are 'doing' but not 'being'.",
+                characteristics: ["Sense of worthlessness", "Spiritual apathy", "Lack of connection with something larger"],
+                primary_risk: "Situational depression or mid-life crisis.",
+                recommended_focus: ["Retreat or silence", "Social contribution", "Philosophy"],
+                next_step: "Do something for someone without expecting anything in return.",
+                immediate_win: "Spend 15 minutes looking at the sky or nature, without thinking.",
+                the_no_to_say: "Say NO to empty materialism.",
+                mindset_shift: "From 'What do I get out of this?' to 'How do I serve the world?'.",
+                stoic_lesson: "We are part of a larger whole. Reconnect with your place in the cosmos.",
+                stoic_principles: ["Cosmopolitanism", "Amor Fati", "Universal Connection"]
             }
         },
         es: {
-            one_liner: "Alejamiento de los propósitos centrales y piloto automático.",
+            one_liner: "El pilar de Espiritualidad y Sentido está en erosión.",
             report: {
-                meaning: "La desconexión es la pérdida del 'por qué'. Las tareas se realizan mecánicamente.",
-                characteristics: ["Cinismo o apatía", "Ejecución mecánica", "Sentimiento de vacío"],
-                primary_risk: "Burnout silencioso o crisis de identidad.",
-                recommended_focus: ["Revisión de valores", "Feedback de mentores", "Nuevo hobby"],
-                next_step: "Vuelve a revisar tus objetivos de 1 año ahora.",
-                immediate_win: "Llama (no envíes audio) a una persona que te inspire o a quien hayas ayudado recientemente.",
-                the_no_to_say: "Di NO a las tareas de 'rutina' por un momento: deja de hacer lo básico por inercia y busca lo que te hace brillar los ojos.",
-                mindset_shift: "De 'Solo necesito terminar esto' a '¿Por qué empecé todo esto en primer lugar?'.",
-                stoic_lesson: "A menudo sufrimos más en la imaginación que en la realidad. Reconéctate con el presente y lo que realmente importa."
+                meaning: "La Desconexión v2 es el vacío existencial. Estás 'haciendo', pero no estás 'siendo'.",
+                characteristics: ["Sentimiento de inutilidad", "Apatía espiritual", "Falta de conexión con algo más grande"],
+                primary_risk: "Depresión situacional o crisis de identidad.",
+                recommended_focus: ["Retiro o silencio", "Contribución social", "Filosofía"],
+                next_step: "Haz algo por alguien sin esperar nada a cambio.",
+                immediate_win: "Pasa 15 minutos mirando al cielo o la naturaleza, sin pensar.",
+                the_no_to_say: "Di NO al materialismo vacío.",
+                mindset_shift: "De '¿Qué gano con esto?' a '¿Cómo sirvo al mundo?'.",
+                stoic_lesson: "Somos parte de un todo mayor. Reencuentra tu lugar en el cosmos.",
+                stoic_principles: ["Cosmopolitismo", "Amor Fati", "Conexión Universal"]
             }
         }
     },
     STAGNATION: {
         pt: {
-            one_liner: "Sensação de ausência de movimento apesar do esforço.",
+            one_liner: "O pilar de Identidade parou de evoluir por falta de novos desafios.",
             report: {
-                meaning: "Estagnação ocorre quando o sistema está em um platô sem crescimento.",
-                characteristics: ["Tédio repetitivo", "Sensação de teto atingido", "Falta de novos desafios"],
-                primary_risk: "Obsolescência e queda de motivação.",
-                recommended_focus: ["Novo aprendizado", "Mudança de ambiente", "Networking"],
-                next_step: "Marque uma conversa com alguém que está 3 passos à sua frente.",
-                immediate_win: "Force um desconforto: inscreva-se em um curso difícil ou aceite um projeto que você não sabe como fazer.",
-                the_no_to_say: "Diga NÃO ao conforto: pare de gastar energia no que você já domina 100%.",
-                mindset_shift: "De 'Eu estou seguro aqui' para 'Eu estou morrendo lentamente no conforto'.",
-                stoic_lesson: "É impossível para um homem aprender aquilo que ele acha que já sabe. Quebre a casca do conforto.",
-                stoic_principles: [
-                    "O conforto é o inimigo do progresso.",
-                    "Se você não está crescendo, está morrendo.",
-                    "A zona de conforto é um lugar bonito, mas nada cresce lá."
-                ]
+                meaning: "Estagnação v2 ocorre quando você parou de investir no próprio crescimento.",
+                characteristics: ["Tédio com a própria rotina", "Falta de novos aprendizados", "Conforto excessivo"],
+                primary_risk: "Obsolescência e perda do brilho pessoal.",
+                recommended_focus: ["Cursos difíceis", "Viagens", "Novos círculos sociais"],
+                next_step: "Inicie um novo aprendizado hoje.",
+                immediate_win: "Leia 10 páginas de um livro complexo sobre um tema novo.",
+                the_no_to_say: "Diga NÃO à mesma rotina de sempre.",
+                mindset_shift: "De 'Eu já sei o suficiente' para 'Eu sou um eterno aprendiz'.",
+                stoic_lesson: "Aquele que parou de ser melhor, parou de ser bom.",
+                stoic_principles: ["Eudaimonia", "Busca pela virtude", "Desafio constante"]
             }
         },
         en: {
-            one_liner: "Sensation of lack of movement despite effort.",
+            one_liner: "Identity pillar has stopped evolving due to lack of new challenges.",
             report: {
-                meaning: "Stagnation occurs when the system is on a plateau without growth.",
-                characteristics: ["Repetitive boredom", "Hitting a ceiling", "Lack of new challenges"],
-                primary_risk: "Obsolescence and drop in motivation.",
-                recommended_focus: ["New learning", "Change of environment", "Networking"],
-                next_step: "Schedule a talk with someone who is 3 steps ahead of you.",
-                immediate_win: "Force a discomfort: sign up for a difficult course or accept a project you don't know how to do yet.",
-                the_no_to_say: "Say NO to comfort: stop wasting energy on what you already master 100%.",
-                mindset_shift: "From 'I am safe here' to 'I am slowly dying in my comfort zone'.",
-                stoic_lesson: "It is impossible for a man to learn what he thinks he already knows. Break the crust of comfort."
+                meaning: "Stagnation v2 occurs when you have stopped investing in your own growth.",
+                characteristics: ["Boredom with your routine", "Lack of new learning", "Excessive comfort"],
+                primary_risk: "Obsolescence and loss of personal spark.",
+                recommended_focus: ["Difficult courses", "Travel", "New social circles"],
+                next_step: "Start a new learning path today.",
+                immediate_win: "Read 10 pages of a complex book on a new topic.",
+                the_no_to_say: "Say NO to the same old routine.",
+                mindset_shift: "From 'I know enough' to 'I am a lifelong learner'.",
+                stoic_lesson: "He who has stopped getting better has stopped being good.",
+                stoic_principles: ["Eudaimonia", "Pursuit of virtue", "Constant challenge"]
             }
         },
         es: {
-            one_liner: "Sensación de falta de movimiento a pesar del esfuerzo.",
+            one_liner: "El pilar de Identidad ha dejado de evolucionar por falta de nuevos desafíos.",
             report: {
-                meaning: "El estancamiento ocurre cuando el sistema está en una meseta sin crecimiento.",
-                characteristics: ["Aburrimiento repetitivo", "Sensación de techo alcanzado", "Falta de nuevos desafíos"],
-                primary_risk: "Obsolescencia y caída de la motivación.",
-                recommended_focus: ["Nuevo aprendizaje", "Cambio de entorno", "Networking"],
-                next_step: "Agenda una charla con alguien que esté 3 pasos por delante de ti.",
-                immediate_win: "Fuerza la incomodidad: inscríbete en un curso difícil o acepta un proyecto que no sepas cómo hacer.",
-                the_no_to_say: "Di NO a la comodidad: deja de gastar energía en lo que ya dominas al 100%.",
-                mindset_shift: "De 'Estoy seguro aquí' a 'Estoy muriendo lentamente en mi zona de confort'.",
-                stoic_lesson: "Es imposible para un hombre aprender lo que cree que ya sabe. Rompe la cáscara de la comodidad."
+                meaning: "El Estancamiento v2 ocurre cuando has dejado de invertir en tu propio crecimiento.",
+                characteristics: ["Aburrimiento con la propia rutina", "Falta de nuevos aprendizajes", "Comodidad excesiva"],
+                primary_risk: "Obsolescencia y pérdida del brillo personal.",
+                recommended_focus: ["Cursos difíciles", "Viajes", "Nuevos círculos sociales"],
+                next_step: "Inicia un nuevo aprendizaje hoy.",
+                immediate_win: "Lee 10 páginas de un libro complejo sobre un tema nuevo.",
+                the_no_to_say: "Di NO a la misma rutina de siempre.",
+                mindset_shift: "De 'Ya sé lo suficiente' a 'Soy un eterno aprendiz'.",
+                stoic_lesson: "El que ha dejado de mejorar, ha dejado de ser bueno.",
+                stoic_principles: ["Eudaimonia", "Búsqueda de la virtud", "Desafío constante"]
             }
         }
     },
     CLARITY: {
         pt: {
-            one_liner: "Visão nítida do contexto e das próximas ações.",
+            one_liner: "Os pilares de Trabalho e Propósito estão em alta sintonia.",
             report: {
-                meaning: "Clareza é o estado ideal de processamento. Você vê os nós e sabe como resolvê-los.",
-                characteristics: ["Foco sustentado", "Decisões rápidas", "Calma operacional"],
-                primary_risk: "Excesso de confiança ou subestimação de riscos.",
-                recommended_focus: ["Sistematização", "Documentação", "Expansão"],
-                next_step: "Documente o seu processo atual para replicá-lo.",
-                immediate_win: "Cronometre seu tempo em uma tarefa de alta complexidade e tente reduzir 10% através de sistema.",
-                the_no_to_say: "Diga NÃO a distrações 'brilhantes': não desvie do plano agora que ele está funcionando.",
-                mindset_shift: "De 'Eu estou correndo' para 'Eu estou construindo uma engrenagem que corre por mim'.",
-                stoic_lesson: "Aquele que é bom em dar desculpas raramente é bom em qualquer outra coisa. Mantenha a clareza e a disciplina.",
-                stoic_principles: [
-                    "A clareza de mente é a base de toda grande realização.",
-                    "Simplicidade é a sofisticação máxima.",
-                    "O sábio não busca mais, mas melhor."
-                ]
+                meaning: "Clareza v2 é quando você sabe quem é e para onde está indo profissionalmente.",
+                characteristics: ["Foco intencional", "Produtividade alta", "Senso de direção"],
+                primary_risk: "Exaustão por alta performance.",
+                recommended_focus: ["Manutenção", "Sistematização", "Legado"],
+                next_step: "Escreva seu manifesto pessoal de trabalho para o próximo semestre.",
+                immediate_win: "Passe 30 min planejando sua próxima semana estratégica.",
+                the_no_to_say: "Diga NÃO a oportunidades que não alinham com seu propósito.",
+                mindset_shift: "De 'Eu estou ocupado' para 'Eu estou focado'.",
+                stoic_lesson: "Se o homem não sabe a que porto navega, nenhum vento é favorável.",
+                stoic_principles: ["Foco do Arqueiro", "Prosenxe (Atenção)", "Ação Intencional"]
             }
         },
         en: {
-            one_liner: "Clear vision of context and next actions.",
+            one_liner: "Work and Purpose pillars are in high harmony.",
             report: {
-                meaning: "Clarity is the ideal state of processing. You see the nodes and know how to untie them.",
-                characteristics: ["Sustained focus", "Quick decisions", "Operational calm"],
-                primary_risk: "Overconfidence or underestimating risks.",
-                recommended_focus: ["Systematization", "Documentation", "Expansion"],
-                next_step: "Document your current process to replicate it.",
-                immediate_win: "Time yourself on a complex task and try to reduce it by 10% through systematic improvement.",
-                the_no_to_say: "Say NO to 'shiny object' distractions: don't deviate from the plan now that it's working.",
-                mindset_shift: "From 'I am running' to 'I am building a machine that runs for me'.",
-                stoic_lesson: "He who is good for making excuses is seldom good for anything else. Maintain clarity and discipline."
+                meaning: "Clarity v2 is when you know who you are and where you are going professionally.",
+                characteristics: ["Intentional focus", "High productivity", "Sense of direction"],
+                primary_risk: "Burnout from high performance.",
+                recommended_focus: ["Maintenance", "Systematization", "Legacy"],
+                next_step: "Write your personal work manifesto for the next six months.",
+                immediate_win: "Spend 30 min planning your next strategic week.",
+                the_no_to_say: "Say NO to opportunities that don't align with your purpose.",
+                mindset_shift: "From 'I am busy' to 'I am focused'.",
+                stoic_lesson: "If a man knows not which port he sails, no wind is favorable.",
+                stoic_principles: ["Archer's Focus", "Prosenxe (Attention)", "Intentional Action"]
             }
         },
         es: {
-            one_liner: "Visión clara del contexto y de las próximas acciones.",
+            one_liner: "Los pilares de Trabajo y Propósito están en alta sintonía.",
             report: {
-                meaning: "La claridad es el estado ideal de procesamiento. Ves los nudos y sabes cómo deshacerlos.",
-                characteristics: ["Enfoque sostenido", "Decisiones rápidas", "Calma operativa"],
-                primary_risk: "Exceso de confianza o subestimación de riesgos.",
-                recommended_focus: ["Sistematización", "Documentación", "Expansión"],
-                next_step: "Documenta tu proceso actual para replicarlo.",
-                immediate_win: "Cronometra tu tiempo en una tarea compleja e intenta reducirlo un 10% mediante una mejora sistemática.",
-                the_no_to_say: "Di NO a las 'distracciones brillantes': no te desvíes del plan ahora que está funcionando.",
-                mindset_shift: "De 'Estoy corriendo' a 'Estoy construyendo una máquina que corre por mí'.",
-                stoic_lesson: "El que es bueno para poner excusas rara vez es bueno para cualquier otra cosa. Mantén la claridad y la disciplina."
+                meaning: "Claridad v2 es cuando sabes quién eres y hacia dónde te diriges profesionalmente.",
+                characteristics: ["Enfoque intencional", "Alta productividad", "Sentido de dirección"],
+                primary_risk: "Agotamiento por alto rendimiento.",
+                recommended_focus: ["Mantenimiento", "Sistematización", "Legado"],
+                next_step: "Escribe tu manifiesto de trabajo personal para el próximo semestre.",
+                immediate_win: "Pasa 30 min planificando tu próxima semana estratégica.",
+                the_no_to_say: "Di NO a oportunidades que no se alineen con tu propósito.",
+                mindset_shift: "De 'Estoy ocupado' a 'Estoy enfocado'.",
+                stoic_lesson: "Si un hombre no sabe a qué puerto navega, ningún viento es favorable.",
+                stoic_principles: ["Enfoque del Arquero", "Prosenxe (Atención)", "Action Intencional"]
             }
         }
     },
     ALIGNMENT: {
         pt: {
-            one_liner: "Sincronia entre intenção, ação e resultado atual.",
+            one_liner: "Harmonia sistêmica entre os 7 pilares fundamentais.",
             report: {
-                meaning: "Alinhamento é o fluxo máximo. Energia gasta proporcional ao resultado.",
-                characteristics: ["Flow", "Resultados sem esforço", "Alta resiliência"],
-                primary_risk: "Acomodação no sucesso momentâneo.",
-                recommended_focus: ["Manutenção de hábitos", "Compartilhamento", "Gratidão"],
-                next_step: "Celebre um pequeno sucesso de hoje.",
-                immediate_win: "Ajude alguém a chegar onde você está agora: o ensino solidifica seu alinhamento.",
-                the_no_to_say: "Diga NÃO a mudanças desnecessárias: proteja seus rituais de energia a todo custo.",
-                mindset_shift: "De 'O que mais eu preciso fazer?' para 'Como posso sustentar esse ritmo sem esforço?'.",
-                stoic_lesson: "A perfeição da vida é passar cada dia como se fosse o último, sem agitação, sem torpor e sem pretensão.",
-                stoic_principles: [
-                    "Viva em harmonia com a natureza e você viverá em harmonia consigo mesmo.",
-                    "O sucesso não é fazer mais, mas estar em paz com o que você faz.",
-                    "Quando você está alinhado, o esforço se torna fluxo."
-                ]
+                meaning: "Alinhamento v2 é a paz de quem tem uma base sólida em todas as áreas da vida.",
+                characteristics: ["Gratidão profunda", "Resiliência total", "Flow existencial"],
+                primary_risk: "Arrogância ou relaxamento excessivo.",
+                recommended_focus: ["Mentorização", "Gratidão constante", "Sustentabilidade"],
+                next_step: "Agradeça a 3 pessoas que fazem parte da sua rede de suporte hoje.",
+                immediate_win: "Compartilhe uma lição aprendida com alguém.",
+                the_no_to_say: "Diga NÃO à complacência.",
+                mindset_shift: "De 'Eu conquistei' para 'Eu sustento com virtude'.",
+                stoic_lesson: "A felicidade é um fluxo de vida suave e sem obstáculos.",
+                stoic_principles: ["Gratidão estoica", "Apatheia (Paz interior)", "Vida virtuosa"]
             }
         },
         en: {
-            one_liner: "Synchrony between intention, action, and current outcome.",
+            one_liner: "Systemic harmony between the 7 fundamental pillars.",
             report: {
-                meaning: "Alignment is the maximum flow. Energy spent proportional to outcome.",
-                characteristics: ["Flow", "Effortless results", "High resilience"],
-                primary_risk: "Settling in momentary success.",
-                recommended_focus: ["Habit maintenance", "Sharing vision", "Gratitude"],
-                next_step: "Celebrate a small success from today.",
-                immediate_win: "Help someone get where you are now: teaching solidifies your own alignment.",
-                the_no_to_say: "Say NO to unnecessary changes: protect your energy rituals at all costs.",
-                mindset_shift: "From 'What else do I need to do?' to 'How can I sustain this effortless rhythm?'.",
-                stoic_lesson: "Perfect behavior is to live each day as if it were your last—without frenzy, without apathy, without pretense."
+                meaning: "Alignment v2 is the peace of someone who has a solid foundation in all areas of life.",
+                characteristics: ["Deep gratitude", "Total resilience", "Existential flow"],
+                primary_risk: "Arrogance or excessive relaxation.",
+                recommended_focus: ["Mentoring", "Constant gratitude", "Sustainability"],
+                next_step: "Thank 3 people who are part of your support network today.",
+                immediate_win: "Share a lesson learned with someone.",
+                the_no_to_say: "Say NO to complacency.",
+                mindset_shift: "From 'I achieved it' to 'I sustain it with virtue'.",
+                stoic_lesson: "Happiness is a smooth and unobstructed flow of life.",
+                stoic_principles: ["Stoic Gratitude", "Apatheia (Inner Peace)", "Virtuous Life"]
             }
         },
         es: {
-            one_liner: "Sincronía entre intención, acción y resultado actual.",
+            one_liner: "Armonía sistémica entre los 7 pilares fundamentales.",
             report: {
-                meaning: "La alineación es el flujo máximo. Energía gastada proporcional al resultado.",
-                characteristics: ["Fluidez", "Resultados sin esfuerzo", "Alta resiliencia"],
-                primary_risk: "Acomodación en el éxito momentáneo.",
-                recommended_focus: ["Mantenimiento de hábitos", "Compartir visión", "Gratitud"],
-                next_step: "Celebra un pequeño éxito de hoy.",
-                immediate_win: "Ayuda a alguien a llegar a donde estás ahora: la enseñanza solidifica tu propia alineación.",
-                the_no_to_say: "Di NO a cambios innecesarios: protege tus rituales de energía a toda costa.",
-                mindset_shift: "De '¿Qué más necesito hacer?' a '¿Cómo puedo mantener este ritmo sin esfuerzo?'.",
-                stoic_lesson: "La perfección de carácter consiste en pasar cada día como se fuera el último, sin agitación, sin letargia y sin hipocresía."
+                meaning: "Alineación v2 es la paz de quien tiene una base sólida en todas las áreas de la vida.",
+                characteristics: ["Gratitud profunda", "Resiliencia total", "Flujo existencial"],
+                primary_risk: "Arrogancia o relajación excesiva.",
+                recommended_focus: ["Mentoría", "Gratitud constante", "Sostenibilidad"],
+                next_step: "Agradece a 3 personas que forman parte de tu red de apoyo hoy.",
+                immediate_win: "Comparte una lección aprendida con alguien.",
+                the_no_to_say: "Di NO a la complacencia.",
+                mindset_shift: "De 'Lo logré' a 'Lo mantengo con virtud'.",
+                stoic_lesson: "La felicidad es un flujo de vida suave y sin obstáculos.",
+                stoic_principles: ["Gratitud estoica", "Apatheia (Paz interior)", "Vida virtuosa"]
             }
         }
     },
 };
 
 export function calculateDiagnosis(answers: Record<number, number>, locale: Locale = "pt"): DiagnosisResult {
-    // Scoring logic for 16 questions
-    // Map of question ID to influencing categories
-    const points: Record<DiagnosisState, number> = {
-        CONFUSION: (answers[3] || 0) + (answers[4] || 0),
-        OVERLOAD: (answers[1] || 0) + (answers[15] || 0) + (answers[16] || 0),
-        REACTIVITY: (answers[5] || 0) + (answers[8] || 0),
-        UNCERTAINTY: (answers[9] || 0) + (answers[12] || 0),
-        DISCONNECTION: (answers[7] || 0),
-        STAGNATION: (answers[10] || 0) + (answers[13] || 0),
-        CLARITY: (answers[2] || 0) + (answers[14] || 0),
-        ALIGNMENT: (answers[6] || 0) + (answers[11] || 0)
+    // Pillars mapping
+    const pillarMap = {
+        SAUDE: [1, 2, 3],
+        TRABALHO: [4, 5, 6],
+        RELACIONAMENTOS: [7, 8, 9],
+        FINANCEIRO: [10, 11, 12],
+        IDENTIDADE: [13, 14, 15],
+        LAZER: [16, 17, 18],
+        ESPIRITUALIDADE: [19, 20, 21]
     };
 
-    // Normalize points (since different number of questions per state)
-    const counts: Record<DiagnosisState, number> = {
-        CONFUSION: 2, OVERLOAD: 3, REACTIVITY: 2, UNCERTAINTY: 2,
-        DISCONNECTION: 1, STAGNATION: 2, CLARITY: 2, ALIGNMENT: 2
+    const pillarColors = {
+        SAUDE: "#FF5F5F",
+        TRABALHO: "#4FACFE",
+        RELACIONAMENTOS: "#FF5D9E",
+        FINANCEIRO: "#2AF598",
+        IDENTIDADE: "#C471ED",
+        LAZER: "#FEE140",
+        ESPIRITUALIDADE: "#7980FF"
     };
 
-    const averages = (Object.keys(points) as DiagnosisState[]).map(state => ({
-        state,
-        avg: points[state] / counts[state]
-    }));
+    const pillarLabels = {
+        pt: { SAUDE: "Saúde", TRABALHO: "Trabalho", RELACIONAMENTOS: "Relações", FINANCEIRO: "Financeiro", IDENTIDADE: "Identidade", LAZER: "Lazer", ESPIRITUALIDADE: "Sentido" },
+        en: { SAUDE: "Health", TRABALHO: "Work", RELACIONAMENTOS: "Relations", FINANCEIRO: "Finance", IDENTIDADE: "Identity", LAZER: "Leisure", ESPIRITUALIDADE: "Meaning" },
+        es: { SAUDE: "Salud", TRABALHO: "Trabajo", RELACIONAMENTOS: "Relaciones", FINANCEIRO: "Finanzas", IDENTIDADE: "Identidad", LAZER: "Ocio", ESPIRITUALIDADE: "Sentido" }
+    };
 
-    // Find state with highest average
-    const winner = averages.reduce((prev, current) => (prev.avg > current.avg) ? prev : current);
+    const scores: Record<string, number> = {};
+    const pillarScoresList: PillarScore[] = [];
 
-    const data = statesData[winner.state][locale];
-    const config = STATE_CONFIGS[winner.state];
+    (Object.entries(pillarMap) as [keyof typeof pillarMap, number[]][]).forEach(([name, qIds]) => {
+        const sum = qIds.reduce((acc, qId) => acc + (answers[qId] || 0), 0);
+        const avg = sum / qIds.length;
+        scores[name] = avg;
+        pillarScoresList.push({
+            label: pillarLabels[locale][name],
+            value: Math.round(avg * 20), // Scale 1-5 to 20-100
+            color: pillarColors[name]
+        });
+    });
+
+    const overallAvg = Object.values(scores).reduce((a, b) => a + b, 0) / 7;
+
+    // Determination Logic
+    let state: DiagnosisState = "CLARITY";
+
+    if (overallAvg >= 4.5) state = "ALIGNMENT";
+    else if (overallAvg >= 3.8) state = "CLARITY";
+    else if (scores.SAUDE + scores.LAZER < 5.5) state = "OVERLOAD";
+    else if (scores.IDENTIDADE + scores.ESPIRITUALIDADE < 5.5) state = "DISCONNECTION";
+    else if (scores.TRABALHO + scores.FINANCEIRO < 5.5) state = "UNCERTAINTY";
+    else if (scores.RELACIONAMENTOS < 2.5) state = "REACTIVITY";
+    else if (scores.IDENTIDADE < 3) state = "CONFUSION";
+    else if (overallAvg < 2.8) state = "STAGNATION";
+
+    const data = statesData[state][locale];
+    const config = STATE_CONFIGS[state];
+
+    // V3 Intelligence Logic
+    const bottleneck = pillarScoresList.reduce((prev, curr) => prev.value < curr.value ? prev : curr);
+
+    // Antifragility: (Identity + Meaning + Health) / 3
+    const idScore = pillarScoresList.find(p => p.label === pillarLabels[locale].IDENTIDADE)?.value || 0;
+    const spirScore = pillarScoresList.find(p => p.label === pillarLabels[locale].ESPIRITUALIDADE)?.value || 0;
+    const healthScore = pillarScoresList.find(p => p.label === pillarLabels[locale].SAUDE)?.value || 0;
+    const antifragilityScore = Math.round((idScore + spirScore + healthScore) / 3);
+
+    const correlations: string[] = [];
+    const workScore = pillarScoresList.find(p => p.label === pillarLabels[locale].TRABALHO)?.value || 0;
+    const financeScore = pillarScoresList.find(p => p.label === pillarLabels[locale].FINANCEIRO)?.value || 0;
+    const relScore = pillarScoresList.find(p => p.label === pillarLabels[locale].RELACIONAMENTOS)?.value || 0;
+
+    if (locale === "pt") {
+        if (workScore > 80 && healthScore < 50) correlations.push("Sua alta performance no Trabalho está asfixiando sua Recuperação Física.");
+        if (financeScore < 40 && relScore < 50) correlations.push("A instabilidade Financeira está gerando reatividade nos seus Relacionamentos.");
+        if (idScore > 85 && spirScore < 40) correlations.push("Sua forte Identidade precisa de um Propósito maior para evitar o vazio existencial.");
+        if (healthScore < 40) correlations.push("Sua baixa Vitalidade é o principal freio para sua clareza mental hoje.");
+    } else {
+        if (workScore > 80 && healthScore < 50) correlations.push("High Work performance is suffocating your Physical Recovery.");
+        if (financeScore < 40 && relScore < 50) correlations.push("Financial instability is triggering reactivity in your Relationships.");
+        if (idScore > 85 && spirScore < 40) correlations.push("Your strong Identity needs a higher Purpose to avoid existential emptiness.");
+    }
+
+    if (correlations.length === 0) {
+        correlations.push(locale === "pt" ? "Seus pilares operam em relativa harmonia sistêmica." : "Your pillars operate in relative systemic harmony.");
+    }
 
     return {
-        state: winner.state,
+        state,
         label: config.labels[locale],
         color: config.color,
-        confidence: Math.floor(75 + winner.avg * 5), // Higher average = higher confidence
+        confidence: Math.min(100, Math.floor(70 + overallAvg * 6)),
         one_liner: data.one_liner,
-        report: data.report
+        report: data.report,
+        pillarScores: pillarScoresList,
+        v3Insights: {
+            antifragilityScore,
+            bottleneckLabel: bottleneck.label,
+            correlations,
+            archetype: overallAvg > 4 ? (locale === "pt" ? "Arquiteto do Destino" : "Architect of Destiny") : (locale === "pt" ? "Explorador em Transição" : "Transition Explorer")
+        }
     };
 }

@@ -32,7 +32,11 @@
         "step2_title": "02. Core Profile",
         "step2_desc": "We identify which of the 8 operational states you are in through our analysis engine.",
         "step3_title": "03. Exit Plan",
-        "step3_desc": "Detailed report with immediate practical actions to restore your alignment."
+        "step3_desc": "Detailed report with immediate practical actions to restore your alignment.",
+        "methodology_title": "The Science of 7 Pillars",
+        "methodology_desc": "It's not just a questionnaire. It's a systemic algorithm that assesses the interconnection between Health, Work, Relations, Finances, Identity, Leisure, and Meaning.",
+        "enterprise_title": "STATUS CORE for Elite Teams",
+        "enterprise_desc": "Reduce burnout and maximize operational clarity. Anonymous diagnostics for high-performance groups seeking the next level of alignment."
     },
     "assessment": {
         "title": "State Diagnosis",
@@ -73,5 +77,14 @@
         "qualitative_analysis": "Personal Context Analysis",
         "stoic_wisdom": "Stoic Wisdom",
         "stoic_lesson": "Lesson for your State"
+    },
+    "pillars": {
+        "health": "Health",
+        "work": "Work",
+        "relationships": "Relationships",
+        "finances": "Finances",
+        "identity": "Identity",
+        "leisure": "Leisure",
+        "spirituality": "Meaning"
     }
 }

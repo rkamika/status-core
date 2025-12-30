@@ -114,3 +114,49 @@
     @apply mx-auto px-4 md:px-6 max-w-7xl;
   }
 }
+
+/* Gold Standard PDF Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  .dark {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --border: 0 0% 90%;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .card,
+  .p-10,
+  .p-12 {
+    break-inside: avoid;
+    border: 1px solid #eee !important;
+    box-shadow: none !important;
+  }
+
+  .radar-chart {
+    page-break-before: always;
+  }
+
+  h1 {
+    font-size: 32pt !important;
+  }
+}
