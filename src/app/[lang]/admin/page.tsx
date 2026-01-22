@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     BarChart3,
@@ -16,12 +16,16 @@ import {
     Eye,
     Globe,
     Zap,
-    Shield
+    Key,
+    User,
+    LogOut,
+    AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     getGlobalStats,
     getSystemSetting,
@@ -29,38 +33,43 @@ import {
     getPromoCodes,
     createPromoCode,
     deactivatePromoCode,
+    updateAdminPassword,
+    ADMIN_EMAIL,
     GlobalStats,
     PromoCode
 } from "@/lib/admin";
 import { Locale } from "@/lib/types";
 import { Logo } from "@/components/logo";
+import { supabase } from "@/lib/supabase";
 
 export default function AdminDashboard({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
 
     // Auth State
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState<any>(null);
+    const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+    const [email, setEmail] = useState(ADMIN_EMAIL);
     const [password, setPassword] = useState("");
-    const [authError, setAuthError] = useState(false);
+    const [authError, setAuthError] = useState("");
+
+    // Force Change Password State
+    const [showResetFlow, setShowResetFlow] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
     // Data State
     const [stats, setStats] = useState<GlobalStats | null>(null);
     const [price, setPrice] = useState("97.00");
     const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingData, setIsLoadingData] = useState(false);
 
     // UI State
     const [newPromoCode, setNewPromoCode] = useState("");
     const [newPromoDiscount, setNewPromoDiscount] = useState("100");
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            refreshData();
-        }
-    }, [isAuthenticated]);
-
-    async function refreshData() {
-        setIsLoading(true);
+    const refreshData = useCallback(async () => {
+        setIsLoadingData(true);
         try {
             const [s, p, pc] = await Promise.all([
                 getGlobalStats(),
@@ -73,19 +82,89 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
         } catch (err) {
             console.error(err);
         } finally {
-            setIsLoading(false);
+            setIsLoadingData(false);
         }
-    }
+    }, []);
 
-    const handleLogin = (e: React.FormEvent) => {
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user?.email === ADMIN_EMAIL) {
+                setUser(session.user);
+                // Check if they need to change password (metadata)
+                if (session.user.user_metadata?.is_initial_login !== false) {
+                    setShowResetFlow(true);
+                } else {
+                    refreshData();
+                }
+            }
+            setIsLoadingAuth(false);
+        };
+        checkSession();
+    }, [refreshData]);
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // MVP: Simple hardcoded password for the owner
-        if (password === "status-admin-2026") {
-            setIsAuthenticated(true);
-            setAuthError(false);
-        } else {
-            setAuthError(true);
+        setAuthError("");
+        if (email !== ADMIN_EMAIL) {
+            setAuthError("Unauthorized email address.");
+            return;
         }
+
+        setIsLoadingAuth(true);
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) throw error;
+            if (data.user?.email !== ADMIN_EMAIL) {
+                await supabase.auth.signOut();
+                throw new Error("Unauthorized access.");
+            }
+
+            setUser(data.user);
+            // If user_metadata doesn't have is_initial_login: false, it's first login
+            if (data.user.user_metadata?.is_initial_login !== false) {
+                setShowResetFlow(true);
+            } else {
+                refreshData();
+            }
+        } catch (err: any) {
+            setAuthError(err.message || "Invalid credentials");
+        } finally {
+            setIsLoadingAuth(false);
+        }
+    };
+
+    const handlePasswordUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            setAuthError("Passwords do not match.");
+            return;
+        }
+        if (newPassword.length < 8) {
+            setAuthError("Password must be at least 8 characters.");
+            return;
+        }
+
+        setIsUpdatingPassword(true);
+        try {
+            await updateAdminPassword(newPassword);
+            setShowResetFlow(false);
+            refreshData();
+        } catch (err: any) {
+            setAuthError(err.message || "Failed to update password");
+        } finally {
+            setIsUpdatingPassword(false);
+        }
+    };
+
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
+        setUser(null);
+        setShowResetFlow(false);
     };
 
     const handleUpdatePrice = async () => {
@@ -105,39 +184,133 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
         refreshData();
     };
 
-    if (!isAuthenticated) {
+    if (isLoadingAuth) {
+        return (
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+                <RefreshCcw className="h-8 w-8 text-primary animate-spin" />
+            </div>
+        );
+    }
+
+    if (!user) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
                     className="w-full max-w-md space-y-8"
                 >
                     <div className="text-center space-y-4">
                         <Logo lang={lang} className="mx-auto" />
-                        <h1 className="text-3xl font-black font-heading tracking-tighter italic text-white uppercase">Admin Vault</h1>
+                        <h1 className="text-3xl font-black font-heading tracking-tighter italic text-white uppercase">Admin Secure Node</h1>
                     </div>
 
-                    <Card className="bg-zinc-900 border-zinc-800 shadow-2xl">
+                    <Card className="bg-zinc-900 border-zinc-800 shadow-2xl overflow-hidden relative">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-primary/20" />
                         <CardHeader>
-                            <CardTitle className="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                                <Lock className="h-4 w-4" /> Restricted Access
+                            <CardTitle className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                <Lock className="h-4 w-4" /> Identity Verification
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <form onSubmit={handleLogin} className="space-y-4">
-                                <div className="space-y-2">
-                                    <Input
-                                        type="password"
-                                        placeholder="Admin Secret Key"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className={`bg-black border-zinc-800 h-12 text-center text-xl font-bold tracking-widest ${authError ? 'border-rose-500' : ''}`}
-                                    />
-                                    {authError && <p className="text-xs text-rose-500 font-bold text-center">Invalid credentials</p>}
+                            <form onSubmit={handleLogin} className="space-y-6">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Admin Email</Label>
+                                        <div className="relative">
+                                            <User className="absolute left-3 top-3 h-4 w-4 text-zinc-600" />
+                                            <Input
+                                                type="email"
+                                                placeholder="admin@statuscore.com"
+                                                value={email}
+                                                readOnly
+                                                className="bg-black border-zinc-800 pl-10 text-zinc-400 font-bold"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Password</Label>
+                                        <div className="relative">
+                                            <Key className="absolute left-3 top-3 h-4 w-4 text-zinc-600" />
+                                            <Input
+                                                type="password"
+                                                placeholder="••••••••"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                className="bg-black border-zinc-800 pl-10 font-bold tracking-widest"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                                <Button className="w-full h-12 font-black uppercase tracking-widest" type="submit">
-                                    Unlock Dashboard
+                                {authError && (
+                                    <motion.div
+                                        initial={{ opacity: 0, x: -5 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        className="flex items-center gap-2 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-500 text-xs font-bold"
+                                    >
+                                        <AlertCircle className="h-4 w-4 shrink-0" />
+                                        {authError}
+                                    </motion.div>
+                                )}
+                                <Button className="w-full h-12 font-black uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-colors" type="submit">
+                                    Authenticate Access
+                                </Button>
+                            </form>
+                        </CardContent>
+                    </Card>
+                    <p className="text-[10px] text-center text-zinc-600 font-black uppercase tracking-[0.3em]">Encrypted Session Node v4.0</p>
+                </motion.div>
+            </div>
+        );
+    }
+
+    if (showResetFlow) {
+        return (
+            <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full max-w-md"
+                >
+                    <Card className="bg-zinc-900 border-primary/20 shadow-2xl relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-primary animate-pulse" />
+                        <CardHeader>
+                            <CardTitle className="text-2xl font-black italic uppercase tracking-tight text-white">Secure Initialization</CardTitle>
+                            <CardDescription className="text-zinc-400 font-medium">
+                                This is your first login. For your security, you must define a new permanent password.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handlePasswordUpdate} className="space-y-6">
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">New Secure Password</Label>
+                                        <Input
+                                            type="password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            className="bg-black border-zinc-800 font-bold tracking-widest"
+                                            placeholder="Min 8 characters"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Confirm Password</Label>
+                                        <Input
+                                            type="password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            className="bg-black border-zinc-800 font-bold tracking-widest"
+                                            placeholder="Repeat password"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                {authError && (
+                                    <p className="text-xs text-rose-500 font-bold bg-rose-500/10 p-2 rounded border border-rose-500/20">{authError}</p>
+                                )}
+                                <Button className="w-full h-12 bg-primary text-black font-black uppercase tracking-widest hover:bg-primary/90" type="submit" disabled={isUpdatingPassword}>
+                                    {isUpdatingPassword ? <RefreshCcw className="h-5 w-5 animate-spin" /> : "Update & Access Dashboard"}
                                 </Button>
                             </form>
                         </CardContent>
@@ -157,15 +330,26 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
                     </Badge>
                 </div>
                 <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 hidden md:block">
+                        Session: {user.email}
+                    </span>
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={refreshData}
-                        disabled={isLoading}
+                        disabled={isLoadingData}
                         className="text-zinc-500 hover:text-white"
                     >
-                        <RefreshCcw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                        <RefreshCcw className={`h-4 w-4 mr-2 ${isLoadingData ? 'animate-spin' : ''}`} />
                         Refresh
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleLogout}
+                        className="text-zinc-500 hover:text-rose-500"
+                    >
+                        <LogOut className="h-4 w-4" />
                     </Button>
                 </div>
             </header>

@@ -18,6 +18,14 @@ export interface PromoCode {
     created_at: string;
 }
 
+// ADMIN WHITELIST
+export const ADMIN_EMAIL = "rodrigo.kamikihara@gmail.com";
+
+export async function isAdmin(): Promise<boolean> {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user?.email === ADMIN_EMAIL;
+}
+
 // 1. GET GLOBAL STATS
 export async function getGlobalStats(): Promise<GlobalStats> {
     try {
@@ -134,5 +142,18 @@ export async function deactivatePromoCode(id: string): Promise<void> {
         await supabase.from('promo_codes').update({ is_active: false }).eq('id', id);
     } catch (error) {
         console.error('Error deactivating promo code:', error);
+    }
+}
+
+export async function updateAdminPassword(newPassword: string): Promise<void> {
+    try {
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword,
+            data: { is_initial_login: false } // Mark that user has changed password
+        });
+        if (error) throw error;
+    } catch (error) {
+        console.error('Error updating admin password:', error);
+        throw error;
     }
 }
