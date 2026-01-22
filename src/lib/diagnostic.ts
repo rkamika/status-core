@@ -14,6 +14,7 @@ export interface PillarScore {
     label: string;
     value: number; // 0 to 100
     color: string;
+    insight: string;
 }
 
 export interface ReportContent {
@@ -579,14 +580,59 @@ export function calculateDiagnosis(answers: Record<number, number>, locale: Loca
     const scores: Record<string, number> = {};
     const pillarScoresList: PillarScore[] = [];
 
+    const getPillarInsight = (name: string, score: number, loc: Locale) => {
+        const insights: Record<string, Record<Locale, { low: string, mid: string, high: string }>> = {
+            SAUDE: {
+                pt: { low: "Nível crítico de vitalidade. Sua capacidade de resposta biológica está comprometida.", mid: "Estado de manutenção básica. Existe energia, mas falta reserva para alta performance.", high: "Vitalidade excepcional. Seu corpo é uma máquina de suporte para sua mente." },
+                en: { low: "Critical vitality level. Your biological response capacity is compromised.", mid: "Basic maintenance state. Energy exists, but lacks reserve for high performance.", high: "Exceptional vitality. Your body is a support machine for your mind." },
+                es: { low: "Nivel crítico de vitalidad. Su capacidad de respuesta biológica está comprometida.", mid: "Estado de mantenimiento básico. Hay energía, pero falta reserva para el alto rendimiento.", high: "Vitalidad excepcional. Su cuerpo es una máquina de soporte para su mente." }
+            },
+            TRABALHO: {
+                pt: { low: "Desalinhamento profissional severo ou falta de progresso claro.", mid: "Execução estável, mas o potencial de impacto ainda não foi totalmente liberado.", high: "Maestria profissional. Você opera em estado de fluxo e geração de valor constante." },
+                en: { low: "Severe professional misalignment or lack of clear progress.", mid: "Stable execution, but impact potential has not yet been fully released.", high: "Professional mastery. You operate in a state of flow and constant value generation." },
+                es: { low: "Desalineación profesional severa o falta de progreso claro.", mid: "Ejecución estable, pero el potencial de impacto aún no se ha liberado por completo.", high: "Maestría profesional. Usted opera en un estado de flujo y generación de valor constante." }
+            },
+            RELACIONAMENTOS: {
+                pt: { low: "Isolamento ou toxicidade sistêmica. Suas conexões estão drenando sua energia.", mid: "Círculos estáveis, mas falta profundidade ou suporte emocional genuíno.", high: "Ecossistema relacional poderoso. Sua rede é sua maior fonte de segurança e suporte." },
+                en: { low: "Isolation or systemic toxicity. Your connections are draining your energy.", mid: "Stable circles, but lack depth or genuine emotional support.", high: "Powerful relational ecosystem. Your network is your greatest source of security and support." },
+                es: { low: "Aislamiento o toxicidad sistémica. Sus conexiones están drenando su energía.", mid: "Círculos estables, pero falta profundidad o apoyo emocional genuino.", high: "Ecosistema relacional poderoso. Su red es su mayor fuente de seguridad y apoyo." }
+            },
+            FINANCEIRO: {
+                pt: { low: "Escassez severa ou desorganização que gera ansiedade constante.", mid: "Estabilidade básica, mas sem a autonomia necessária para decisões audaciosas.", high: "Antifragilidade financeira. Seus recursos sustentam sua liberdade e expansão." },
+                en: { low: "Severe scarcity or disorganization generating constant anxiety.", mid: "Basic stability, but without the autonomy needed for audacious decisions.", high: "Financial antifragility. Your resources sustain your freedom and expansion." },
+                es: { low: "Escasez severa o desorganización que genera ansiedad constante.", mid: "Estabilidad básica, pero sin la autonomía necesaria para decisiones audaces.", high: "Antifragilidad financiera. Sus recursos sostienen su libertad y expansión." }
+            },
+            IDENTIDADE: {
+                pt: { low: "Crise de self. Falta clareza sobre valores e limites pessoais.", mid: "Você sabe quem é, mas ainda se curva a pressões externas excessivas.", high: "Sobraniedade absoluta. Sua identidade é o eixo inabalável de todas as suas ações." },
+                en: { low: "Self-crisis. Lack of clarity about personal values and boundaries.", mid: "You know who you are, but still bow to excessive external pressures.", high: "Absolute sovereignty. Your identity is the unshakable axis of all your actions." },
+                es: { low: "Crisis de identidad. Falta de claridad sobre valores y límites personales.", mid: "Sabe quién es, pero todavía se pliega a presiones externas excesivas.", high: "Soberanía absoluta. Su identidad es el eje inquebrantable de todas sus acciones." }
+            },
+            LAZER: {
+                pt: { low: "Anedonia ou negligência total com a diversão. Risco alto de colapso por rigidez.", mid: "Momentos de pausa ocorrem, mas não geram regeneração profunda.", high: "Regeneração ativa. Você utiliza o lazer como ferramenta estratégica de alta performance." },
+                en: { low: "Anhedonia or total neglect of fun. High risk of collapse due to rigidity.", mid: "Pauses occur, but do not generate deep regeneration.", high: "Active regeneration. You use leisure as a strategic high-performance tool." },
+                es: { low: "Anhedonia o negligencia total con la diversión. Alto riesgo de colapso por rigidez.", mid: "Hay momentos de pausa, pero no generan una regeneración profunda.", high: "Regeneración activa. Utiliza el ocio como herramienta estratégica de alto rendimiento." }
+            },
+            ESPIRITUALIDADE: {
+                pt: { low: "Vazio existencial profundo. Suas ações carecem de um porquê maior.", mid: "Conexão esporádica com propósito, mas o cotidiano ainda parece puramente material.", high: "Propósito transcendental. Existe uma conexão clara com o Sentido que guia sua vida." },
+                en: { low: "Deep existential emptiness. Your actions lack a higher why.", mid: "Sporadic connection with purpose, but everyday life still feels purely material.", high: "Transcendental purpose. There is a clear connection with the Meaning that guides your life." },
+                es: { low: "Vacío existencial profundo. Sus acciones carecen de un porqué mayor.", mid: "Conexión esporádica con el propósito, pero lo cotidiano aún parece puramente material.", high: "Propósito trascendental. Existe una conexión clara con el Sentido que guía su vida." }
+            }
+        };
+
+        const tier = score < 40 ? "low" : score < 75 ? "mid" : "high";
+        return insights[name][loc][tier];
+    };
+
     (Object.entries(pillarMap) as [keyof typeof pillarMap, number[]][]).forEach(([name, qIds]) => {
         const sum = qIds.reduce((acc, qId) => acc + (answers[qId] || 0), 0);
         const avg = sum / qIds.length;
+        const scoreValue = Math.round(avg * 20);
         scores[name] = avg;
         pillarScoresList.push({
             label: pillarLabels[locale][name],
-            value: Math.round(avg * 20), // Scale 1-5 to 20-100
-            color: pillarColors[name]
+            value: scoreValue,
+            color: pillarColors[name],
+            insight: getPillarInsight(name, scoreValue, locale)
         });
     });
 
@@ -626,14 +672,24 @@ export function calculateDiagnosis(answers: Record<number, number>, locale: Loca
         if (financeScore < 40 && relScore < 50) correlations.push("A instabilidade Financeira está gerando reatividade nos seus Relacionamentos.");
         if (idScore > 85 && spirScore < 40) correlations.push("Sua forte Identidade precisa de um Propósito maior para evitar o vazio existencial.");
         if (healthScore < 40) correlations.push("Sua baixa Vitalidade é o principal freio para sua clareza mental hoje.");
+    } else if (locale === "es") {
+        if (workScore > 80 && healthScore < 50) correlations.push("Tu alto desempeño en el Trabajo está asfixiando tu Recuperación Física.");
+        if (financeScore < 40 && relScore < 50) correlations.push("La inestabilidad Financiera está generando reactividad en tus Relaciones.");
+        if (idScore > 85 && spirScore < 40) correlations.push("Tu fuerte Identidad necesita un Propósito mayor para evitar el vacío existencial.");
+        if (healthScore < 40) correlations.push("Tu baja Vitalidad es el principal freno para tu claridad mental hoy.");
     } else {
         if (workScore > 80 && healthScore < 50) correlations.push("High Work performance is suffocating your Physical Recovery.");
         if (financeScore < 40 && relScore < 50) correlations.push("Financial instability is triggering reactivity in your Relationships.");
         if (idScore > 85 && spirScore < 40) correlations.push("Your strong Identity needs a higher Purpose to avoid existential emptiness.");
+        if (healthScore < 40) correlations.push("Your low Vitality is the main break for your mental clarity today.");
     }
 
     if (correlations.length === 0) {
-        correlations.push(locale === "pt" ? "Seus pilares operam em relativa harmonia sistêmica." : "Your pillars operate in relative systemic harmony.");
+        correlations.push(
+            locale === "pt" ? "Seus pilares operam em relativa harmonia sistêmica." :
+                locale === "es" ? "Tus pilares operan en relativa armonía sistémica." :
+                    "Your pillars operate in relative systemic harmony."
+        );
     }
 
     return {
@@ -648,7 +704,9 @@ export function calculateDiagnosis(answers: Record<number, number>, locale: Loca
             antifragilityScore,
             bottleneckLabel: bottleneck.label,
             correlations,
-            archetype: overallAvg > 4 ? (locale === "pt" ? "Arquiteto do Destino" : "Architect of Destiny") : (locale === "pt" ? "Explorador em Transição" : "Transition Explorer")
+            archetype: overallAvg > 4
+                ? (locale === "pt" ? "Arquiteto do Destino" : locale === "es" ? "Arquitecto del Destino" : "Architect of Destiny")
+                : (locale === "pt" ? "Explorador em Transição" : locale === "es" ? "Explorador en Transición" : "Transition Explorer")
         }
     };
 }

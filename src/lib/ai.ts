@@ -24,6 +24,8 @@ export async function getAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysis
     CRITICAL: The qualitative context ("context" below) is where the user shares their current struggle, feelings, or specific situation. 
     You MUST weave this context into your Executive Summary and Action Plan to make it feel deeply personal and not just a generic score analysis.
     
+    LANGUAGE REQUIREMENT: You MUST respond in ${data.lang}. All text in the JSON fields must be in ${data.lang}.
+    
     Data:
     pillars: ${JSON.stringify(data.pillarScores)}
     context: "${data.qualitativeContext || "No context provided"}"
@@ -32,21 +34,25 @@ export async function getAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysis
     Tasks:
     1. Executive Summary: 2 paragraphs in a premium, wise, and direct tone. Analyze the correlations and the "ripple effect". If context is provided, address it directly.
     2. 7-Day Action Plan: EXACTLY 7 practical, high-impact actions (Day 1 to Day 7). Use the "pilar" field to map each day to one of the 7 pillars.
+       - IMPORTANT: Translate the "day" field (e.g., "Dia 1", "Day 1", "Día 1") into the user's language.
+       - IMPORTANT: Translate the "pilar" field to one of these: ${Object.values(data.pillarScores).map(p => p.label).join(', ')}.
     3. Stoic Refinement: A deep stoic reflection tailored to these specific results and context.
+    4. Deep Dive Analysis: An EXTENSIVE (8-10 paragraphs), highly detailed systemic analysis. Explain how the weakest pillars are affecting the strongest ones, the long-term risks if no action is taken, and the "Hidden Logic" behind their current state. This must be the most valuable part of the report. It should read like chapters of a high-end strategy book.
     
     Response Format (JSON only):
     {
       "executiveSummary": "...",
       "sevenDayPlan": [
-        {"day": "Day 1", "action": "...", "pilar": "..."},
-        {"day": "Day 2", "action": "...", "pilar": "..."},
-        {"day": "Day 3", "action": "...", "pilar": "..."},
-        {"day": "Day 4", "action": "...", "pilar": "..."},
-        {"day": "Day 5", "action": "...", "pilar": "..."},
-        {"day": "Day 6", "action": "...", "pilar": "..."},
-        {"day": "Day 7", "action": "...", "pilar": "..."}
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."},
+        {"day": "...", "action": "...", "pilar": "..."}
       ],
-      "stoicRefinement": "..."
+      "stoicRefinement": "...",
+      "deepDiveAnalysis": "..."
     }
     `;
 

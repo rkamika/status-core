@@ -68,7 +68,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                             points={gridPoints}
                             fill="none"
                             stroke="currentColor"
-                            className="text-foreground/5 dark:text-white/5"
+                            className="text-foreground/5 dark:text-white/5 print:text-black/10"
                             strokeWidth="1"
                             strokeDasharray={i === 3 ? "0" : "4 4"}
                         />
@@ -104,7 +104,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                                 x2={center + Math.cos(p.angle) * radius}
                                 y2={center + Math.sin(p.angle) * radius}
                                 stroke="currentColor"
-                                className="text-foreground/10 dark:text-white/10"
+                                className="text-foreground/10 dark:text-white/10 print:text-black/20"
                                 strokeWidth="1"
                             />
                         </g>
@@ -134,6 +134,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                             transition={{ delay: 0.5 + i * 0.1 }}
                             points={`${center},${center} ${p.x},${p.y} ${nextP.x},${nextP.y}`}
                             style={{ fill: p.color }}
+                            className="print:opacity-20"
                         />
                     );
                 })}
@@ -155,6 +156,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                             strokeWidth="1.5"
                             strokeOpacity="0.5"
                             strokeLinecap="round"
+                            className="print:stroke-opacity-100"
                         />
                     );
                 })}
@@ -191,7 +193,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                                 y={ly}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
-                                className="text-[11px] font-black uppercase tracking-widest"
+                                className="text-[11px] font-black uppercase tracking-widest print:opacity-100"
                                 style={{ fill: p.color, opacity: 0.8 }}
                             >
                                 {p.label}
@@ -201,7 +203,7 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
                                 y={ly + 14}
                                 textAnchor="middle"
                                 dominantBaseline="middle"
-                                className="text-[14px] font-heading font-black fill-foreground dark:fill-white"
+                                className="text-[14px] font-heading font-black fill-foreground dark:fill-white print:fill-black print:opacity-100"
                             >
                                 {data[i].value}%
                             </text>

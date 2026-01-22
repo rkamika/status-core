@@ -117,46 +117,168 @@
 
 /* Gold Standard PDF Print Styles */
 @media print {
+  @page {
+    margin: 10mm;
+    size: A4 portrait;
+  }
+
   .no-print {
     display: none !important;
+  }
+
+  /* Force light mode variables for printing regardless of current theme */
+  :root,
+  .dark {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.1 0 0);
+    --card: oklch(0.99 0 0);
+    --card-foreground: oklch(0.1 0 0);
+    --primary: oklch(0.2 0 0);
+    --primary-foreground: oklch(1 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.4 0 0);
+    --border: oklch(0.9 0 0);
   }
 
   body {
     background: white !important;
     color: black !important;
-  }
-
-  .dark {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
-    --border: 0 0% 90%;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    width: 210mm;
+    /* Force A4 width */
   }
 
   * {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    background-image: none !important;
+    /* Kill gradients and images */
   }
 
   .container {
     max-width: 100% !important;
+    width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
   }
 
+  /* Prevent headers from being orphaned at the bottom of a page */
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 0.5rem !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Specific binding to next element */
+  h2+*,
+  h3+*,
+  h4+* {
+    break-before: avoid !important;
+    page-break-before: avoid !important;
+  }
+
+  /* ALLOW breaking inside sections and cards to prevent huge gaps */
+  section,
   .card,
-  .p-10,
-  .p-12 {
-    break-inside: avoid;
-    border: 1px solid #eee !important;
-    box-shadow: none !important;
+  div[class*="space-y-"],
+  .container {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    break-before: auto !important;
+    break-after: auto !important;
   }
 
+  /* Prevent small items (badges, small cards) from being cut, but allow their containers to break */
+  .badge,
+  .badge-outline,
+  div[class*="grid-"]>div {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Force grids to behave like flexbox in print for better page breaking */
+  div[class*="grid-"] {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+  }
+
+  div[class*="grid-cols-7"]>div,
+  div[class*="grid-cols-1"]>div,
+  div[class*="grid-cols-2"]>div {
+    flex: 1 1 200px !important;
+    min-width: 150px !important;
+  }
+
+  /* Force cards to have a visible border for structure */
+  .card,
+  div[class*="bg-muted"],
+  div[class*="bg-card"],
+  div[class*="bg-gradient-"] {
+    background-color: transparent !important;
+    background-image: none !important;
+    border: 1px solid oklch(0.9 0 0) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Ensure text is readable */
+  p,
+  span,
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: black !important;
+    orphans: 4;
+    widows: 4;
+  }
+
+  /* Critical: Eliminate large vertical paddings that cause jumps */
+  .pt-8,
+  .pt-10,
+  .pt-12,
+  .pt-16,
+  .pt-20,
+  .pt-24,
+  .py-16,
+  .py-20 {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  .space-y-8,
+  .space-y-10,
+  .space-y-16 {
+    gap: 0.5rem !important;
+  }
+
+  /* Ensure charts are sized appropriately */
   .radar-chart {
-    page-break-before: always;
+    max-width: 320px !important;
+    margin: 0 auto !important;
+    break-inside: avoid !important;
   }
 
-  h1 {
-    font-size: 32pt !important;
+  /* Capas and large elements */
+  .print-page-break {
+    page-break-before: always !important;
+  }
+
+  /* Make sure progress bars are visible */
+  div[class*="bg-muted/30"] {
+    background-color: #f3f4f6 !important;
   }
 }

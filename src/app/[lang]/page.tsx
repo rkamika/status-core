@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { use } from "react";
 import { motion } from "framer-motion";
-import { Zap, PlayCircle, Shield, LucideIcon, Search, Sparkles, Infinity as InfinityIcon, Layers, Activity, ArrowRight } from "lucide-react";
+import { Zap, PlayCircle, Shield, LucideIcon, Search, Sparkles, Infinity as InfinityIcon, Layers, Activity, ArrowRight, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { FloatingCTA } from "@/components/floating-cta";
+import { Logo } from "@/components/logo";
 
 export default function LandingPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
@@ -20,12 +21,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
       <FloatingCTA lang={lang} label={dict.landing.cta_button} />
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between">
-          <Link className="flex items-center justify-center gap-2 group" href={`/${lang}`}>
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center transition-transform group-hover:scale-110 shadow-[0_0_15px_rgba(var(--primary),0.5)]">
-              <div className="w-3 h-3 bg-background rounded-full" />
-            </div>
-            <span className="font-heading font-bold text-xl tracking-tighter">STATUS CORE</span>
-          </Link>
+          <Logo lang={lang} />
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
@@ -137,7 +133,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center gap-12">
               <div className="text-center space-y-2 opacity-30 select-none">
-                <p className="text-[10px] font-black tracking-[0.5em] uppercase">Trusted by forward-thinking leaders at</p>
+                <p className="text-[10px] font-black tracking-[0.5em] uppercase">{dict.landing.trusted_by}</p>
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-24 items-center justify-items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
                 {["TECHCRUNCH", "WIRED", "FORBES", "FAST COMPANY"].map((brand) => (
@@ -191,7 +187,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-8">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
-                  <Layers className="h-3 w-3" /> Methodology
+                  <Layers className="h-3 w-3" /> {dict.landing.methodology_badge}
                 </div>
                 <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter leading-none">
                   {dict.landing.methodology_title}
@@ -200,7 +196,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                   {dict.landing.methodology_desc}
                 </p>
                 <div className="grid grid-cols-2 gap-6 pt-4">
-                  {["Sistêmica", "Cognitiva", "Neurológica", "Estoica"].map((tag) => (
+                  {[dict.pillars.identity, dict.pillars.health, dict.pillars.work, dict.pillars.stoic].map((tag) => (
                     <div key={tag} className="flex items-center gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                       <span className="text-sm font-bold uppercase tracking-widest opacity-60">{tag}</span>
@@ -219,12 +215,17 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 <div className="space-y-6">
                   <div className="h-2 w-20 bg-primary/40 rounded-full" />
                   <p className="text-2xl font-serif italic text-foreground opacity-80 leading-snug">
-                    "A performance de elite não é sobre trabalhar mais, mas sobre alinhar as tensões internas entre as 7 áreas fundamentais da vida."
+                    {lang === 'pt'
+                      ? '"A performance de elite não é sobre trabalhar mais, mas sobre alinhar as tensões internas entre as 7 áreas fundamentais da vida."'
+                      : lang === 'es'
+                        ? '"El rendimiento de élite no se trata de trabajar más, sino de alinear las tensiones internas entre las 7 áreas fundamentales de la vida."'
+                        : '"Elite performance is not about working harder, but about aligning the internal tensions between the 7 fundamental areas of life."'
+                    }
                   </p>
                   <div className="flex items-center gap-4 pt-4">
                     <div className="w-12 h-12 rounded-full bg-primary/20 border border-primary/20 flex items-center justify-center font-black italic">SC</div>
                     <div>
-                      <p className="text-sm font-black uppercase tracking-widest">Equipe Status Core</p>
+                      <p className="text-sm font-black uppercase tracking-widest">{dict.landing.team_name}</p>
                       <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest">Cognitive Strategy Group</p>
                     </div>
                   </div>
@@ -240,7 +241,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             <div className="max-w-4xl mx-auto text-center space-y-12">
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/40 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]">
-                  <Activity className="h-3 w-3 text-primary" /> Enterprise
+                  <Activity className="h-3 w-3 text-primary" /> {dict.landing.enterprise_badge}
                 </div>
                 <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter">
                   {dict.landing.enterprise_title}
@@ -251,7 +252,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
               </div>
               <Link href={`/${lang}/assessment`} className="inline-block pt-4">
                 <Button variant="outline" size="lg" className="h-16 px-12 text-xl font-black border-primary/40 text-primary hover:bg-primary/5 transition-all">
-                  Contact Sales <ArrowRight className="ml-3 h-5 w-5" />
+                  {dict.landing.contact_sales} <ArrowRight className="ml-3 h-5 w-5" />
                 </Button>
               </Link>
             </div>
@@ -261,15 +262,10 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
       <footer className="w-full py-20 border-t border-border/10 bg-zinc-950 items-center justify-center flex">
         <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="flex flex-col items-center md:items-start gap-4">
-            <Link className="flex items-center gap-2 group" href={`/${lang}`}>
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <div className="w-3 h-3 bg-background rounded-full" />
-              </div>
-              <span className="font-heading font-bold tracking-tighter text-2xl">STATUS CORE</span>
-            </Link>
+            <Logo lang={lang} size={40} />
             <p className="text-xs text-muted-foreground font-medium tracking-tight text-center md:text-left">
-              Advanced Personal Intelligence for High Performance.<br />
-              © 2025 Status Core Systems.
+              {dict.landing.footer_tagline}<br />
+              {dict.landing.footer_copyright}
             </p>
           </div>
           <div className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
@@ -279,11 +275,19 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
               <Link href="#" className="hover:text-primary hover:opacity-100 transition-all">{dict.footer.contact}</Link>
             </div>
             <div className="flex gap-4">
-              {["𝕏", "in", "ig"].map((sm) => (
-                <div key={sm} className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer font-bold text-xs">
-                  {sm}
-                </div>
-              ))}
+              <Link
+                href="https://www.instagram.com/statuscore.original"
+                target="_blank"
+                className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer text-muted-foreground hover:text-primary"
+              >
+                <Instagram className="h-4 w-4" />
+              </Link>
+              <div className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer font-bold text-[10px] text-muted-foreground">
+                𝕏
+              </div>
+              <div className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer font-bold text-[10px] text-muted-foreground">
+                in
+              </div>
             </div>
           </div>
         </div>

@@ -16,6 +16,7 @@ export interface Dimension {
     label: string;
     value: number;
     color: string;
+    insight?: string;
 }
 
 export interface V3Insights {
@@ -27,6 +28,7 @@ export interface V3Insights {
         executiveSummary: string;
         sevenDayPlan: { day: string; action: string; pilar: string }[];
         stoicRefinement: string;
+        deepDiveAnalysis: string;
     };
 }
 

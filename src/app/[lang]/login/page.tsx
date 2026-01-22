@@ -8,20 +8,38 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MoveLeft, Mail, Loader2, Link as LinkIcon } from "lucide-react";
+import { Logo } from "@/components/logo";
+import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSent, setIsSent] = useState(false);
+    const [error, setError] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!email) return;
+
         setIsLoading(true);
-        // Simulação de envio de Magic Link
-        setTimeout(() => {
-            setIsLoading(false);
+        setError("");
+
+        try {
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: {
+                    emailRedirectTo: `${window.location.origin}/dashboard`,
+                },
+            });
+
+            if (error) throw error;
             setIsSent(true);
-        }, 1500);
+        } catch (err: any) {
+            console.error("Auth Error:", err);
+            setError(err.message || "Ocorreu um erro ao enviar o link.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -36,11 +54,8 @@ export default function LoginPage() {
                 transition={{ duration: 0.5 }}
                 className="w-full max-w-md"
             >
-                <div className="flex flex-col items-center mb-8 gap-2">
-                    <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
-                        <div className="w-4 h-4 bg-background rounded-full" />
-                    </div>
-                    <span className="font-heading font-bold text-2xl tracking-tight">STATUS CORE</span>
+                <div className="flex flex-col items-center mb-8">
+                    <Logo lang="en" size={64} showText={true} className="flex-col animate-pulse" />
                 </div>
 
                 <Card className="border-border/40 shadow-xl bg-card/50 backdrop-blur">
@@ -76,6 +91,9 @@ export default function LoginPage() {
                                         />
                                     </div>
                                 </div>
+                                {error && (
+                                    <p className="text-xs text-rose-500 font-medium text-center">{error}</p>
+                                )}
                                 <Button className="w-full h-10 rounded-lg" type="submit" disabled={isLoading}>
                                     {isLoading ? (
                                         <>

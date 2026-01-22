@@ -10,6 +10,7 @@ import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { QUESTIONS, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
+import { Logo } from "@/components/logo";
 
 export default function AssessmentPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -37,12 +38,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
         <div className="min-h-screen bg-background flex flex-col">
             <header className="px-4 lg:px-6 h-16 flex items-center border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
                 <div className="container mx-auto flex items-center justify-between">
-                    <Link className="flex items-center justify-center gap-2" href={`/${lang}`}>
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                            <div className="w-3 h-3 bg-background rounded-full" />
-                        </div>
-                        <span className="font-heading font-bold text-xl tracking-tight">STATUS CORE</span>
-                    </Link>
+                    <Logo lang={lang} />
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
                         <LanguageSelector currentLang={lang} />
@@ -94,46 +90,55 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                                 {dict.assessment.question} {currentStep + 1} / {questions.length}
                                             </div>
                                             <h2 className="text-xl md:text-3xl font-bold font-heading leading-tight tracking-tight text-balance">
-                                                {questions[currentStep].text}
+                                                {/* @ts-ignore - dynamic dictionary access */}
+                                                {dict.assessment.questions_data?.[(currentStep + 1).toString()]?.text || questions[currentStep].text}
                                             </h2>
                                         </div>
 
                                         <div className="grid grid-cols-1 gap-2">
-                                            {[
-                                                { val: 1, label: dict.assessment.never },
-                                                { val: 2, label: dict.assessment.rarely },
-                                                { val: 3, label: dict.assessment.sometimes },
-                                                { val: 4, label: dict.assessment.often },
-                                                { val: 5, label: dict.assessment.always },
-                                            ].map(({ val, label }) => (
-                                                <button
-                                                    key={val}
-                                                    onClick={() => handleAnswer(val)}
-                                                    className={`
-                                                        group relative p-3 text-left rounded-xl border transition-all duration-300
-                                                        active:scale-[0.99] hover:scale-[1.005]
-                                                        ${answers[questions[currentStep].id] === val
-                                                            ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
-                                                            : 'bg-muted/40 dark:bg-card/40 backdrop-blur-sm border-border hover:border-primary/50 hover:bg-muted/60 dark:hover:bg-card/60 text-foreground'
-                                                        }
-                                                    `}
-                                                >
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="text-sm font-bold font-heading">
-                                                            {label}
-                                                        </span>
-                                                        <div className={`
-                                                            w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors
+                                            {(() => {
+                                                /* @ts-ignore */
+                                                const customOptions = dict.assessment.questions_data?.[(currentStep + 1).toString()]?.options;
+                                                const optionsList = customOptions ?
+                                                    customOptions.map((label: string, i: number) => ({ val: i + 1, label })) :
+                                                    [
+                                                        { val: 1, label: dict.assessment.never },
+                                                        { val: 2, label: dict.assessment.rarely },
+                                                        { val: 3, label: dict.assessment.sometimes },
+                                                        { val: 4, label: dict.assessment.often },
+                                                        { val: 5, label: dict.assessment.always },
+                                                    ];
+
+                                                return optionsList.map(({ val, label }: { val: number, label: string }) => (
+                                                    <button
+                                                        key={val}
+                                                        onClick={() => handleAnswer(val)}
+                                                        className={`
+                                                            group relative p-3 text-left rounded-xl border transition-all duration-300
+                                                            active:scale-[0.99] hover:scale-[1.005]
                                                             ${answers[questions[currentStep].id] === val
-                                                                ? 'border-primary-foreground bg-primary-foreground text-primary'
-                                                                : 'border-muted-foreground/30 group-hover:border-primary/50'
+                                                                ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
+                                                                : 'bg-muted/40 dark:bg-card/40 backdrop-blur-sm border-border hover:border-primary/50 hover:bg-muted/60 dark:hover:bg-card/60 text-foreground'
                                                             }
-                                                        `}>
-                                                            {answers[questions[currentStep].id] === val && <div className="w-2 h-2 rounded-full bg-current" />}
+                                                        `}
+                                                    >
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-sm font-bold font-heading">
+                                                                {label}
+                                                            </span>
+                                                            <div className={`
+                                                                w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors
+                                                                ${answers[questions[currentStep].id] === val
+                                                                    ? 'border-primary-foreground bg-primary-foreground text-primary'
+                                                                    : 'border-muted-foreground/30 group-hover:border-primary/50'
+                                                                }
+                                                            `}>
+                                                                {answers[questions[currentStep].id] === val && <div className="w-2 h-2 rounded-full bg-current" />}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </button>
-                                            ))}
+                                                    </button>
+                                                ));
+                                            })()}
                                         </div>
                                     </>
                                 )}

@@ -15,6 +15,7 @@ import { calculateDiagnosis, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { saveDiagnosis, generateId } from "@/lib/storage";
 import { SavedDiagnosis } from "@/lib/types";
+import { Logo } from "@/components/logo";
 
 export default function PreviewPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -38,37 +39,47 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
     const diagnosis = calculateDiagnosis(answers, lang);
     const { label: statusLabel, color: statusColor, confidence, one_liner, pillarScores } = diagnosis;
 
-    // Save diagnosis to localStorage on mount
+    // Save diagnosis to storage on mount
     useEffect(() => {
-        if (Object.keys(answers).length === 0) {
-            setIsLoading(false);
-            return;
-        }
+        const handleSave = async () => {
+            if (Object.keys(answers).length === 0) {
+                setIsLoading(false);
+                return;
+            }
 
-        const newId = generateId();
-        const savedData: SavedDiagnosis = {
-            id: newId,
-            timestamp: Date.now(),
-            lang,
-            answers,
-            qualitativeContext,
-            state: diagnosis.state,
-            confidence,
-            label: statusLabel,
-            color: statusColor,
-            oneLiner: one_liner,
-            dimensions: pillarScores,
-            isUnlocked: false,
-            v3Insights: diagnosis.v3Insights
+            const newId = generateId();
+            const savedData: SavedDiagnosis = {
+                id: newId,
+                timestamp: Date.now(),
+                lang,
+                answers,
+                qualitativeContext,
+                state: diagnosis.state,
+                confidence,
+                label: statusLabel,
+                color: statusColor,
+                oneLiner: one_liner,
+                dimensions: pillarScores,
+                isUnlocked: false,
+                v3Insights: diagnosis.v3Insights ? {
+                    ...diagnosis.v3Insights,
+                    aiAnalysis: diagnosis.v3Insights.aiAnalysis ? {
+                        ...diagnosis.v3Insights.aiAnalysis,
+                        deepDiveAnalysis: "" // Placeholder to satisfy V3Insights type
+                    } : undefined
+                } : undefined
+            };
+
+            try {
+                await saveDiagnosis(savedData);
+                setDiagnosisId(newId);
+            } catch (e) {
+                console.error('Error saving diagnosis:', e);
+            }
+            setIsLoading(false);
         };
 
-        try {
-            saveDiagnosis(savedData);
-            setDiagnosisId(newId);
-        } catch (e) {
-            console.error('Error saving diagnosis:', e);
-        }
-        setIsLoading(false);
+        handleSave();
     }, [lang, answersParam, qualitativeContext]);
 
     if (Object.keys(answers).length === 0) {
@@ -76,10 +87,10 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
             <div className="min-h-screen bg-background flex items-center justify-center p-4">
                 <Card className="max-w-md">
                     <CardContent className="p-8 text-center space-y-4">
-                        <h2 className="text-2xl font-bold">Nenhum diagnóstico encontrado</h2>
-                        <p className="text-muted-foreground">Complete o assessment para ver seu resultado.</p>
+                        <h2 className="text-2xl font-bold">{dict.preview.empty_title}</h2>
+                        <p className="text-muted-foreground">{dict.preview.empty_desc}</p>
                         <Link href={`/${lang}/assessment`}>
-                            <Button>Iniciar Assessment</Button>
+                            <Button>{dict.preview.empty_button}</Button>
                         </Link>
                     </CardContent>
                 </Card>
@@ -108,12 +119,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
 
             <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
                 <div className="container mx-auto flex items-center justify-between">
-                    <Link className="flex items-center justify-center gap-2" href={`/${lang}`}>
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                            <div className="w-3 h-3 bg-background rounded-full" />
-                        </div>
-                        <span className="font-heading font-bold text-xl tracking-tight">STATUS CORE</span>
-                    </Link>
+                    <Logo lang={lang} />
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
                         <LanguageSelector currentLang={lang} />
@@ -145,7 +151,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                             </div>
                             <div className="w-px h-4 bg-border" />
                             <div className="text-muted-foreground font-medium">
-                                7 Pilares da Experiência Humana
+                                {dict.preview.pillars_tagline}
                             </div>
                         </div>
                     </motion.div>
@@ -177,7 +183,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                 </p>
                                 <div className="h-px w-20 bg-primary/50" />
                                 <p className="text-muted-foreground text-sm uppercase tracking-widest font-bold">
-                                    Visão Geral dos Pilares
+                                    {dict.preview.pillars_overview}
                                 </p>
                             </motion.div>
 
@@ -226,19 +232,19 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                     <ul className="space-y-3 text-sm text-muted-foreground">
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>Significado Profundo (v2)</span>
+                                            <span>{dict.preview.pilar_meaning}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>Causas Raiz nos 7 Pilares</span>
+                                            <span>{dict.preview.pilar_root_cause}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>Plano de Ação Transversal</span>
+                                            <span>{dict.preview.pilar_action_plan}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>Sabedoria Estoica Aplicada</span>
+                                            <span>{dict.preview.pilar_stoic_wisdom}</span>
                                         </li>
                                     </ul>
                                 </CardContent>
@@ -257,10 +263,10 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                 </div>
                                 <CardContent className="p-8 space-y-8 flex flex-col justify-between h-full relative z-10">
                                     <div className="space-y-4">
-                                        <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">PREMIUM v2</Badge>
+                                        <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">{dict.preview.premium_v2}</Badge>
                                         <h3 className="text-2xl font-bold font-heading">{dict.report.title}</h3>
                                         <p className="text-muted-foreground leading-relaxed font-medium">
-                                            Acesse o diagnóstico existencial completo dos seus 7 pilares com ações práticas, sabedoria estoica profunda e análise neural de impacto.
+                                            {dict.preview.premium_desc}
                                         </p>
                                     </div>
                                     <div className="space-y-4">
@@ -275,7 +281,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                         <Link href={`/${lang}/report/demo`} className="block">
                                             <Button variant="ghost" className="w-full text-foreground/70 hover:bg-primary/10 hover:text-primary border border-border h-14 font-bold">
                                                 <LayoutDashboard className="mr-2 h-5 w-5" />
-                                                Ver Demo v2
+                                                {dict.preview.view_demo}
                                             </Button>
                                         </Link>
                                     </div>

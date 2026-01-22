@@ -16,7 +16,10 @@
     "footer": {
         "terms": "Términos de Uso",
         "privacy": "Política de Privacidad",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "footer_tagline": "Inteligencia Personal Avanzada para el Alto Rendimiento.",
+        "footer_copyright": "© 2025 Status Core Systems.",
+        "team_name": "Equipo Status Core"
     },
     "landing": {
         "hero_badge": "Status Core V1.0",
@@ -28,11 +31,11 @@
         "how_it_works_title": "Cómo Funciona",
         "how_it_works_subtitle": "Tres pasos para entender qué está bloqueando tu potencial.",
         "step1_title": "01. Diagnóstico",
-        "step1_desc": "16 preguntas profundas basadas en ciencia cognitiva y performance de alto nivel.",
+        "step1_desc": "21 preguntas profundas basadas en ciencia cognitiva y performance de alto nivel.",
         "step2_title": "02. Perfil Core",
         "step2_desc": "Identificamos en cuál de los 8 estados operativos te encuentras a través de nuestro motor de análisis.",
         "step3_title": "03. Plan de Salida",
-        "step3_desc": "Informe detallado con acciones prácticas inmediatas para restaurar seu alinhamento."
+        "step3_desc": "Informe detallado con acciones prácticas inmediatas para restaurar su alineación."
     },
     "assessment": {
         "title": "Diagnóstico de Estado",
@@ -45,19 +48,245 @@
         "always": "Siempre",
         "qualitative_title": "Contexto Adicional",
         "qualitative_desc": "Describa libremente cómo se siente hoy o qué situación está drenando su energía.",
-        "qualitative_placeholder": "Escriba aquí..."
+        "qualitative_placeholder": "Escriba aquí...",
+        "questions_data": {
+            "1": {
+                "text": "Siento que tengo suficiente energía física para realizar mis actividades sin un agotamiento extremo.",
+                "options": [
+                    "Agotamiento total",
+                    "Baja energía",
+                    "Regular",
+                    "Buena energía",
+                    "Energía plena"
+                ]
+            },
+            "2": {
+                "text": "He tenido una buena calidad de sueño y me despierto sintiendo que mi cuerpo ha descansado.",
+                "options": [
+                    "Sueño pésimo",
+                    "Despierto cansado",
+                    "Regular",
+                    "Buen descanso",
+                    "Sueño reparador"
+                ]
+            },
+            "3": {
+                "text": "Puedo mantener el equilibrio emocional incluso ante contratiempos estresantes.",
+                "options": [
+                    "Descontrol total",
+                    "Mucha reactividad",
+                    "Inestable",
+                    "Equilibrado",
+                    "Serenidad total"
+                ]
+            },
+            "4": {
+                "text": "Siento que mi trabajo actual tiene un sentido claro y contribuye a algo más grande.",
+                "options": [
+                    "Vacío total",
+                    "Sin propósito",
+                    "Indiferente",
+                    "Tiene sentido",
+                    "Propósito pleno"
+                ]
+            },
+            "5": {
+                "text": "Tengo claridad sobre mis próximas metas de crecimiento profesional.",
+                "options": [
+                    "Totalmente perdido",
+                    "Mucha duda",
+                    "Alguna idea",
+                    "Plan claro",
+                    "Visión total"
+                ]
+            },
+            "6": {
+                "text": "Me siento entusiasmado y adecuadamente desafiado durante mi rutina laboral.",
+                "options": [
+                    "Aburrimiento/Apatía",
+                    "Desmotivado",
+                    "Neutro",
+                    "Interesado",
+                    "Flujo total"
+                ]
+            },
+            "7": {
+                "text": "Siento que tengo un sistema de apoyo sólido en mis relaciones (familia/amigos).",
+                "options": [
+                    "Solitario",
+                    "Poco apoyo",
+                    "Moderado",
+                    "Buen soporte",
+                    "Red sólida"
+                ]
+            },
+            "8": {
+                "text": "Puedo expresar mis necesidades y sentimientos con claridad en mis relaciones.",
+                "options": [
+                    "Supresión total",
+                    "Mucha dificultad",
+                    "A veces",
+                    "Buena claridad",
+                    "Transparencia total"
+                ]
+            },
+            "9": {
+                "text": "Me siento integrado y aceptado en los grupos sociales que frecuento.",
+                "options": [
+                    "Desplazado",
+                    "Poco aceptado",
+                    "Neutro",
+                    "Bien aceptado",
+                    "Pertenencia total"
+                ]
+            },
+            "10": {
+                "text": "Tengo tranquilidad con respecto a mi estabilidad financiera actual.",
+                "options": [
+                    "Pánico/Caos",
+                    "Mucha inseguridad",
+                    "Inestable",
+                    "Estable",
+                    "Seguridad plena"
+                ]
+            },
+            "11": {
+                "text": "Siento que tengo autonomía para tomar decisiones financieras sin un miedo excesivo al futuro.",
+                "options": [
+                    "Sin autonomía",
+                    "Rehén del miedo",
+                    "Limitado",
+                    "Autónomo",
+                    "Libertad plena"
+                ]
+            },
+            "12": {
+                "text": "Mi vida financiera está lo suficientemente organizada como para no generar ansiedad constante.",
+                "options": [
+                    "Desorganización total",
+                    "Ansiedad diaria",
+                    "Razonable",
+                    "Organizado",
+                    "Paz financiera"
+                ]
+            },
+            "13": {
+                "text": "Tengo claridad sobre mi valores fundamentales y actúo de acuerdo con ellos.",
+                "options": [
+                    "Desalineado",
+                    "Sin claridad",
+                    "Intentando",
+                    "En línea",
+                    "Integridad total"
+                ]
+            },
+            "14": {
+                "text": "Me seguro de mis capacidades y de mi valor personal.",
+                "options": [
+                    "Inseguridad total",
+                    "Autoestima baja",
+                    "Oscilante",
+                    "Confiado",
+                    "Autoconfianza plena"
+                ]
+            },
+            "15": {
+                "text": "Practico el autorespeto y sé poner límites saludables para proteger mi identidad.",
+                "options": [
+                    "Permisividad total",
+                    "Dificultad para decir no",
+                    "A veces",
+                    "Límites claros",
+                    "Soberanía plena"
+                ]
+            },
+            "16": {
+                "text": "Puedo desconectarme totalmente del trabajo y las obligaciones durante mi tiempo libre.",
+                "options": [
+                    "Siempre conectado",
+                    "Mucha dificultad",
+                    "Parcialmente",
+                    "Desconecto bien",
+                    "Desconexión total"
+                ]
+            },
+            "17": {
+                "text": "Tengo pasatiempos o actividades de ocio que me brindan diversión y alegría genuinas.",
+                "options": [
+                    "Anedonia/Nulo",
+                    "Raro",
+                    "Poco freq.",
+                    "Buena frecuencia",
+                    "Alegría plena"
+                ]
+            },
+            "18": {
+                "text": "Siento que mi vida personal es diversa y liviana, más allá de las responsabilidades.",
+                "options": [
+                    "Peso total",
+                    "Monótono",
+                    "Regular",
+                    "Equilibrado",
+                    "Levedad plena"
+                ]
+            },
+            "19": {
+                "text": "Siento una conexión con algo más grande o con un propósito existencial que me guía.",
+                "options": [
+                    "Escepticismo vacío",
+                    "Sin conexión",
+                    "Buscando",
+                    "Conectado",
+                    "Conexión profunda"
+                ]
+            },
+            "20": {
+                "text": "Mi vida tiene sentido para mí a un nível profundo, más allá del éxito material.",
+                "options": [
+                    "Superficial",
+                    "Sentido débil",
+                    "Neutro",
+                    "Profundo",
+                    "Plenitud existencial"
+                ]
+            },
+            "21": {
+                "text": "Practico momentos de reflexión, meditación o conexión interior con regularidade.",
+                "options": [
+                    "Nunca lo hago",
+                    "Raramente",
+                    "A veces",
+                    "Frecuente",
+                    "Práctica diaria"
+                ]
+            }
+        }
     },
     "preview": {
-        "title": "Tu Estatus",
+        "title": "Tu Estado",
         "diagnosed": "Diagnóstico Completado",
         "confidence": "Score de Confianza",
-        "what_is_next": "Qué viene en el Informe:",
+        "what_is_next": "Qué hay en el Informe:",
         "unlock_button": "Desbloquear Informe Completo",
-        "demo_button": "Demo: Ir ao Dashboard"
+        "demo_button": "Demo: Ir al Dashboard",
+        "empty_title": "No se encontró diagnóstico",
+        "empty_desc": "Completa la evaluación para ver tu resultado.",
+        "empty_button": "Iniciar Evaluación",
+        "pillars_tagline": "7 Pilares de la Experiencia Humana",
+        "pillars_overview": "Visión General de los Pilares",
+        "premium_v2": "PREMIUM v2",
+        "premium_desc": "Accede al diagnóstico existencial completo de tus 7 pilares con acciones prácticas, profunda sabiduría estoica y análisis de impacto neural.",
+        "view_demo": "Ver Demo v2",
+        "pilar_meaning": "Significado Profundo (v2)",
+        "pilar_root_cause": "Causas Raíz en los 7 Pilares",
+        "pilar_action_plan": "Plan de Acción Transversal",
+        "pilar_stoic_wisdom": "Sabiduría Estoica Aplicada"
     },
     "report": {
         "title": "Informe Completo",
         "analysis": "Análisis de Estado",
+        "systemic_intelligence": "INTELIGENCIA SISTÉMICA v4",
+        "results_by_pillar": "Resultados por Pilar",
         "meaning": "Lo que esto significa",
         "characteristics": "Características Observadas",
         "risk": "Riesgo Primario",
@@ -72,7 +301,33 @@
         "general_next_step": "Próximo Paso General",
         "qualitative_analysis": "Análisis de Contexto Personal",
         "stoic_wisdom": "Sabiduría Estoica",
-        "stoic_lesson": "Lección para tu Estado"
+        "stoic_lesson": "Lección para tu Estado",
+        "antifragility_index": "Índice de Antifragilidad",
+        "antifragility_desc": "Resiliencia sistémica basada en Identidad, Salud y Sentido.",
+        "ripple_effect": "Efecto Cascada",
+        "archetype": "Arquetipo",
+        "executive_summary": "Resumen Ejecutivo",
+        "deep_dive_title": "Análisis Sistémico Profundo",
+        "strategic_plan": "Plan Estratégico de 7 Días",
+        "alpha_priority": "ALPHA PRIORITY",
+        "unlock_title": "Desbloquea tu Inteligencia Sistémica",
+        "unlock_desc": "Recibe análisis de IA personalizado, plan de 7 días y métricas de antifragilidad.",
+        "unlock_button": "Desbloquear Ahora",
+        "download_report": "Descargar Informe",
+        "syncing_pillars": "Sincronizando Pilares...",
+        "report_v4": "Informe de Inteligencia v4",
+        "neural_library": "Biblioteca Neural",
+        "strategic_readings": "Lecturas Estratégicas para tu Cuello de Botella",
+        "library_desc": "Curaduría de conocimiento profundo para acelerar tu evolución neuro-sistémica basada en tu Pilar Alpha.",
+        "predictive_projection": "Proyección Predictiva",
+        "future_90_days": "Tu Futuro en 90 Días",
+        "evolution_trajectory": "Trayectoria de Evolución",
+        "price_of_inertia": "Precio de la Inercia",
+        "practical_protocol": "Protocolo Práctico",
+        "impact_leverage": "Palanca de Impacto",
+        "risk_warnings": "Alertas de Riesgo",
+        "risk_calculation_note": "Riesgos calculados en base a patrones de inconsistencia de puntuación.",
+        "explore_knowledge": "Explorar Conocimiento"
     },
     "pillars": {
         "health": "Salud",
@@ -80,7 +335,8 @@
         "relationships": "Relaciones",
         "finances": "Finanzas",
         "identity": "Identidad",
-        "leisure": "Lazer",
-        "spirituality": "Sentido"
+        "leisure": "Ocio",
+        "spirituality": "Sentido",
+        "stoic": "Estoica"
     }
 }

@@ -27,6 +27,7 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { Locale } from "@/lib/diagnostic";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSelector } from "@/components/language-selector";
+import { Logo } from "@/components/logo";
 
 export default function DashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -37,10 +38,16 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const allDiagnoses = getAllDiagnoses();
-        setDiagnoses(allDiagnoses);
-        setCurrentId(getCurrentDiagnosisId());
-        setIsLoading(false);
+        const loadData = async () => {
+            const [allDiagnoses, currentDiagnosisId] = await Promise.all([
+                getAllDiagnoses(),
+                getCurrentDiagnosisId()
+            ]);
+            setDiagnoses(allDiagnoses);
+            setCurrentId(currentDiagnosisId);
+            setIsLoading(false);
+        };
+        loadData();
     }, []);
 
     const currentDiagnosis = diagnoses.find(d => d.id === currentId) || diagnoses[0];
@@ -65,12 +72,12 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                 >
                     <Inbox className="h-20 w-20 mx-auto text-muted-foreground opacity-50" />
                     <div className="space-y-2">
-                        <h2 className="text-3xl font-bold font-heading">Nenhum Diagnóstico</h2>
-                        <p className="text-muted-foreground">Você ainda não fez nenhum assessment. Comece agora para descobrir seu estado atual em 7 pilares.</p>
+                        <h2 className="text-3xl font-bold font-heading">{dict.dashboard.empty_title}</h2>
+                        <p className="text-muted-foreground">{dict.dashboard.empty_desc}</p>
                     </div>
                     <Link href={`/${lang}/assessment`}>
                         <Button size="lg" className="gap-2 font-bold px-8 shadow-xl shadow-primary/20">
-                            Iniciar Avaliação v2
+                            {dict.dashboard.start_assessment}
                             <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
@@ -105,12 +112,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
 
             <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
                 <div className="container mx-auto flex items-center justify-between">
-                    <Link className="flex items-center justify-center gap-2" href={`/${lang}`}>
-                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                            <div className="w-3 h-3 bg-background rounded-full" />
-                        </div>
-                        <span className="font-heading font-bold text-xl tracking-tight">STATUS CORE</span>
-                    </Link>
+                    <Logo lang={lang} />
                     <div className="flex items-center gap-2">
                         <ThemeToggle />
                         <LanguageSelector currentLang={lang} />
@@ -127,12 +129,12 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                     <section className="space-y-6">
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
-                                <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Diagnóstico Atual</h2>
-                                <p className="text-2xl font-bold font-heading">Visão Geral v2</p>
+                                <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">{dict.dashboard.current_diagnosis}</h2>
+                                <p className="text-2xl font-bold font-heading">{dict.dashboard.overview_v2}</p>
                             </div>
                             <Link href={`/${lang}/assessment`}>
                                 <Button variant="outline" size="sm" className="rounded-full border-primary/20 hover:border-primary transition-colors font-bold px-6">
-                                    Novo Diagnóstico
+                                    {dict.dashboard.new_diagnosis}
                                 </Button>
                             </Link>
                         </div>
@@ -145,23 +147,23 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                             <Card className="border-border bg-card/70 dark:bg-zinc-900/40 backdrop-blur-xl shadow-2xl overflow-hidden group hover:border-primary/10 transition-all duration-700 rounded-[2.5rem]">
                                 <CardHeader className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 pb-10 border-b border-border/40 p-10">
                                     <div className="space-y-3">
-                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">Ativo v2</Badge>
+                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">{dict.dashboard.active_v2}</Badge>
                                         <CardTitle className="text-6xl md:text-8xl font-heading font-black tracking-tighter text-foreground leading-[0.8] py-2">
                                             {currentDiagnosis.label}
                                         </CardTitle>
                                         <CardDescription className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
-                                            <Clock className="h-4 w-4" /> Realizado em {formatDate(currentDiagnosis.timestamp)}
+                                            <Clock className="h-4 w-4" /> {dict.dashboard.performed_at} {formatDate(currentDiagnosis.timestamp)}
                                         </CardDescription>
                                     </div>
                                     <div className="flex flex-row md:flex-col gap-8 md:gap-4 items-center md:items-end">
                                         <div className="flex items-center md:items-end flex-col gap-1">
                                             <div className="text-5xl md:text-6xl font-black text-primary leading-none">{currentDiagnosis.confidence}%</div>
-                                            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">Confiança Neural</div>
+                                            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.neural_confidence}</div>
                                         </div>
                                         {currentDiagnosis.isUnlocked && currentDiagnosis.v3Insights && (
                                             <div className="flex items-center md:items-end flex-col gap-1">
                                                 <div className="text-3xl md:text-4xl font-black text-foreground leading-none">{currentDiagnosis.v3Insights.antifragilityScore}%</div>
-                                                <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">Antifragilidade</div>
+                                                <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.antifragility}</div>
                                             </div>
                                         )}
                                     </div>
@@ -176,7 +178,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-3">
                                             <div className="h-px flex-1 bg-border/40" />
-                                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black whitespace-nowrap">Análise dos 7 Pilares</h3>
+                                            <h3 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black whitespace-nowrap">{dict.dashboard.pillar_analysis}</h3>
                                             <div className="h-px flex-1 bg-border/40" />
                                         </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -212,18 +214,18 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                                         {currentDiagnosis.isUnlocked ? (
                                             <div className="flex items-center gap-2 text-primary">
                                                 <CheckCircle2 className="h-5 w-5" />
-                                                <span>Relatório v2 Desbloqueado</span>
+                                                <span>{dict.dashboard.premium_unlocked}</span>
                                             </div>
                                         ) : (
                                             <div className="flex items-center gap-2">
                                                 <Padlock className="h-5 w-5" />
-                                                <span>Recursos Premium Ocultos</span>
+                                                <span>{dict.dashboard.premium_locked}</span>
                                             </div>
                                         )}
                                     </div>
                                     <Button size="lg" className="rounded-full shadow-xl shadow-primary/20 w-full sm:w-auto font-black h-14 px-10 text-lg group" asChild>
                                         <Link href={currentDiagnosis.isUnlocked ? `/${lang}/report/${currentDiagnosis.id}` : `/${lang}/checkout/${currentDiagnosis.id}`}>
-                                            {currentDiagnosis.isUnlocked ? "Ver Relatório Completo" : "Desbloquear Plano v2"}
+                                            {currentDiagnosis.isUnlocked ? dict.dashboard.view_report : dict.dashboard.unlock_plan}
                                             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                         </Link>
                                     </Button>
@@ -235,7 +237,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                     {/* History Snippet */}
                     {history.length > 0 && (
                         <section className="space-y-6">
-                            <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">Histórico de Estados</h2>
+                            <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">{dict.dashboard.history_title}</h2>
                             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                                 {history.map((item, i) => (
                                     <motion.div
@@ -258,7 +260,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                                                     </div>
                                                     <div className="flex items-center gap-3">
                                                         {item.isUnlocked && (
-                                                            <Badge variant="outline" className="text-[10px] font-black border-primary/30 text-primary bg-primary/5 px-2 py-0.5">PREMIUM</Badge>
+                                                            <Badge variant="outline" className="text-[10px] font-black border-primary/30 text-primary bg-primary/5 px-2 py-0.5">{dict.dashboard.premium_badge}</Badge>
                                                         )}
                                                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                                                             <ArrowRight className="h-4 w-4" />
