@@ -196,7 +196,15 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                   {dict.landing.methodology_desc}
                 </p>
                 <div className="grid grid-cols-2 gap-6 pt-4">
-                  {[dict.pillars.identity, dict.pillars.health, dict.pillars.work, dict.pillars.stoic].map((tag) => (
+                  {[
+                    dict.pillars.health,
+                    dict.pillars.work,
+                    dict.pillars.relationships,
+                    dict.pillars.finances,
+                    dict.pillars.identity,
+                    dict.pillars.leisure,
+                    dict.pillars.spirituality
+                  ].map((tag) => (
                     <div key={tag} className="flex items-center gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                       <span className="text-sm font-bold uppercase tracking-widest opacity-60">{tag}</span>
@@ -259,12 +267,6 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
               >
                 <Instagram className="h-4 w-4" />
               </Link>
-              <div className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer font-bold text-[10px] text-muted-foreground">
-                𝕏
-              </div>
-              <div className="w-10 h-10 rounded-full border border-white/5 bg-white/[0.02] flex items-center justify-center hover:bg-white/[0.05] hover:border-primary/20 transition-all cursor-pointer font-bold text-[10px] text-muted-foreground">
-                in
-              </div>
             </div>
           </div>
         </div>

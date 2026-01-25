@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { MoveLeft, Mail, Loader2, Link as LinkIcon } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { supabase } from "@/lib/supabase";
+import { getDictionary } from "@/lib/get-dictionary";
+import { Locale } from "@/lib/diagnostic";
 
-export default function LoginPage() {
+export default function LoginPage({ params }: { params: Promise<{ lang: Locale }> }) {
+    const { lang } = use(params);
+    const dict = use(getDictionary(lang));
+
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isSent, setIsSent] = useState(false);
@@ -28,7 +33,7 @@ export default function LoginPage() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: `${window.location.origin}/dashboard`,
+                    emailRedirectTo: `${window.location.origin}/${lang}/dashboard`,
                 },
             });
 
@@ -36,16 +41,37 @@ export default function LoginPage() {
             setIsSent(true);
         } catch (err: any) {
             console.error("Auth Error:", err);
-            setError(err.message || "Ocorreu um erro ao enviar o link.");
+            const errorMessage = lang === 'pt'
+                ? "Ocorreu um erro ao enviar o link."
+                : lang === 'es'
+                    ? "Ocurrió un error al enviar el enlace."
+                    : "An error occurred while sending the link.";
+            setError(err.message || errorMessage);
         } finally {
             setIsLoading(false);
         }
     };
 
+    // Helper to render localized agreement with links
+    const renderAgreement = () => {
+        const text = dict.login.agreement;
+        const parts = text.split(/({terms}|{privacy})/);
+
+        return parts.map((part: string, i: number) => {
+            if (part === "{terms}") {
+                return <Link key={i} href="#" className="underline hover:text-primary">{dict.footer.terms}</Link>;
+            }
+            if (part === "{privacy}") {
+                return <Link key={i} href="#" className="underline hover:text-primary">{dict.footer.privacy}</Link>;
+            }
+            return part;
+        });
+    };
+
     return (
         <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-            <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <MoveLeft className="h-4 w-4" /> Voltar para Home
+            <Link href={`/${lang}`} className="absolute top-8 left-8 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <MoveLeft className="h-4 w-4" /> {dict.login.back_to_home}
             </Link>
 
             <motion.div
@@ -55,30 +81,30 @@ export default function LoginPage() {
                 className="w-full max-w-md"
             >
                 <div className="flex flex-col items-center mb-8">
-                    <Logo lang="en" size={64} showText={true} className="flex-col animate-pulse" />
+                    <Logo lang={lang} size={64} showText={true} className="flex-col animate-pulse" />
                 </div>
 
                 <Card className="border-border/40 shadow-xl bg-card/50 backdrop-blur">
                     <CardHeader className="space-y-1 text-center">
                         <CardTitle className="text-2xl font-heading">
-                            {isSent ? "Verifique seu e-mail" : "Acesse seu Diagnóstico"}
+                            {isSent ? dict.login.success_title : dict.login.title}
                         </CardTitle>
                         <CardDescription>
                             {isSent
-                                ? "Enviamos um link de acesso para o seu endereço de e-mail."
-                                : "Entre com seu e-mail para salvar seu histórico e desbloquear relatórios."}
+                                ? dict.login.success_description
+                                : dict.login.description}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="grid gap-4">
                         {!isSent ? (
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="email" className="text-xs uppercase tracking-widest text-muted-foreground">E-mail</Label>
+                                    <Label htmlFor="email" className="text-xs uppercase tracking-widest text-muted-foreground">{dict.login.email_label}</Label>
                                     <div className="relative">
                                         <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                         <Input
                                             id="email"
-                                            placeholder="seu@email.com"
+                                            placeholder={dict.login.email_placeholder}
                                             type="email"
                                             autoCapitalize="none"
                                             autoComplete="email"
@@ -97,16 +123,16 @@ export default function LoginPage() {
                                 <Button className="w-full h-10 rounded-lg" type="submit" disabled={isLoading}>
                                     {isLoading ? (
                                         <>
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enviando...
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {dict.login.sending}
                                         </>
                                     ) : (
-                                        "Enviar Link de Acesso"
+                                        dict.login.submit_button
                                     )}
                                 </Button>
                                 <div className="pt-2">
                                     <Button variant="outline" className="w-full h-10 rounded-lg border-dashed text-muted-foreground hover:text-primary transition-colors" asChild>
-                                        <Link href="/dashboard">
-                                            Acessar Modo Demo (Preview)
+                                        <Link href={`/${lang}/dashboard`}>
+                                            {dict.login.demo_link}
                                         </Link>
                                     </Button>
                                 </div>
@@ -118,15 +144,15 @@ export default function LoginPage() {
                                 </div>
                                 <div className="text-center space-y-2">
                                     <p className="text-sm text-muted-foreground">
-                                        Não recebeu? Verifique o spam ou tente novamente.
+                                        {dict.login.not_received}
                                     </p>
                                     <Button variant="link" className="text-xs" onClick={() => setIsSent(false)}>
-                                        Tentar outro e-mail
+                                        {dict.login.try_another_email}
                                     </Button>
                                 </div>
                                 <Button variant="outline" className="w-full" asChild>
-                                    <Link href="/dashboard">
-                                        (Link para Demo: Ir ao Dashboard)
+                                    <Link href={`/${lang}/dashboard`}>
+                                        {dict.login.demo_link_success}
                                     </Link>
                                 </Button>
                             </div>
@@ -136,13 +162,11 @@ export default function LoginPage() {
                                 <span className="w-full border-t border-border/40" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">Sem senhas</span>
+                                <span className="bg-background px-2 text-muted-foreground">{dict.login.no_passwords}</span>
                             </div>
                         </div>
                         <p className="px-8 text-center text-xs text-muted-foreground">
-                            Ao continuar, você concorda com nossos{" "}
-                            <Link href="#" className="underline hover:text-primary">Termos</Link> e{" "}
-                            <Link href="#" className="underline hover:text-primary">Privacidade</Link>.
+                            {renderAgreement()}
                         </p>
                     </CardContent>
                 </Card>

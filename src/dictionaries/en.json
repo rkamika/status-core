@@ -55,6 +55,7 @@
         "new_diagnosis": "New Diagnosis",
         "active_v4": "Active v4",
         "performed_at": "Performed on",
+        "performed_at_date": "on",
         "neural_confidence": "Neural Confidence",
         "antifragility": "Antifragility",
         "pillar_analysis": "7 Pillar Analysis",
@@ -404,5 +405,22 @@
         "leisure": "Leisure",
         "spirituality": "Meaning",
         "stoic": "Stoic"
+    },
+    "login": {
+        "title": "Access your Diagnosis",
+        "description": "Enter your email to save your history and unlock reports.",
+        "email_label": "Email",
+        "email_placeholder": "your@email.com",
+        "submit_button": "Send Access Link",
+        "sending": "Sending...",
+        "success_title": "Check your email",
+        "success_description": "We sent an access link to your email address.",
+        "not_received": "Didn't receive it? Check spam or try again.",
+        "try_another_email": "Try another email",
+        "demo_link": "Access Demo Mode (Preview)",
+        "demo_link_success": "(Demo Link: Go to Dashboard)",
+        "back_to_home": "Back to Home",
+        "no_passwords": "No passwords",
+        "agreement": "By continuing, you agree to our {terms} and {privacy}."
     }
 }

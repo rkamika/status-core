@@ -47,6 +47,7 @@
         "new_diagnosis": "Nuevo Diagnóstico",
         "active_v4": "Activo v4",
         "performed_at": "Realizado el",
+        "performed_at_date": "el",
         "neural_confidence": "Confianza Neural",
         "antifragility": "Antifragilidad",
         "pillar_analysis": "Análisis de los 7 Pilares",
@@ -97,7 +98,7 @@
                     "Mucha reactividad",
                     "Inestable",
                     "Equilibrado",
-                    "Serenidad total"
+                    "Serenidade total"
                 ]
             },
             "4": {
@@ -111,7 +112,7 @@
                 ]
             },
             "5": {
-                "text": "Tengo claridad sobre mis próximas metas de crecimiento profesional.",
+                "text": "Tengo claridad sobre mis próximas metas de crescimento profissional.",
                 "options": [
                     "Totalmente perdido",
                     "Mucha duda",
@@ -241,7 +242,7 @@
                 ]
             },
             "18": {
-                "text": "Siento que mi vida personal es diversa y liviana, más allá de las responsabilidades.",
+                "text": "Siento que mi vida personal é diversa y liviana, más allá de las responsabilidades.",
                 "options": [
                     "Peso total",
                     "Monótono",
@@ -271,7 +272,7 @@
                 ]
             },
             "21": {
-                "text": "Practico momentos de reflexión, meditación o conexión interior con regularidade.",
+                "text": "Praticó momentos de reflexión, meditación o conexión interior con regularidade.",
                 "options": [
                     "Nunca lo hago",
                     "Raramente",
@@ -343,7 +344,7 @@
         "future_90_days": "Tu Futuro en 90 Días",
         "evolution_trajectory": "Trayectoria de Evolución",
         "price_of_inertia": "Precio de la Inercia",
-        "practical_protocol": "Protocolo Práctico",
+        "practical_protocol": "Protocolo Prático",
         "impact_leverage": "Palanca de Impacto",
         "risk_warnings": "Alertas de Riesgo",
         "risk_calculation_note": "Riesgos calculados en base a patrones de inconsistencia de puntuación.",
@@ -363,10 +364,10 @@
         "trajectory_desc": "Con corrección de cuello de botella alfa y reequilibrio sistémico.",
         "inertia_desc": "Manteniendo los patrones actuales e ignorando las alertas de riesgo detectadas.",
         "forecast_quote": "“En 90 días, su sistema neural se habrá adaptado al nuevo patrón. La inercia hoy cuesta aproximadamente 3 veces más esfuerzo de recuperación en el futuro.”",
-        "forecast_calc_label": "Cálculo del Costo de Oportunidad Neural",
+        "forecast_calc_label": "Cálculo del Costo de Oportunidades Neural",
         "immediate_command": "Comando Inmediato v1.0",
         "shift_label": "CAMBIO",
-        "shift_desc": "Interrumpir el patrón reactivo.",
+        "shift_desc": "Interromper el patrón reactivo.",
         "focus_label": "FOCO",
         "focus_desc": "Anclarse en la palanca única.",
         "act_label": "ACCIÓN",
@@ -384,7 +385,7 @@
         "work_vs_health": "Tu alto desempeño en el Trabajo está asfixiando tu Recuperación Física.",
         "finance_vs_rel": "La inestabilidad Financiera está generando reactividad en tus Relaciones.",
         "id_vs_spir": "Tu fuerte Identidad necesita un Propósito mayor para evitar el vacío existencial.",
-        "vitality_brake": "Tu baja Vitalidad es el principal freno para tu claridad mental hoy.",
+        "vitality_brake": "Tu baja Vitalidade é o principal freno para tu claridad mental hoy.",
         "harmony": "Tus pilares operan en relativa armonía sistémica."
     },
     "pillars": {
@@ -396,5 +397,22 @@
         "leisure": "Ocio",
         "spirituality": "Sentido",
         "stoic": "Estoica"
+    },
+    "login": {
+        "title": "Accede a tu Diagnóstico",
+        "description": "Ingresa tu email para guardar tu historial y desbloquear informes.",
+        "email_label": "Correo electrónico",
+        "email_placeholder": "tu@email.com",
+        "submit_button": "Enviar enlace de acceso",
+        "sending": "Enviando...",
+        "success_title": "Verifica tu correo",
+        "success_description": "Hemos enviado un enlace de acceso a tu dirección de correo electrónico.",
+        "not_received": "¿No lo recibiste? Verifica el spam o inténtalo de nuevo.",
+        "try_another_email": "Intentar con otro correo",
+        "demo_link": "Acceder al Modo Demo (Vista previa)",
+        "demo_link_success": "(Enlace a Demo: Ir al Dashboard)",
+        "back_to_home": "Volver al Inicio",
+        "no_passwords": "Sin contraseñas",
+        "agreement": "Al continuar, aceptas nuestros {terms} e {privacy}."
     }
 }

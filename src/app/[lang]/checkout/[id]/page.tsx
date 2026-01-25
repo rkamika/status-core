@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getDiagnosisById, unlockDiagnosis } from "@/lib/storage";
 import { getSystemSetting, validatePromoCode, PromoCode } from "@/lib/admin";
-import { Locale } from "@/lib/types";
 import { Logo } from "@/components/logo";
+import { MercadoPagoBricks } from "@/components/mercado-pago-bricks";
+import { Locale, SavedDiagnosis } from "@/lib/types";
 
 export default function CheckoutPage({ params }: { params: Promise<{ lang: Locale; id: string }> }) {
     const { lang, id } = use(params);
@@ -24,6 +25,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const [diagnosis, setDiagnosis] = useState<any>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
+    const [preferenceId, setPreferenceId] = useState<string | null>(null);
 
     // Pricing & Promo State
     const [basePrice, setBasePrice] = useState(97.00);
@@ -87,8 +89,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             const data = await response.json();
             if (data.error) throw new Error(data.error);
 
+            if (data.provider === 'mercadopago' && data.preferenceId) {
+                // Instead of redirecting to checkoutUrl, we set the preferenceId to show Bricks
+                setPreferenceId(data.preferenceId);
+                return;
+            }
+
             if (data.checkoutUrl) {
-                // For redirecting to Stripe Checkout or Mercado Pago Checkout Pro
+                // For Stripe or other redirect-based providers
                 window.location.href = data.checkoutUrl;
                 return;
             }
@@ -278,39 +286,73 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                 </div>
                             </Card>
 
-                            {/* MAIN CTA */}
+                            {/* MAIN CTA / BRICKS */}
                             <Card className="border-border dark:border-white/5 bg-card/70 dark:bg-zinc-900/30 backdrop-blur-xl shadow-xl p-6">
                                 <div className="space-y-6">
-                                    <div className="p-4 rounded-xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 space-y-4">
-                                        <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
-                                            <Shield className="h-4 w-4 text-primary" />
-                                            {lang === 'pt' ? 'Processamento Criptografado SSL' : 'SSL Encrypted Processing'}
+                                    {preferenceId ? (
+                                        <div className="space-y-6">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-primary italic">
+                                                <Lock className="h-4 w-4" />
+                                                {lang === 'pt' ? 'Pagamento Seguro Local' : 'Secure Local Payment'}
+                                            </div>
+                                            <MercadoPagoBricks
+                                                preferenceId={preferenceId}
+                                                onSuccess={async () => {
+                                                    await unlockDiagnosis(id);
+                                                    setIsComplete(true);
+                                                    setTimeout(() => {
+                                                        router.push(`/${lang}/report/${id}`);
+                                                    }, 2000);
+                                                }}
+                                                onError={(err) => {
+                                                    console.error("Bricks UI Error:", err);
+                                                    alert(lang === 'pt' ? "Erro no processamento. Tente novamente." : "Processing error. Try again.");
+                                                    setPreferenceId(null);
+                                                }}
+                                            />
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="text-[10px] uppercase font-black tracking-widest opacity-40 hover:opacity-100"
+                                                onClick={() => setPreferenceId(null)}
+                                            >
+                                                {lang === 'pt' ? '← Voltar para resumo' : '← Back to summary'}
+                                            </Button>
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <>
+                                            <div className="p-4 rounded-xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 space-y-4">
+                                                <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
+                                                    <Shield className="h-4 w-4 text-primary" />
+                                                    {lang === 'pt' ? 'Processamento Criptografado SSL' : 'SSL Encrypted Processing'}
+                                                </div>
+                                            </div>
 
-                                    <Button
-                                        size="lg"
-                                        className="w-full h-16 text-lg font-black italic uppercase shadow-xl shadow-primary/20 group"
-                                        onClick={handleUnlock}
-                                        disabled={isProcessing}
-                                    >
-                                        {isProcessing ? (
-                                            <RefreshCcw className="h-5 w-5 animate-spin" />
-                                        ) : (
-                                            <>
-                                                {isFree
-                                                    ? (lang === 'pt' ? 'Desbloquear Grátis agora' : 'Unlock for Free now')
-                                                    : (lang === 'pt' ? 'Finalizar Pagamento' : 'Complete Payment')}
-                                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                                            </>
-                                        )}
-                                    </Button>
+                                            <Button
+                                                size="lg"
+                                                className="w-full h-16 text-lg font-black italic uppercase shadow-xl shadow-primary/20 group"
+                                                onClick={handleUnlock}
+                                                disabled={isProcessing}
+                                            >
+                                                {isProcessing ? (
+                                                    <RefreshCcw className="h-5 w-5 animate-spin" />
+                                                ) : (
+                                                    <>
+                                                        {isFree
+                                                            ? (lang === 'pt' ? 'Desbloquear Grátis agora' : 'Unlock for Free now')
+                                                            : (lang === 'pt' ? 'Finalizar Pagamento' : 'Complete Payment')}
+                                                        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                                    </>
+                                                )}
+                                            </Button>
 
-                                    <div className="text-center">
-                                        <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-40">
-                                            {lang === 'pt' ? '* Acesso vitalício ao seu relatório gerado.' : '* Lifetime access to your generated report.'}
-                                        </span>
-                                    </div>
+                                            <div className="text-center">
+                                                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-40">
+                                                    {lang === 'pt' ? '* Acesso vitalício ao seu relatório gerado.' : '* Lifetime access to your generated report.'}
+                                                </span>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </Card>
                         </motion.div>

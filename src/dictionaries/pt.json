@@ -55,6 +55,7 @@
         "new_diagnosis": "Novo Diagnóstico",
         "active_v4": "Ativo v4",
         "performed_at": "Realizado em",
+        "performed_at_date": "em",
         "neural_confidence": "Confiança Neural",
         "antifragility": "Antifragilidade",
         "pillar_analysis": "Análise dos 7 Pilares",
@@ -300,7 +301,7 @@
         "empty_title": "Nenhum diagnóstico encontrado",
         "empty_desc": "Complete o assessment para ver seu resultado.",
         "empty_button": "Iniciar Assessment",
-        "pillars_tagline": "7 Pilares da Experiência Humana",
+        "pillars_tagline": "7 Pilares da Experiencia Humana",
         "pillars_overview": "Visão Geral dos Pilares",
         "platinum_v4": "PLATINUM v4",
         "premium_desc": "Desbloqueie a versão completa do Status Core v4 Platinum. Receba um plano tático de 7 dias, análise de antifragilidade e identifique seu maior gargalo existencial.",
@@ -314,7 +315,7 @@
         "title": "Relatório Completo",
         "analysis": "Análise de Estado",
         "systemic_intelligence": "INTELIGÊNCIA SISTÊMICA v4",
-        "results_by_pillar": "Resultados por Pilar",
+        "results_by_pilar": "Resultados por Pilar",
         "meaning": "O que isso significa",
         "characteristics": "Características Observadas",
         "risk": "Risco Primário",
@@ -404,5 +405,22 @@
         "leisure": "Lazer",
         "spirituality": "Sentido",
         "stoic": "Estoica"
+    },
+    "login": {
+        "title": "Acesse seu Diagnóstico",
+        "description": "Entre com seu e-mail para salvar seu histórico e desbloquear relatórios.",
+        "email_label": "E-mail",
+        "email_placeholder": "seu@email.com",
+        "submit_button": "Enviar Link de Acesso",
+        "sending": "Enviando...",
+        "success_title": "Verifique seu e-mail",
+        "success_description": "Enviamos um link de acesso para o seu endereço de e-mail.",
+        "not_received": "Não recebeu? Verifique o spam ou tente novamente.",
+        "try_another_email": "Tentar outro e-mail",
+        "demo_link": "Acessar Modo Demo (Preview)",
+        "demo_link_success": "(Link para Demo: Ir ao Dashboard)",
+        "back_to_home": "Voltar para Home",
+        "no_passwords": "Sem senhas",
+        "agreement": "Ao continuar, você concorda com nossos {terms} e {privacy}."
     }
 }
