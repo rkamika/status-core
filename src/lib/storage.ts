@@ -73,7 +73,12 @@ export async function saveDiagnosis(diagnosis: SavedDiagnosis): Promise<void> {
 
 // Get diagnosis by ID
 export async function getDiagnosisById(id: string): Promise<SavedDiagnosis | null> {
+    // 2. Local Fallback
+    const storage = getLocalStorage();
+    const localVersion = storage.diagnoses.find(d => d.id === id) || null;
+
     // 1. Try Supabase
+    let cloudVersion: SavedDiagnosis | null = null;
     try {
         const { data, error } = await supabase
             .from('diagnoses')
@@ -82,7 +87,7 @@ export async function getDiagnosisById(id: string): Promise<SavedDiagnosis | nul
             .single();
 
         if (data && !error) {
-            return {
+            cloudVersion = {
                 id: data.id,
                 timestamp: new Date(data.created_at).getTime(),
                 lang: data.lang,
@@ -102,9 +107,17 @@ export async function getDiagnosisById(id: string): Promise<SavedDiagnosis | nul
         console.error('Supabase Fetch Error:', error);
     }
 
-    // 2. Local Fallback
-    const storage = getLocalStorage();
-    return storage.diagnoses.find(d => d.id === id) || null;
+    // Merge strategy:
+    // If we have cloud data, use it as base. 
+    // BUT if local data exists and shows 'isUnlocked: true', override cloud.
+    if (cloudVersion && localVersion) {
+        return {
+            ...cloudVersion,
+            isUnlocked: cloudVersion.isUnlocked || localVersion.isUnlocked
+        };
+    }
+
+    return cloudVersion || localVersion;
 }
 
 // Get all diagnoses

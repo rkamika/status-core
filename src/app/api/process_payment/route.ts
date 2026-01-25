@@ -51,8 +51,23 @@ export async function POST(req: Request) {
 
         if (result.status === 'approved') {
             if (result.external_reference) {
-                console.log('[Payment API] Unlocking diagnosis:', result.external_reference);
-                await unlockDiagnosis(result.external_reference);
+                console.log('[Payment API] Unlocking diagnosis via Admin:', result.external_reference);
+
+                // Use admin client to bypass RLS on server
+                const { supabaseAdmin } = await import('@/lib/supabase-admin');
+                const { error: unlockError } = await supabaseAdmin
+                    .from('diagnoses')
+                    .update({
+                        is_unlocked: true,
+                        unlocked_at: new Date().toISOString()
+                    })
+                    .eq('id', result.external_reference);
+
+                if (unlockError) {
+                    console.error('[Payment API] Admin Unlock Error:', unlockError);
+                } else {
+                    console.log('[Payment API] Diagnosis unlocked successfully');
+                }
             }
             return NextResponse.json({
                 status: result.status,
