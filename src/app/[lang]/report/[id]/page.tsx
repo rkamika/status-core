@@ -1110,7 +1110,6 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                             </p>
                                         </div>
                                         <div className="pt-8 flex justify-center gap-4 relative z-10 no-print">
-                                            <Button variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 uppercase font-black tracking-widest text-[10px]">{dict.common.share || "Share"}</Button>
                                             <Button className="rounded-full px-8 shadow-lg shadow-primary/20 uppercase font-black tracking-widest text-[10px]" onClick={handlePrint}>{dict.report.download_report}</Button>
                                         </div>
                                     </Card>
