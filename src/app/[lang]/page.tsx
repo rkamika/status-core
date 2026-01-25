@@ -235,29 +235,6 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           </div>
         </section>
 
-        {/* New Enterprise / Elite Teams Section */}
-        <section className="w-full py-24 md:py-32">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-4xl mx-auto text-center space-y-12">
-              <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border/40 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em]">
-                  <Activity className="h-3 w-3 text-primary" /> {dict.landing.enterprise_badge}
-                </div>
-                <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter">
-                  {dict.landing.enterprise_title}
-                </h2>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  {dict.landing.enterprise_desc}
-                </p>
-              </div>
-              <Link href={`/${lang}/assessment`} className="inline-block pt-4">
-                <Button variant="outline" size="lg" className="h-16 px-12 text-xl font-black border-primary/40 text-primary hover:bg-primary/5 transition-all">
-                  {dict.landing.contact_sales} <ArrowRight className="ml-3 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
       </main>
       <footer className="w-full py-20 border-t border-border/10 bg-zinc-950 items-center justify-center flex">
         <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-12">
