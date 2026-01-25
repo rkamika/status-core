@@ -16,7 +16,7 @@ declare global {
     }
 }
 
-export function MercadoPagoBricks({ preferenceId, onSuccess, onError }: MercadoPagoBricksProps) {
+export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onError }: MercadoPagoBricksProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const mpInstance = useRef<any>(null);
     const [isSdkLoaded, setIsSdkLoaded] = useState(false);
