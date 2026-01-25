@@ -77,19 +77,36 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const handleUnlock = async () => {
         setIsProcessing(true);
 
-        // Simulate payment processing if not free
-        if (!isFree) {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ diagnosisId: id, lang })
+            });
+
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+
+            if (data.checkoutUrl) {
+                // For redirecting to Stripe Checkout or Mercado Pago Checkout Pro
+                window.location.href = data.checkoutUrl;
+                return;
+            }
+
+            // Fallback just in case
+            if (isFree) {
+                await unlockDiagnosis(id);
+                setIsComplete(true);
+                setTimeout(() => {
+                    router.push(`/${lang}/report/${id}`);
+                }, 2000);
+            }
+        } catch (err: any) {
+            console.error('Payment Error:', err);
+            alert(err.message || 'Payment initiation failed');
+        } finally {
+            setIsProcessing(false);
         }
-
-        await unlockDiagnosis(id);
-        setIsProcessing(false);
-        setIsComplete(true);
-
-        // Redirect to report after 2 seconds
-        setTimeout(() => {
-            router.push(`/${lang}/report/${id}`);
-        }, 2000);
     };
 
     if (!diagnosis) {
