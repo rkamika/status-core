@@ -24,7 +24,7 @@ import {
 import { getAllDiagnoses, getCurrentDiagnosisId } from "@/lib/storage";
 import { SavedDiagnosis } from "@/lib/types";
 import { getDictionary } from "@/lib/get-dictionary";
-import { Locale } from "@/lib/diagnostic";
+import { calculateDiagnosis, Locale } from "@/lib/diagnostic";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSelector } from "@/components/language-selector";
 import { Logo } from "@/components/logo";
@@ -43,12 +43,30 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                 getAllDiagnoses(),
                 getCurrentDiagnosisId()
             ]);
-            setDiagnoses(allDiagnoses);
+
+            // Re-localize all diagnoses based on the current URL 'lang'
+            const localizedDiagnoses = allDiagnoses.map(d => {
+                const localized = calculateDiagnosis(d.answers, lang);
+                return {
+                    ...d,
+                    label: localized.label,
+                    oneLiner: localized.one_liner,
+                    dimensions: localized.pillarScores,
+                    v3Insights: d.v3Insights ? {
+                        ...d.v3Insights,
+                        archetype: localized.v3Insights?.archetype || d.v3Insights.archetype,
+                        antifragilityScore: localized.v3Insights?.antifragilityScore || d.v3Insights.antifragilityScore,
+                        correlations: localized.v3Insights?.correlations || d.v3Insights.correlations,
+                    } : undefined
+                };
+            });
+
+            setDiagnoses(localizedDiagnoses);
             setCurrentId(currentDiagnosisId);
             setIsLoading(false);
         };
         loadData();
-    }, []);
+    }, [lang]);
 
     const currentDiagnosis = diagnoses.find(d => d.id === currentId) || diagnoses[0];
     const history = diagnoses.slice(1, 11); // Show up to 10 recent diagnoses

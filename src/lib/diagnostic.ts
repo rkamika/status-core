@@ -692,6 +692,23 @@ export function calculateDiagnosis(answers: Record<number, number>, locale: Loca
         );
     }
 
+    const archetypes = {
+        pt: {
+            "Architect of Destiny": "Arquiteto do Destino",
+            "Transition Explorer": "Explorador em Transição"
+        },
+        es: {
+            "Architect of Destiny": "Arquitecto del Destino",
+            "Transition Explorer": "Explorador en Transición"
+        },
+        en: {
+            "Architect of Destiny": "Architect of Destiny",
+            "Transition Explorer": "Transition Explorer"
+        }
+    };
+
+    const currentArchetype = overallAvg > 4 ? "Architect of Destiny" : "Transition Explorer";
+
     return {
         state,
         label: config.labels[locale],
@@ -704,9 +721,7 @@ export function calculateDiagnosis(answers: Record<number, number>, locale: Loca
             antifragilityScore,
             bottleneckLabel: bottleneck.label,
             correlations,
-            archetype: overallAvg > 4
-                ? (locale === "pt" ? "Arquiteto do Destino" : locale === "es" ? "Arquitecto del Destino" : "Architect of Destiny")
-                : (locale === "pt" ? "Explorador em Transição" : locale === "es" ? "Explorador en Transición" : "Transition Explorer")
+            archetype: archetypes[locale][currentArchetype]
         }
     };
 }
