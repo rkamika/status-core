@@ -148,7 +148,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                         <div className="flex items-center justify-between">
                             <div className="space-y-1">
                                 <h2 className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black">{dict.dashboard.current_diagnosis}</h2>
-                                <p className="text-2xl font-bold font-heading">{dict.dashboard.overview_v2}</p>
+                                <p className="text-2xl font-bold font-heading">{dict.dashboard.overview_v4}</p>
                             </div>
                             <Link href={`/${lang}/assessment`}>
                                 <Button variant="outline" size="sm" className="rounded-full border-primary/20 hover:border-primary transition-colors font-bold px-6">
@@ -165,7 +165,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                             <Card className="border-border bg-card/70 dark:bg-zinc-900/40 backdrop-blur-xl shadow-2xl overflow-hidden group hover:border-primary/10 transition-all duration-700 rounded-[2.5rem]">
                                 <CardHeader className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 pb-10 border-b border-border/40 p-10">
                                     <div className="space-y-3">
-                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">{dict.dashboard.active_v2}</Badge>
+                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">{dict.dashboard.active_v4}</Badge>
                                         <CardTitle className="text-6xl md:text-8xl font-heading font-black tracking-tighter text-foreground leading-[0.8] py-2">
                                             {currentDiagnosis.label}
                                         </CardTitle>

@@ -175,7 +175,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Sinais mistos entre seus pilares estão gerando neblina mental.",
             report: {
-                meaning: "A Confusão v2 ocorre quando os pilares de Identidade e Espiritualidade estão desalinhados, impedindo uma visão clara do todo.",
+                meaning: "A Confusão v4 ocorre quando os pilares de Identidade e Espiritualidade estão desalinhados, impedindo uma visão clara do todo.",
                 characteristics: ["Dificuldade em priorizar qual pilar focar", "Sentimento de estar perdido mesmo agindo", "Conflito entre valores e ações diárias"],
                 primary_risk: "Gasto de energia em áreas que não trazem realização real.",
                 recommended_focus: ["Revisão de valores (Identidade)", "Meditação (Espiritualidade)", "Journaling"],
@@ -190,7 +190,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Mixed signals between your pillars are generating mental fog.",
             report: {
-                meaning: "Confusion v2 occurs when the Identity and Spirituality pillars are misaligned, preventing a clear view of the whole.",
+                meaning: "Confusion v4 occurs when the Identity and Spirituality pillars are misaligned, preventing a clear view of the whole.",
                 characteristics: ["Difficulty prioritizing which pillar to focus on", "Feeling lost despite taking action", "Conflict between values and daily actions"],
                 primary_risk: "Wasting energy on areas that do not bring real fulfillment.",
                 recommended_focus: ["Value review (Identity)", "Meditation (Spirituality)", "Journaling"],
@@ -205,7 +205,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Las señales mixtas entre tus pilares están generando niebla mental.",
             report: {
-                meaning: "La Confusión v2 ocurre cuando los pilares de Identidad y Espiritualidad están desalineados, impidiendo una visión clara del todo.",
+                meaning: "La Confusión v4 ocurre cuando los pilares de Identidad y Espiritualidad están desalineados, impidiendo una visión clara del todo.",
                 characteristics: ["Dificultad para priorizar en qué pilar enfocarse", "Sentimiento de estar perdido a pesar de actuar", "Conflicto entre valores y acciones diarias"],
                 primary_risk: "Gasto de energía en áreas que no aportan una realización real.",
                 recommended_focus: ["Revisión de valores (Identidad)", "Meditación (Espiritualidad)", "Journaling"],
@@ -222,7 +222,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Os pilares de Saúde e Lazer estão sendo drenados pelo Trabalho.",
             report: {
-                meaning: "A Sobrecarga v2 é um desequilíbrio sistêmico onde o volume de um pilar asfixia os outros.",
+                meaning: "A Sobrecarga v4 é um desequilíbrio sistêmico onde o volume de um pilar asfixia os outros.",
                 characteristics: ["Fadiga persistente", "Falta de tempo para si mesmo", "Negligência com a saúde física"],
                 primary_risk: "Colapso físico ou burnout por falta de recuperação.",
                 recommended_focus: ["Restabelecimento do sono", "Limites no trabalho", "Lazer obrigatório"],
@@ -237,7 +237,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Health and Leisure pillars are being drained by Work.",
             report: {
-                meaning: "Overload v2 is a systemic imbalance where the volume of one pillar suffocates the others.",
+                meaning: "Overload v4 is a systemic imbalance where the volume of one pillar suffocates the others.",
                 characteristics: ["Persistent fatigue", "Lack of time for oneself", "Neglect of physical health"],
                 primary_risk: "Physical collapse or burnout due to lack of recovery.",
                 recommended_focus: ["Sleep restoration", "Work boundaries", "Mandatory leisure"],
@@ -252,7 +252,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Los pilares de Salud y Ocio están siendo drenados por el Trabajo.",
             report: {
-                meaning: "La Sobrecarga v2 es un desequilibrio sistémico donde el volumen de un pilar asfixia a los demás.",
+                meaning: "La Sobrecarga v4 es un desequilibrio sistémico donde el volumen de un pilar asfixia a los demás.",
                 characteristics: ["Fatiga persistente", "Falta de tiempo para uno mismo", "Negligencia con la salud física"],
                 primary_risk: "Colapso físico o burnout por falta de recuperación.",
                 recommended_focus: ["Restablecimiento del sueño", "Límites en el trabajo", "Ocio obligatorio"],
@@ -269,7 +269,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Conflitos no pilar de Relacionamentos estão gerando gatilhos emocionais.",
             report: {
-                meaning: "A Reatividade v2 indica que sua segurança emocional nos relacionamentos está fragilizada.",
+                meaning: "A Reatividade v4 indica que sua segurança emocional nos relacionamentos está fragilizada.",
                 characteristics: ["Paciência curta com pessoas próximas", "Sentimento de isolamento", "Defensividade excessiva"],
                 primary_risk: "Ruptura de laços importantes e solidão.",
                 recommended_focus: ["Comunicação não-violenta", "Escuta ativa", "Perdão"],
@@ -284,7 +284,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Conflicts in the Relationships pillar are generating emotional triggers.",
             report: {
-                meaning: "Reactivity v2 indicates that your emotional security in relationships is fragile.",
+                meaning: "Reactivity v4 indicates that your emotional security in relationships is fragile.",
                 characteristics: ["Short patience with close ones", "Feeling of isolation", "Excessive defensiveness"],
                 primary_risk: "Breakdown of important bonds and loneliness.",
                 recommended_focus: ["Non-violent communication", "Active listening", "Forgiveness"],
@@ -299,7 +299,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Conflictos en el pilar de Relaciones están generando disparadores emocionales.",
             report: {
-                meaning: "La Reactividad v2 indica que tu seguridad emocional en las relaciones está debilitada.",
+                meaning: "La Reactividad v4 indica que tu seguridad emocional en las relaciones está debilitada.",
                 characteristics: ["Poca paciencia con los allegados", "Sentimiento de aislamiento", "Defensividad excesiva"],
                 primary_risk: "Ruptura de vínculos importantes y soledad.",
                 recommended_focus: ["Comunicación no violenta", "Escucha activa", "Perdón"],
@@ -316,7 +316,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Instabilidade no pilar Financeiro gera medo do futuro.",
             report: {
-                meaning: "A Incerteza v2 está ligada à falta de uma rede de segurança material ou plano futuro.",
+                meaning: "A Incerteza v4 está ligada à falta de uma rede de segurança material ou plano futuro.",
                 characteristics: ["Preocupação excessiva com dinheiro", "Hesitação em investir em si", "Medo da escassez"],
                 primary_risk: "Paralisia e perda de autonomia.",
                 recommended_focus: ["Planejamento financeiro", "Reserva de emergência", "Crescimento profissional"],
@@ -331,7 +331,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Instability in the Financial pillar generates fear of the future.",
             report: {
-                meaning: "Uncertainty v2 is linked to the lack of a material safety net or future plan.",
+                meaning: "Uncertainty v4 is linked to the lack of a material safety net or future plan.",
                 characteristics: ["Excessive worry about money", "Hesitation to invest in oneself", "Fear of scarcity"],
                 primary_risk: "Paralysis and loss of autonomy.",
                 recommended_focus: ["Financial planning", "Emergency fund", "Professional growth"],
@@ -346,7 +346,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Inestabilidad en el pilar Financiero genera miedo al futuro.",
             report: {
-                meaning: "La Incertidumbre v2 está ligada a la falta de una red de seguridad material o un plan futuro.",
+                meaning: "La Incertidumbre v4 está ligada a la falta de una red de seguridad material o un plan futuro.",
                 characteristics: ["Preocupación excesiva por el dinero", "Dudas para invertir en uno mismo", "Miedo a la escasez"],
                 primary_risk: "Parálisis y pérdida de autonomía.",
                 recommended_focus: ["Planificación financiera", "Reserva de emergencia", "Crecimiento profesional"],
@@ -363,7 +363,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "O pilar de Espiritualidade e Sentido está em erosão.",
             report: {
-                meaning: "A Desconexão v2 é o vazio existencial. Você está fazendo, mas não está 'sendo'.",
+                meaning: "A Desconexão v4 é o vazio existencial. Você está fazendo, mas não está 'sendo'.",
                 characteristics: ["Sentimento de inutilidade", "Apatia espiritual", "Falta de conexão com algo maior"],
                 primary_risk: "Depressão situacional ou crise de meia idade.",
                 recommended_focus: ["Retiro ou silêncio", "Contribuição social", "Filosofia"],
@@ -378,7 +378,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "The Spirituality and Meaning pillar is eroding.",
             report: {
-                meaning: "Disconnection v2 is existential emptiness. You are 'doing' but not 'being'.",
+                meaning: "Disconnection v4 is existential emptiness. You are 'doing' but not 'being'.",
                 characteristics: ["Sense of worthlessness", "Spiritual apathy", "Lack of connection with something larger"],
                 primary_risk: "Situational depression or mid-life crisis.",
                 recommended_focus: ["Retreat or silence", "Social contribution", "Philosophy"],
@@ -393,7 +393,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "El pilar de Espiritualidad y Sentido está en erosión.",
             report: {
-                meaning: "La Desconexión v2 es el vacío existencial. Estás 'haciendo', pero no estás 'siendo'.",
+                meaning: "La Desconexión v4 es el vacío existencial. Estás 'haciendo', pero no estás 'siendo'.",
                 characteristics: ["Sentimiento de inutilidad", "Apatía espiritual", "Falta de conexión con algo más grande"],
                 primary_risk: "Depresión situacional o crisis de identidad.",
                 recommended_focus: ["Retiro o silencio", "Contribución social", "Filosofía"],
@@ -410,7 +410,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "O pilar de Identidade parou de evoluir por falta de novos desafios.",
             report: {
-                meaning: "Estagnação v2 ocorre quando você parou de investir no próprio crescimento.",
+                meaning: "Estagnação v4 ocorre quando você parou de investir no próprio crescimento.",
                 characteristics: ["Tédio com a própria rotina", "Falta de novos aprendizados", "Conforto excessivo"],
                 primary_risk: "Obsolescência e perda do brilho pessoal.",
                 recommended_focus: ["Cursos difíceis", "Viagens", "Novos círculos sociais"],
@@ -425,7 +425,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Identity pillar has stopped evolving due to lack of new challenges.",
             report: {
-                meaning: "Stagnation v2 occurs when you have stopped investing in your own growth.",
+                meaning: "Stagnation v4 occurs when you have stopped investing in your own growth.",
                 characteristics: ["Boredom with your routine", "Lack of new learning", "Excessive comfort"],
                 primary_risk: "Obsolescence and loss of personal spark.",
                 recommended_focus: ["Difficult courses", "Travel", "New social circles"],
@@ -440,7 +440,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "El pilar de Identidad ha dejado de evolucionar por falta de nuevos desafíos.",
             report: {
-                meaning: "El Estancamiento v2 ocurre cuando has dejado de invertir en tu propio crecimiento.",
+                meaning: "El Estancamiento v4 ocurre cuando has dejado de invertir en tu propio crecimiento.",
                 characteristics: ["Aburrimiento con la propia rutina", "Falta de nuevos aprendizajes", "Comodidad excesiva"],
                 primary_risk: "Obsolescencia y pérdida del brillo personal.",
                 recommended_focus: ["Cursos difíciles", "Viajes", "Nuevos círculos sociales"],
@@ -457,7 +457,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Os pilares de Trabalho e Propósito estão em alta sintonia.",
             report: {
-                meaning: "Clareza v2 é quando você sabe quem é e para onde está indo profissionalmente.",
+                meaning: "Clareza v4 é quando você sabe quem é e para onde está indo profissionalmente.",
                 characteristics: ["Foco intencional", "Produtividade alta", "Senso de direção"],
                 primary_risk: "Exaustão por alta performance.",
                 recommended_focus: ["Manutenção", "Sistematização", "Legado"],
@@ -472,7 +472,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Work and Purpose pillars are in high harmony.",
             report: {
-                meaning: "Clarity v2 is when you know who you are and where you are going professionally.",
+                meaning: "Clarity v4 is when you know who you are and where you are going professionally.",
                 characteristics: ["Intentional focus", "High productivity", "Sense of direction"],
                 primary_risk: "Burnout from high performance.",
                 recommended_focus: ["Maintenance", "Systematization", "Legacy"],
@@ -487,7 +487,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Los pilares de Trabajo y Propósito están en alta sintonía.",
             report: {
-                meaning: "Claridad v2 es cuando sabes quién eres y hacia dónde te diriges profesionalmente.",
+                meaning: "Claridad v4 es cuando sabes quién eres y hacia dónde te diriges profesionalmente.",
                 characteristics: ["Enfoque intencional", "Alta productividad", "Sentido de dirección"],
                 primary_risk: "Agotamiento por alto rendimiento.",
                 recommended_focus: ["Mantenimiento", "Sistematización", "Legado"],
@@ -504,7 +504,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         pt: {
             one_liner: "Harmonia sistêmica entre os 7 pilares fundamentais.",
             report: {
-                meaning: "Alinhamento v2 é a paz de quem tem uma base sólida em todas as áreas da vida.",
+                meaning: "Alinhamento v4 é a paz de quem tem uma base sólida em todas as áreas da vida.",
                 characteristics: ["Gratidão profunda", "Resiliência total", "Flow existencial"],
                 primary_risk: "Arrogância ou relaxamento excessivo.",
                 recommended_focus: ["Mentorização", "Gratidão constante", "Sustentabilidade"],
@@ -519,7 +519,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         en: {
             one_liner: "Systemic harmony between the 7 fundamental pillars.",
             report: {
-                meaning: "Alignment v2 is the peace of someone who has a solid foundation in all areas of life.",
+                meaning: "Alignment v4 is the peace of someone who has a solid foundation in all areas of life.",
                 characteristics: ["Deep gratitude", "Total resilience", "Existential flow"],
                 primary_risk: "Arrogance or excessive relaxation.",
                 recommended_focus: ["Mentoring", "Constant gratitude", "Sustainability"],
@@ -534,7 +534,7 @@ const statesData: Record<DiagnosisState, Record<Locale, { one_liner: string, rep
         es: {
             one_liner: "Armonía sistémica entre los 7 pilares fundamentales.",
             report: {
-                meaning: "Alineación v2 es la paz de quien tiene una base sólida en todas las áreas de la vida.",
+                meaning: "Alineación v4 es la paz de quien tiene una base sólida en todas las áreas de la vida.",
                 characteristics: ["Gratitud profunda", "Resiliencia total", "Flujo existencial"],
                 primary_risk: "Arrogancia o relajación excesiva.",
                 recommended_focus: ["Mentoría", "Gratitud constante", "Sostenibilidad"],

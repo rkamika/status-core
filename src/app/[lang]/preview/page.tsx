@@ -232,19 +232,19 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                     <ul className="space-y-3 text-sm text-muted-foreground">
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_meaning}</span>
+                                            <span>{dict.preview.pilar_neural_insight}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_root_cause}</span>
+                                            <span>{dict.preview.pilar_strategic_plan}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_action_plan}</span>
+                                            <span>{dict.preview.pilar_antifragility}</span>
                                         </li>
                                         <li className="flex items-center gap-3">
                                             <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_stoic_wisdom}</span>
+                                            <span>{dict.preview.pilar_alpha_priority}</span>
                                         </li>
                                     </ul>
                                 </CardContent>
@@ -263,7 +263,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                 </div>
                                 <CardContent className="p-8 space-y-8 flex flex-col justify-between h-full relative z-10">
                                     <div className="space-y-4">
-                                        <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">{dict.preview.premium_v2}</Badge>
+                                        <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">{dict.preview.platinum_v4}</Badge>
                                         <h3 className="text-2xl font-bold font-heading">{dict.report.title}</h3>
                                         <p className="text-muted-foreground leading-relaxed font-medium">
                                             {dict.preview.premium_desc}
@@ -281,7 +281,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                         <Link href={`/${lang}/report/demo`} className="block">
                                             <Button variant="ghost" className="w-full text-foreground/70 hover:bg-primary/10 hover:text-primary border border-border h-14 font-bold">
                                                 <LayoutDashboard className="mr-2 h-5 w-5" />
-                                                {dict.preview.view_demo}
+                                                {dict.preview.view_demo_v4}
                                             </Button>
                                         </Link>
                                     </div>
