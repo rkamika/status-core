@@ -5,32 +5,17 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { getDiagnosisById } from '@/lib/storage';
 import { getSystemSetting } from '@/lib/admin';
 
-// Initialize clients lazily to prevent build-time errors if env vars are missing
-let stripeClient: Stripe | null = null;
-const getStripe = () => {
-    if (!stripeClient && process.env.STRIPE_SECRET_KEY) {
-        stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
-            apiVersion: '2025-01-27.acacia' as any,
-        });
-    }
-    return stripeClient;
-};
+// Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
+const stripe = process.env.STRIPE_SECRET_KEY
+    ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-01-27.acacia' as any })
+    : null;
 
-let mpConfig: MercadoPagoConfig | null = null;
-const getMPConfig = () => {
-    if (!mpConfig && process.env.MERCADOPAGO_ACCESS_TOKEN) {
-        mpConfig = new MercadoPagoConfig({
-            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
-        });
-    }
-    return mpConfig;
-};
+const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
+    ? new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN })
+    : null;
 
 export async function POST(req: Request) {
     try {
-        const stripe = getStripe();
-        const mpConfig = getMPConfig();
-
         if (!stripe || !mpConfig) {
             console.error('Missing payment provider configuration');
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 503 });

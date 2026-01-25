@@ -3,15 +3,10 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { unlockDiagnosis } from '@/lib/storage';
 
-let stripeClient: Stripe | null = null;
-const getStripe = () => {
-    if (!stripeClient && process.env.STRIPE_SECRET_KEY) {
-        stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
-            apiVersion: '2025-01-27.acacia' as any,
-        });
-    }
-    return stripeClient;
-};
+// Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
+const stripe = process.env.STRIPE_SECRET_KEY
+    ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-01-27.acacia' as any })
+    : null;
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -21,7 +16,6 @@ export async function POST(req: Request) {
     let event: Stripe.Event;
 
     try {
-        const stripe = getStripe();
         const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
         if (!stripe || !webhookSecret) {

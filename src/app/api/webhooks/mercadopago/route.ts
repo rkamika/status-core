@@ -2,15 +2,10 @@ import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { unlockDiagnosis } from '@/lib/storage';
 
-let mpConfig: MercadoPagoConfig | null = null;
-const getMPConfig = () => {
-    if (!mpConfig && process.env.MERCADOPAGO_ACCESS_TOKEN) {
-        mpConfig = new MercadoPagoConfig({
-            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
-        });
-    }
-    return mpConfig;
-};
+// Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
+const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
+    ? new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN })
+    : null;
 
 export async function POST(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -18,7 +13,6 @@ export async function POST(req: Request) {
     const type = searchParams.get('type');
 
     try {
-        const mpConfig = getMPConfig();
         if (!mpConfig) {
             console.error('MercadoPago configuration missing');
             return NextResponse.json({ error: 'Not configured' }, { status: 503 });
