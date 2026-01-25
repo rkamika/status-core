@@ -2,9 +2,15 @@ import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { unlockDiagnosis } from '@/lib/storage';
 
-const mpClient = new MercadoPagoConfig({
-    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-});
+let mpConfig: MercadoPagoConfig | null = null;
+const getMPConfig = () => {
+    if (!mpConfig && process.env.MERCADOPAGO_ACCESS_TOKEN) {
+        mpConfig = new MercadoPagoConfig({
+            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+        });
+    }
+    return mpConfig;
+};
 
 export async function POST(req: Request) {
     const { searchParams } = new URL(req.url);
@@ -12,8 +18,14 @@ export async function POST(req: Request) {
     const type = searchParams.get('type');
 
     try {
+        const mpConfig = getMPConfig();
+        if (!mpConfig) {
+            console.error('MercadoPago configuration missing');
+            return NextResponse.json({ error: 'Not configured' }, { status: 503 });
+        }
+
         if (type === 'payment' && resourceId) {
-            const payment = new Payment(mpClient);
+            const payment = new Payment(mpConfig);
             const data = await payment.get({ id: resourceId });
 
             if (data.status === 'approved') {

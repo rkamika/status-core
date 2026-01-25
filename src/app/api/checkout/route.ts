@@ -5,16 +5,37 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { getDiagnosisById } from '@/lib/storage';
 import { getSystemSetting } from '@/lib/admin';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2025-01-27.acacia' as any,
-});
+// Initialize clients lazily to prevent build-time errors if env vars are missing
+let stripeClient: Stripe | null = null;
+const getStripe = () => {
+    if (!stripeClient && process.env.STRIPE_SECRET_KEY) {
+        stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+            apiVersion: '2025-01-27.acacia' as any,
+        });
+    }
+    return stripeClient;
+};
 
-const mpClient = new MercadoPagoConfig({
-    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-});
+let mpConfig: MercadoPagoConfig | null = null;
+const getMPConfig = () => {
+    if (!mpConfig && process.env.MERCADOPAGO_ACCESS_TOKEN) {
+        mpConfig = new MercadoPagoConfig({
+            accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN,
+        });
+    }
+    return mpConfig;
+};
 
 export async function POST(req: Request) {
     try {
+        const stripe = getStripe();
+        const mpConfig = getMPConfig();
+
+        if (!stripe || !mpConfig) {
+            console.error('Missing payment provider configuration');
+            return NextResponse.json({ error: 'Payment system not configured' }, { status: 503 });
+        }
+
         const { diagnosisId, lang } = await req.json();
         const headersList = await headers();
         const country = headersList.get('x-vercel-ip-country') || 'US';
@@ -31,7 +52,7 @@ export async function POST(req: Request) {
 
         // Brazil Market -> MercadoPago (Language-based identification for testing)
         if (lang === 'pt') {
-            const preference = new Preference(mpClient);
+            const preference = new Preference(mpConfig);
             const result = await preference.create({
                 body: {
                     items: [
