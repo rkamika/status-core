@@ -6,6 +6,7 @@ import Script from "next/script";
 interface MercadoPagoBricksProps {
     preferenceId: string;
     diagnosisId: string;
+    amount: number;
     onSuccess: (id: string) => void;
     onError: (error: any) => void;
 }
@@ -16,7 +17,7 @@ declare global {
     }
 }
 
-export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onError }: MercadoPagoBricksProps) {
+export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess, onError }: MercadoPagoBricksProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const mpInstance = useRef<any>(null);
     const [isSdkLoaded, setIsSdkLoaded] = useState(false);
@@ -50,6 +51,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onErro
 
             await bricksBuilder.create("payment", "paymentBrick_container", {
                 initialization: {
+                    amount: amount,
                     preferenceId: preferenceId,
                 },
                 customization: {

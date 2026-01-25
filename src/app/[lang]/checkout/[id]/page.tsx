@@ -303,6 +303,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                             <MercadoPagoBricks
                                                 preferenceId={preferenceId}
                                                 diagnosisId={id}
+                                                amount={finalPrice}
                                                 onSuccess={async () => {
                                                     await unlockDiagnosis(id);
                                                     setIsComplete(true);
