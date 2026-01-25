@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 
 interface MercadoPagoBricksProps {
@@ -18,43 +18,44 @@ declare global {
 export function MercadoPagoBricks({ preferenceId, onSuccess, onError }: MercadoPagoBricksProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const mpInstance = useRef<any>(null);
+    const [isSdkLoaded, setIsSdkLoaded] = useState(false);
+    const [initError, setInitError] = useState<string | null>(null);
 
-    const initBricks = () => {
+    const initBricks = async () => {
         if (!window.MercadoPago) {
-            console.error("MercadoPago SDK not found in window object");
-            return;
-        }
-        if (!containerRef.current) {
-            console.error("Container ref not ready for Bricks");
-            return;
-        }
-        if (!preferenceId) {
-            console.error("preferenceId is missing for Bricks initialization");
+            setInitError("SDK not found on window object");
             return;
         }
 
         const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY;
         if (!publicKey) {
-            console.error("NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY is not defined in environment");
+            setInitError("Public Key missing (NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY)");
+            console.error("NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY is not defined");
+            return;
         }
 
-        console.log("Initializing Bricks for preferenceId:", preferenceId);
+        if (!preferenceId) {
+            setInitError("Preference ID missing");
+            return;
+        }
 
-        // Initialize MP instance if not already done
-        if (!mpInstance.current) {
-            try {
+        try {
+            // Initialize MP instance if not already done
+            if (!mpInstance.current) {
                 mpInstance.current = new window.MercadoPago(publicKey, { locale: "pt-BR" });
-                console.log("MercadoPago instance created successfully");
-            } catch (err) {
-                console.error("Failed to create MercadoPago instance:", err);
-                return;
+                console.log("MP Instance initialized");
             }
-        }
 
-        const bricksBuilder = mpInstance.current.bricks();
+            const bricksBuilder = mpInstance.current.bricks();
 
-        const renderPaymentBrick = async (bricksBuilder: any) => {
-            const settings = {
+            // Clear container
+            if (containerRef.current) {
+                containerRef.current.innerHTML = "";
+            }
+
+            console.log("Rendering Payment Brick for:", preferenceId);
+
+            await bricksBuilder.create("payment", "paymentBrick_container", {
                 initialization: {
                     amount: 97,
                     preferenceId: preferenceId,
@@ -75,79 +76,89 @@ export function MercadoPagoBricks({ preferenceId, onSuccess, onError }: MercadoP
                 },
                 callbacks: {
                     onReady: () => {
-                        console.log("Bricks UI is ready and rendered");
+                        console.log("Brick Ready");
+                        setInitError(null);
                     },
                     onSubmit: ({ selectedPaymentMethod, formData }: any) => {
-                        console.log("Payment submitted via Bricks:", selectedPaymentMethod);
                         return new Promise((resolve, reject) => {
                             fetch("/api/process_payment", {
                                 method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
+                                headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify(formData),
                             })
                                 .then((response) => response.json())
                                 .then((data) => {
                                     if (data.status === "approved") {
-                                        console.log("Payment approved:", data.id);
                                         onSuccess(data.id);
                                         resolve(data);
                                     } else {
-                                        console.warn("Payment status not approved:", data.status);
                                         reject();
                                     }
                                 })
                                 .catch((error) => {
-                                    console.error("Error processing payment API:", error);
                                     onError(error);
                                     reject();
                                 });
                         });
                     },
                     onError: (error: any) => {
-                        console.error("Bricks Callback Error:", error);
+                        console.error("Brick Error Callback:", error);
                         onError(error);
                     },
                 },
-            };
-
-            // Clear previous container content before rendering
-            if (containerRef.current) {
-                containerRef.current.innerHTML = "";
-            }
-
-            try {
-                console.log("Attempting to create payment brick...");
-                await bricksBuilder.create("payment", "paymentBrick_container", settings);
-                console.log("Payment brick creation call completed");
-            } catch (err) {
-                console.error("Detailed error in bricksBuilder.create:", err);
-            }
-        };
-
-        renderPaymentBrick(bricksBuilder);
+            });
+        } catch (err: any) {
+            console.error("Fatal Brick Init Error:", err);
+            setInitError(err.message || "Failed to initialize payment form");
+        }
     };
 
     useEffect(() => {
-        // If script is already loaded
-        if (window.MercadoPago) {
+        // Polling for the script just in case onLoad is problematic
+        const interval = setInterval(() => {
+            if (window.MercadoPago) {
+                setIsSdkLoaded(true);
+                clearInterval(interval);
+            }
+        }, 500);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        if (isSdkLoaded && preferenceId) {
             initBricks();
         }
-    }, [preferenceId]);
+    }, [isSdkLoaded, preferenceId]);
 
     return (
-        <div className="w-full">
+        <div className="w-full space-y-4">
             <Script
                 src="https://sdk.mercadopago.com/js/v2"
-                onLoad={() => {
-                    console.log("MercadoPago script loaded via next/script");
-                    initBricks();
-                }}
+                onLoad={() => setIsSdkLoaded(true)}
                 strategy="afterInteractive"
             />
-            <div id="paymentBrick_container" ref={containerRef} className="min-h-[600px] w-full bg-background/50 rounded-2xl p-4">
-                {/* Mercado Pago Brick will be rendered here */}
+
+            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full bg-card/50 rounded-2xl p-4 flex flex-col items-center justify-center border border-border/40">
+                {!isSdkLoaded && !initError && (
+                    <div className="flex flex-col items-center gap-2">
+                        <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
+                        <p className="text-xs text-muted-foreground animate-pulse">Carregando processador de pagamento...</p>
+                    </div>
+                )}
+
+                {initError && (
+                    <div className="text-center space-y-2 p-4">
+                        <p className="text-sm text-rose-500 font-bold">⚠️ Erro ao carregar checkout</p>
+                        <p className="text-[10px] text-muted-foreground opacity-60 uppercase">{initError}</p>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="text-[10px] text-primary underline"
+                        >
+                            Tentar recarregar página
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
