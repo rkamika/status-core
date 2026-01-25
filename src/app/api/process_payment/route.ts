@@ -9,31 +9,49 @@ const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
 export async function POST(req: Request) {
     try {
         if (!mpConfig) {
+            console.error('[Payment API] Mercado Pago not configured');
             return NextResponse.json({ error: 'Mercado Pago not configured' }, { status: 503 });
         }
 
         const body = await req.json();
+        console.log('[Payment API] Incoming Body:', JSON.stringify(body, null, 2));
+
         const payment = new Payment(mpConfig);
 
-        const result = await payment.create({
+        // Ensure we have a transaction_amount (sometimes the brick might have internal logic)
+        // Usually the brick sends exactly what's needed for payment.create
+
+        const paymentData = {
             body: {
                 transaction_amount: body.transaction_amount,
                 token: body.token,
-                description: body.description,
+                description: body.description || 'Status Core - Relatório Platinum',
                 installments: body.installments,
                 payment_method_id: body.payment_method_id,
                 issuer_id: body.issuer_id,
                 payer: {
-                    email: body.payer.email,
-                    identification: body.payer.identification,
+                    email: body.payer?.email,
+                    identification: body.payer?.identification,
+                    first_name: body.payer?.first_name,
+                    last_name: body.payer?.last_name,
                 },
-                external_reference: body.external_reference, // This should be the diagnosisId
+                external_reference: body.external_reference,
+                // Add metadata for easier tracking
+                metadata: {
+                    diagnosis_id: body.external_reference
+                }
             }
-        });
+        };
+
+        console.log('[Payment API] Sending to Mercado Pago:', JSON.stringify(paymentData, null, 2));
+
+        const result = await payment.create(paymentData);
+
+        console.log('[Payment API] Mercado Pago Response:', JSON.stringify(result, null, 2));
 
         if (result.status === 'approved') {
-            // Unlock diagnosis if payment is approved immediately (like PIX or Credit Card)
             if (result.external_reference) {
+                console.log('[Payment API] Unlocking diagnosis:', result.external_reference);
                 await unlockDiagnosis(result.external_reference);
             }
             return NextResponse.json({
@@ -41,6 +59,7 @@ export async function POST(req: Request) {
                 id: result.id
             });
         } else {
+            console.warn('[Payment API] Payment not approved:', result.status, result.status_detail);
             return NextResponse.json({
                 status: result.status,
                 status_detail: result.status_detail,
@@ -49,7 +68,16 @@ export async function POST(req: Request) {
         }
 
     } catch (error: any) {
-        console.error('Payment Processing Error:', error);
-        return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+        console.error('[Payment API] Detailed Error:', {
+            message: error.message,
+            stack: error.stack,
+            cause: error.cause,
+            mpResponse: error.response?.data
+        });
+
+        return NextResponse.json({
+            error: error.message || 'Internal Server Error',
+            details: error.response?.data
+        }, { status: 500 });
     }
 }

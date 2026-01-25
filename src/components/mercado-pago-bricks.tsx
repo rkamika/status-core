@@ -5,6 +5,7 @@ import Script from "next/script";
 
 interface MercadoPagoBricksProps {
     preferenceId: string;
+    diagnosisId: string;
     onSuccess: (id: string) => void;
     onError: (error: any) => void;
 }
@@ -80,11 +81,15 @@ export function MercadoPagoBricks({ preferenceId, onSuccess, onError }: MercadoP
                         setInitError(null);
                     },
                     onSubmit: ({ selectedPaymentMethod, formData }: any) => {
+                        console.log("Payment submitted via Bricks:", selectedPaymentMethod);
                         return new Promise((resolve, reject) => {
                             fetch("/api/process_payment", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(formData),
+                                body: JSON.stringify({
+                                    ...formData,
+                                    external_reference: diagnosisId
+                                }),
                             })
                                 .then((response) => response.json())
                                 .then((data) => {
