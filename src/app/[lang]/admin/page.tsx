@@ -51,8 +51,6 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
     const [email, setEmail] = useState(ADMIN_EMAIL);
     const [password, setPassword] = useState("");
     const [authError, setAuthError] = useState("");
-    const [isSendingMagicLink, setIsSendingMagicLink] = useState(false);
-    const [magicLinkSent, setMagicLinkSent] = useState(false);
 
     // Force Change Password State
     const [showResetFlow, setShowResetFlow] = useState(false);
@@ -137,25 +135,6 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
             setAuthError(err.message || "Invalid credentials");
         } finally {
             setIsLoadingAuth(false);
-        }
-    };
-
-    const handleSendMagicLink = async () => {
-        setAuthError("");
-        setIsSendingMagicLink(true);
-        try {
-            const { error } = await supabase.auth.signInWithOtp({
-                email: ADMIN_EMAIL,
-                options: {
-                    emailRedirectTo: `${window.location.origin}/${lang}/admin`
-                }
-            });
-            if (error) throw error;
-            setMagicLinkSent(true);
-        } catch (err: any) {
-            setAuthError(err.message || "Failed to send magic link");
-        } finally {
-            setIsSendingMagicLink(false);
         }
     };
 
@@ -273,42 +252,10 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
                                         {authError}
                                     </motion.div>
                                 )}
-                                 <Button className="w-full h-12 font-black uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-colors" type="submit">
-                                     Authenticate Access
-                                 </Button>
-
-                                 <div className="relative py-2">
-                                     <div className="absolute inset-0 flex items-center">
-                                         <span className="w-full border-t border-zinc-800" />
-                                     </div>
-                                     <div className="relative flex justify-center text-[10px] uppercase font-black text-zinc-600">
-                                         <span className="bg-zinc-900 px-2 tracking-widest">Or</span>
-                                     </div>
-                                 </div>
-
-                                 {magicLinkSent ? (
-                                     <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-bold text-center">
-                                         Link sent to your email!
-                                     </div>
-                                 ) : (
-                                     <Button
-                                         variant="outline"
-                                         className="w-full h-12 font-black uppercase tracking-widest border-zinc-800 hover:bg-white/5 transition-colors group"
-                                         type="button"
-                                         onClick={handleSendMagicLink}
-                                         disabled={isSendingMagicLink}
-                                     >
-                                         {isSendingMagicLink ? (
-                                             <RefreshCcw className="h-4 w-4 animate-spin" />
-                                         ) : (
-                                             <>
-                                                 <Globe className="h-4 w-4 mr-2 group-hover:text-primary transition-colors" />
-                                                 Get Magic Link
-                                             </>
-                                         )}
-                                     </Button>
-                                 )}
-                             </form>
+                                <Button className="w-full h-12 font-black uppercase tracking-widest bg-white text-black hover:bg-zinc-200 transition-colors" type="submit">
+                                    Authenticate Access
+                                </Button>
+                            </form>
                         </CardContent>
                     </Card>
                     <p className="text-[10px] text-center text-zinc-600 font-black uppercase tracking-[0.3em]">Encrypted Session Node v4.0</p>
