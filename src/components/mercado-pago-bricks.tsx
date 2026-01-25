@@ -23,42 +23,33 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onErro
     const [initError, setInitError] = useState<string | null>(null);
 
     const initBricks = async () => {
-        if (!window.MercadoPago) {
-            setInitError("SDK not found on window object");
-            return;
-        }
+        if (!window.MercadoPago || !containerRef.current || !preferenceId) return;
 
         const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY;
+
         if (!publicKey) {
-            setInitError("Public Key missing (NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY)");
-            console.error("NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY is not defined");
+            setInitError("Public Key missing");
             return;
         }
 
-        if (!preferenceId) {
-            setInitError("Preference ID missing");
-            return;
-        }
+        // Diagnostic: Print partial key to verify match with MP dashboard
+        const partialKey = `${publicKey.substring(0, 8)}...${publicKey.substring(publicKey.length - 4)}`;
+        console.log("DEBUG: Using Public Key:", partialKey);
+        console.log("DEBUG: Using PreferenceID:", preferenceId);
 
         try {
-            // Initialize MP instance if not already done
             if (!mpInstance.current) {
                 mpInstance.current = new window.MercadoPago(publicKey, { locale: "pt-BR" });
-                console.log("MP Instance initialized");
             }
 
             const bricksBuilder = mpInstance.current.bricks();
 
-            // Clear container
             if (containerRef.current) {
                 containerRef.current.innerHTML = "";
             }
 
-            console.log("Rendering Payment Brick for:", preferenceId);
-
             await bricksBuilder.create("payment", "paymentBrick_container", {
                 initialization: {
-                    amount: 97,
                     preferenceId: preferenceId,
                 },
                 customization: {
@@ -77,11 +68,10 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onErro
                 },
                 callbacks: {
                     onReady: () => {
-                        console.log("Brick Ready");
+                        console.log("SUCCESS: Payment Brick rendered");
                         setInitError(null);
                     },
                     onSubmit: ({ selectedPaymentMethod, formData }: any) => {
-                        console.log("Payment submitted via Bricks:", selectedPaymentMethod);
                         return new Promise((resolve, reject) => {
                             fetch("/api/process_payment", {
                                 method: "POST",
@@ -107,26 +97,25 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onErro
                         });
                     },
                     onError: (error: any) => {
-                        console.error("Brick Error Callback:", error);
+                        console.error("MP BRICK ERROR:", error);
+                        setInitError(`Bricks error: ${error.cause || 'Unknown'}`);
                         onError(error);
                     },
                 },
             });
         } catch (err: any) {
-            console.error("Fatal Brick Init Error:", err);
-            setInitError(err.message || "Failed to initialize payment form");
+            console.error("FATAL MP INIT ERROR:", err);
+            setInitError(err.message || "Failed to load payment form");
         }
     };
 
     useEffect(() => {
-        // Polling for the script just in case onLoad is problematic
         const interval = setInterval(() => {
             if (window.MercadoPago) {
                 setIsSdkLoaded(true);
                 clearInterval(interval);
             }
         }, 500);
-
         return () => clearInterval(interval);
     }, []);
 
@@ -137,31 +126,26 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, onSuccess, onErro
     }, [isSdkLoaded, preferenceId]);
 
     return (
-        <div className="w-full space-y-4">
+        <div className="w-full">
             <Script
                 src="https://sdk.mercadopago.com/js/v2"
                 onLoad={() => setIsSdkLoaded(true)}
                 strategy="afterInteractive"
             />
 
-            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full bg-card/50 rounded-2xl p-4 flex flex-col items-center justify-center border border-border/40">
+            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full bg-card/10 rounded-2xl flex items-center justify-center border border-white/5">
                 {!isSdkLoaded && !initError && (
                     <div className="flex flex-col items-center gap-2">
-                        <div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full" />
-                        <p className="text-xs text-muted-foreground animate-pulse">Carregando processador de pagamento...</p>
+                        <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
+                        <p className="text-[10px] uppercase font-black tracking-widest opacity-40">Iniciando Checkout...</p>
                     </div>
                 )}
 
                 {initError && (
-                    <div className="text-center space-y-2 p-4">
-                        <p className="text-sm text-rose-500 font-bold">⚠️ Erro ao carregar checkout</p>
-                        <p className="text-[10px] text-muted-foreground opacity-60 uppercase">{initError}</p>
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="text-[10px] text-primary underline"
-                        >
-                            Tentar recarregar página
-                        </button>
+                    <div className="text-center p-6">
+                        <p className="text-xs text-rose-500 font-bold uppercase mb-2">Erro de Configuração</p>
+                        <p className="text-[10px] text-muted-foreground mb-4 uppercase">{initError}</p>
+                        <button onClick={() => window.location.reload()} className="text-[10px] text-primary underline font-bold uppercase">Tentar Novamente</button>
                     </div>
                 )}
             </div>
