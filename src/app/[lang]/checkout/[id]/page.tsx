@@ -110,8 +110,13 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                 }, 2000);
             }
         } catch (err: any) {
-            console.error('Payment Error:', err);
-            alert(err.message || 'Payment initiation failed');
+            console.error('Detailed Payment Initiation Error:', {
+                message: err.message,
+                stack: err.stack,
+                diagnosisId: id,
+                lang
+            });
+            alert(lang === 'pt' ? 'Falha ao iniciar pagamento. Verifique o console para detalhes.' : 'Payment initiation failed. Check console for details.');
         } finally {
             setIsProcessing(false);
         }

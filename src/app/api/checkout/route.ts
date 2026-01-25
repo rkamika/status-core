@@ -17,17 +17,23 @@ const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
 export async function POST(req: Request) {
     try {
         if (!stripe || !mpConfig) {
-            console.error('Missing payment provider configuration');
+            console.error('Payment system not configured correctly:', {
+                stripe: !!stripe,
+                mercadopago: !!mpConfig
+            });
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 503 });
         }
 
         const { diagnosisId, lang } = await req.json();
+        console.log('Processing checkout request:', { diagnosisId, lang });
+
         const headersList = await headers();
         const country = headersList.get('x-vercel-ip-country') || 'US';
 
         // Verify diagnosis exists
         const diagnosis = await getDiagnosisById(diagnosisId);
         if (!diagnosis) {
+            console.warn('Diagnosis not found in storage:', diagnosisId);
             return NextResponse.json({ error: 'Diagnosis not found' }, { status: 404 });
         }
 
@@ -35,7 +41,11 @@ export async function POST(req: Request) {
         const settingsPrice = await getSystemSetting('report_price');
         const basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
 
-        // Brazil Market -> MercadoPago (Language-based identification for testing)
+        // Construct base URL for redirects
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+        console.log('Using base URL for redirects:', baseUrl);
+
+        // Brazil Market -> MercadoPago
         if (lang === 'pt') {
             const preference = new Preference(mpConfig);
             const result = await preference.create({
@@ -50,20 +60,22 @@ export async function POST(req: Request) {
                         }
                     ],
                     back_urls: {
-                        success: `${process.env.NEXT_PUBLIC_APP_URL}/${lang}/report/${diagnosisId}?unlocked=true`,
-                        failure: `${process.env.NEXT_PUBLIC_APP_URL}/${lang}/checkout/${diagnosisId}`,
-                        pending: `${process.env.NEXT_PUBLIC_APP_URL}/${lang}/checkout/${diagnosisId}`,
+                        success: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
+                        failure: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+                        pending: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
                     },
                     auto_return: 'approved',
                     external_reference: diagnosisId,
-                    notification_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mercadopago`,
+                    notification_url: `${baseUrl}/api/webhooks/mercadopago`,
                 }
             });
 
+            console.log('Mercado Pago preference created:', result.id);
+
             return NextResponse.json({
                 provider: 'mercadopago',
-                checkoutUrl: result.init_point, // For Checkout Pro (Redirect)
-                preferenceId: result.id,       // For Checkout Bricks (Embedded)
+                checkoutUrl: result.init_point,
+                preferenceId: result.id,
             });
         }
 
@@ -84,22 +96,28 @@ export async function POST(req: Request) {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/${lang}/report/${diagnosisId}?unlocked=true`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/${lang}/checkout/${diagnosisId}`,
+            success_url: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
+            cancel_url: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
             client_reference_id: diagnosisId,
             metadata: {
                 diagnosisId,
             },
         });
 
+        console.log('Stripe session created:', session.id);
+
         return NextResponse.json({
             provider: 'stripe',
-            checkoutUrl: session.url, // For Stripe Checkout (Redirect)
-            clientSecret: session.client_secret, // For Stripe Elements (Embedded)
+            checkoutUrl: session.url,
+            clientSecret: session.client_secret,
         });
 
     } catch (error: any) {
-        console.error('Checkout Error:', error);
+        console.error('Detailed Checkout API Error:', {
+            message: error.message,
+            stack: error.stack,
+            mpError: error.cause || error.response?.data
+        });
         return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
     }
 }
