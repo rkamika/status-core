@@ -212,10 +212,13 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
             <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50 no-print">
                 <div className="container mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-6">
-                        <Link className="flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors" href={`/${lang}/dashboard`}>
+                        <button
+                            className="flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors outline-none pb-0.5"
+                            onClick={() => router.back()}
+                        >
                             <ChevronLeft className="h-4 w-4" />
                             <span className="font-medium text-sm">{dict.common.back}</span>
-                        </Link>
+                        </button>
                         <div className="h-4 w-px bg-border hidden sm:block" />
                         <Logo lang={lang} size={28} />
                     </div>

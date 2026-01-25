@@ -28,6 +28,7 @@ import { calculateDiagnosis, Locale } from "@/lib/diagnostic";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSelector } from "@/components/language-selector";
 import { Logo } from "@/components/logo";
+import { RadarChart } from "@/components/ui/radar-chart";
 
 export default function DashboardPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -163,27 +164,37 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                             className="relative"
                         >
                             <Card className="border-border bg-card/70 dark:bg-zinc-900/40 backdrop-blur-xl shadow-2xl overflow-hidden group hover:border-primary/10 transition-all duration-700 rounded-[2.5rem]">
-                                <CardHeader className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 pb-10 border-b border-border/40 p-10">
-                                    <div className="space-y-3">
-                                        <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">{dict.dashboard.active_v4}</Badge>
-                                        <CardTitle className="text-6xl md:text-8xl font-heading font-black tracking-tighter text-foreground leading-[0.8] py-2">
-                                            {currentDiagnosis.label}
-                                        </CardTitle>
-                                        <CardDescription className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
-                                            <Clock className="h-4 w-4" /> {dict.dashboard.performed_at} {formatDate(currentDiagnosis.timestamp)}
-                                        </CardDescription>
-                                    </div>
-                                    <div className="flex flex-row md:flex-col gap-8 md:gap-4 items-center md:items-end">
-                                        <div className="flex items-center md:items-end flex-col gap-1">
-                                            <div className="text-5xl md:text-6xl font-black text-primary leading-none">{currentDiagnosis.confidence}%</div>
-                                            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.neural_confidence}</div>
-                                        </div>
-                                        {currentDiagnosis.isUnlocked && currentDiagnosis.v3Insights && (
-                                            <div className="flex items-center md:items-end flex-col gap-1">
-                                                <div className="text-3xl md:text-4xl font-black text-foreground leading-none">{currentDiagnosis.v3Insights.antifragilityScore}%</div>
-                                                <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.antifragility}</div>
+                                <CardHeader className="flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0 pb-10 border-b border-border/40 p-10 relative z-10">
+                                    <div className="flex-1 flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+                                        <div className="space-y-3">
+                                            <Badge variant="secondary" className="bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest px-3 py-1">{dict.dashboard.active_v4}</Badge>
+                                            <CardTitle className="text-6xl md:text-8xl font-heading font-black tracking-tighter text-foreground leading-[0.8] py-2">
+                                                {currentDiagnosis.label}
+                                            </CardTitle>
+                                            <CardDescription className="flex items-center gap-2 text-muted-foreground font-medium text-sm">
+                                                <Clock className="h-4 w-4" /> {dict.dashboard.performed_at} {formatDate(currentDiagnosis.timestamp)}
+                                            </CardDescription>
+
+                                            <div className="flex gap-8 pt-4">
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="text-4xl font-black text-primary leading-none">{currentDiagnosis.confidence}%</div>
+                                                    <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.neural_confidence}</div>
+                                                </div>
+                                                {currentDiagnosis.isUnlocked && currentDiagnosis.v3Insights && (
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="text-3xl font-black text-foreground leading-none">{currentDiagnosis.v3Insights.antifragilityScore}%</div>
+                                                        <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground font-black opacity-40 italic whitespace-nowrap">{dict.dashboard.antifragility}</div>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
+                                        </div>
+
+                                        <div className="flex justify-center lg:justify-end -my-8">
+                                            <div className="relative group">
+                                                <div className="absolute inset-0 bg-primary/10 blur-[80px] rounded-full opacity-40 group-hover:opacity-60 transition-opacity duration-1000" />
+                                                <RadarChart data={currentDiagnosis.dimensions} size={300} />
+                                            </div>
+                                        </div>
                                     </div>
                                 </CardHeader>
 
@@ -192,7 +203,7 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
                                         "{currentDiagnosis.oneLiner}"
                                     </blockquote>
 
-                                    {/* Dimension Scores v2 (7 Pillars) */}
+                                    {/* Dimension Scores v4 (7 Pillars) */}
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-3">
                                             <div className="h-px flex-1 bg-border/40" />
