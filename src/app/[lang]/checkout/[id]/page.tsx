@@ -43,6 +43,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
             if (!savedDiagnosis) {
                 router.push(`/${lang}/assessment`);
+            } else if (savedDiagnosis.isUnlocked) {
+                router.push(`/${lang}/report/${id}`);
             } else {
                 setDiagnosis(savedDiagnosis);
             }
