@@ -168,7 +168,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
 
                         {isLastStep ? (
                             <Link href={`/${lang}/preview?answers=${encodeURIComponent(JSON.stringify(answers))}&q=${encodeURIComponent(qualitative)}`} className="w-full sm:w-auto">
-                                <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 px-6 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-base">
+                                <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 px-4 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-sm">
                                     {dict.common.finish}
                                     <ArrowRight className="h-4 w-4" />
                                 </Button>
@@ -178,7 +178,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                 size="lg"
                                 onClick={() => setCurrentStep(currentStep + 1)}
                                 disabled={!hasAnsweredCurrent}
-                                className="w-full sm:w-auto gap-2 px-6 sm:px-10 h-12 font-bold text-base"
+                                className="w-full sm:w-auto gap-2 px-4 sm:px-10 h-12 font-bold text-sm"
                             >
                                 {dict.common.next}
                                 <ChevronRight className="h-4 w-4" />
