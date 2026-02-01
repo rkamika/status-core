@@ -27,8 +27,8 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             <ThemeToggle />
             <LanguageSelector currentLang={lang} />
             <Link href={`/${lang}/login`} className="text-sm font-black hidden sm:block hover:text-primary uppercase tracking-widest opacity-40 hover:opacity-100 transition-all ml-4">{dict.header.login}</Link>
-            <Link href={`/${lang}/assessment`} className="shrink-0">
-              <Button variant="default" size="sm" className="font-bold px-3 sm:px-6 shadow-lg shadow-primary/20 text-xs sm:text-sm whitespace-nowrap">
+            <Link href={`/${lang}/assessment`} className="shrink-0 flex items-center justify-center">
+              <Button variant="default" size="sm" className="font-bold px-3 sm:px-6 shadow-lg shadow-primary/20 text-[10px] sm:text-xs md:text-sm whitespace-nowrap min-w-0">
                 {dict.landing.cta_button}
               </Button>
             </Link>
@@ -105,13 +105,13 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto"
               >
                 <Link href={`/${lang}/assessment`} className="w-full sm:w-auto">
-                  <Button size="lg" className="h-14 sm:h-16 px-8 sm:px-12 text-lg sm:text-xl font-black w-full shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms]">
+                  <Button size="lg" className="h-14 sm:h-16 px-4 sm:px-12 text-base sm:text-xl font-black w-full shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms] whitespace-normal">
                     {dict.landing.cta_button}
                   </Button>
                 </Link>
                 <Link href={`/${lang}/report/demo`} className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="h-14 sm:h-16 px-8 sm:px-12 text-lg sm:text-xl font-black w-full border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:bg-white/[0.05]">
-                    <PlayCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:text-primary transition-colors" /> {dict.landing.demo_link}
+                  <Button variant="outline" size="lg" className="h-14 sm:h-16 px-4 sm:px-12 text-base sm:text-xl font-black w-full border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:bg-white/[0.05] whitespace-normal">
+                    <PlayCircle className="mr-2 h-4 w-4 sm:mr-3 sm:h-6 sm:w-6 group-hover:text-primary transition-colors shrink-0" /> {dict.landing.demo_link}
                   </Button>
                 </Link>
               </motion.div>

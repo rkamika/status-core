@@ -366,7 +366,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
                                             <Button
                                                 size="lg"
-                                                className="w-full h-16 text-lg font-black italic uppercase shadow-xl shadow-primary/20 group"
+                                                className="w-full h-14 sm:h-16 text-base sm:text-lg font-black italic uppercase shadow-xl shadow-primary/20 group px-4"
                                                 onClick={handleUnlock}
                                                 disabled={isProcessing}
                                             >
