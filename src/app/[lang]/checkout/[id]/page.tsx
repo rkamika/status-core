@@ -327,7 +327,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                     await unlockDiagnosis(id);
                                                     setIsComplete(true);
                                                     setTimeout(() => {
-                                                        router.push(`/${lang}/report/${id}`);
+                                                        router.push(`/${lang}/report/${id}?unlocked=true`);
                                                     }, 2000);
                                                 }}
                                                 onError={(err) => {
