@@ -47,81 +47,33 @@ export async function POST(req: Request) {
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
         console.log('Using base URL for redirects:', baseUrl);
 
-        // Brazil Market -> MercadoPago
-        if (lang === 'pt') {
-            const preference = new Preference(mpConfig);
-            const result = await preference.create({
-                body: {
-                    items: [
-                        {
-                            id: diagnosisId,
-                            title: `Status Core - Relatório Platinum (${diagnosis.label})`,
-                            quantity: 1,
-                            unit_price: basePrice,
-                            currency_id: 'BRL',
-                        }
-                    ],
-                    back_urls: {
-                        success: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
-                        failure: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-                        pending: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-                    },
-                    auto_return: 'approved',
-                    external_reference: diagnosisId,
-                    notification_url: `${baseUrl}/api/webhooks/mercadopago`,
-                }
-            });
-
-            console.log('Mercado Pago preference created:', result.id);
-
-            // Send CAPI AddPaymentInfo
-            await sendMetaCapiEvent({
-                eventName: 'AddPaymentInfo',
-                eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-                userData: { ip, userAgent, externalId: diagnosisId },
-                customData: {
-                    value: basePrice,
-                    currency: 'BRL',
-                    content_name: 'Platinum Report',
-                    content_ids: [diagnosisId],
-                    content_type: 'product'
+        // Default Payment Provider -> MercadoPago (for all markets)
+        const preference = new Preference(mpConfig);
+        const result = await preference.create({
+            body: {
+                items: [
+                    {
+                        id: diagnosisId,
+                        title: lang === 'pt'
+                            ? `Status Core - Relatório Platinum (${diagnosis.label})`
+                            : `Status Core - Platinum Report (${diagnosis.label})`,
+                        quantity: 1,
+                        unit_price: basePrice,
+                        currency_id: 'BRL',
+                    }
+                ],
+                back_urls: {
+                    success: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
+                    failure: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+                    pending: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
                 },
-                eventId: `api_pi_${diagnosisId}_${Date.now()}`
-            });
-
-            return NextResponse.json({
-                provider: 'mercadopago',
-                checkoutUrl: result.init_point,
-                preferenceId: result.id,
-            });
-        }
-
-        // Global Market -> Stripe
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: `Status Core - Platinum Report (${diagnosis.label})`,
-                            description: 'AI-Powered Systemic Performance Diagnosis',
-                        },
-                        unit_amount: Math.round(basePrice * 100), // Stripe expects cents
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
-            success_url: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
-            cancel_url: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-            client_reference_id: diagnosisId,
-            metadata: {
-                diagnosisId,
-            },
+                auto_return: 'approved',
+                external_reference: diagnosisId,
+                notification_url: `${baseUrl}/api/webhooks/mercadopago`,
+            }
         });
 
-        console.log('Stripe session created:', session.id);
+        console.log('Mercado Pago preference created for:', { diagnosisId, lang });
 
         // Send CAPI AddPaymentInfo
         await sendMetaCapiEvent({
@@ -130,7 +82,7 @@ export async function POST(req: Request) {
             userData: { ip, userAgent, externalId: diagnosisId },
             customData: {
                 value: basePrice,
-                currency: 'USD',
+                currency: 'BRL',
                 content_name: 'Platinum Report',
                 content_ids: [diagnosisId],
                 content_type: 'product'
@@ -139,9 +91,9 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json({
-            provider: 'stripe',
-            checkoutUrl: session.url,
-            clientSecret: session.client_secret,
+            provider: 'mercadopago',
+            checkoutUrl: result.init_point,
+            preferenceId: result.id,
         });
 
     } catch (error: any) {
