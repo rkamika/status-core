@@ -4,7 +4,9 @@ import { sendMetaCapiEvent } from '@/lib/meta-capi';
 
 export async function POST(req: Request) {
     try {
-        const { eventName, params, eventID, url } = await req.json();
+        const { eventName, params, eventID, url, externalId: providedExternalId } = await req.json();
+
+        console.log(`[Meta Track Proxy] Received ${eventName}`, { eventID, providedExternalId });
 
         const headersList = await headers();
         const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
@@ -14,8 +16,8 @@ export async function POST(req: Request) {
         const fbp = cookieStore.get('_fbp')?.value;
         const fbc = cookieStore.get('_fbc')?.value;
 
-        // Extract diagnosisId from params or eventID if possible
-        const externalId = params?.content_ids?.[0] || params?.externalId || (eventID?.includes('_') ? eventID.split('_')[1] : undefined);
+        // Use provided externalId or fallback to content_ids, but NEVER a random timestamp from eventID
+        const externalId = providedExternalId || params?.content_ids?.[0] || params?.externalId;
 
         await sendMetaCapiEvent({
             eventName,

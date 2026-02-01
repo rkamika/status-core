@@ -88,7 +88,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                 trackFBEvent('CompleteRegistration', {
                     content_name: 'Emotional Diagnostic Result',
                     status: diagnosis.state
-                });
+                }, `reg_${newId}`, newId);
             } catch (e) {
                 console.error('Error saving diagnosis:', e);
             }

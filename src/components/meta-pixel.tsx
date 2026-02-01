@@ -4,14 +4,19 @@ import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
-export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string) => {
+export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string, externalId?: string) => {
     // 1. Ensure we have a unique eventID for deduplication
     const finalEventId = eventID || `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
     // 2. Browser Tracking (Pixel)
     if (typeof window !== 'undefined' && (window as any).fbq) {
         const testCode = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE;
-        const finalParams = testCode ? { ...params, test_event_code: testCode } : params;
+        // Pass externalId in the params to help Pixel's automatic matching
+        const finalParams = {
+            ...(params || {}),
+            external_id: externalId,
+            ...(testCode ? { test_event_code: testCode } : {})
+        };
         (window as any).fbq('track', eventName, finalParams, { eventID: finalEventId });
     }
 
@@ -24,6 +29,7 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
                 eventName,
                 params,
                 eventID: finalEventId,
+                externalId,
                 url: window.location.href
             }),
         }).catch(err => console.warn('Meta CAPI Proxy Error:', err));
@@ -59,7 +65,6 @@ export default function MetaPixel() {
             'https://connect.facebook.net/en_US/fbevents.js');
             fbq('set', 'autoConfig', false, '${pixelId}');
             fbq('init', '${pixelId}');
-            fbq('track', 'PageView');
           `,
                 }}
             />

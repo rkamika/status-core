@@ -96,7 +96,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             content_category: 'Diagnostic',
             value: finalPrice,
             currency: 'BRL'
-        }, `pi_${id}`);
+        }, `pi_${id}`, id);
 
         try {
             const response = await fetch('/api/checkout', {
