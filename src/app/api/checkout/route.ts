@@ -5,6 +5,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { getDiagnosisById } from '@/lib/storage';
 import { getSystemSetting } from '@/lib/admin';
 import { sendMetaCapiEvent } from '@/lib/meta-capi';
+import { cookies } from 'next/headers';
 
 // Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -31,6 +32,10 @@ export async function POST(req: Request) {
         const country = headersList.get('x-vercel-ip-country') || 'US';
         const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
         const userAgent = headersList.get('user-agent') || '';
+
+        const cookieStore = await cookies();
+        const fbp = cookieStore.get('_fbp')?.value;
+        const fbc = cookieStore.get('_fbc')?.value;
 
         // Verify diagnosis exists
         const diagnosis = await getDiagnosisById(diagnosisId);
@@ -76,10 +81,11 @@ export async function POST(req: Request) {
         console.log('Mercado Pago preference created for:', { diagnosisId, lang });
 
         // Send CAPI AddPaymentInfo
-        await sendMetaCapiEvent({
+        console.log('Attempting to send CAPI AddPaymentInfo for:', diagnosisId);
+        const capiResult = await sendMetaCapiEvent({
             eventName: 'AddPaymentInfo',
             eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-            userData: { ip, userAgent, externalId: diagnosisId },
+            userData: { ip, userAgent, externalId: diagnosisId, fbp, fbc },
             customData: {
                 value: basePrice,
                 currency: 'BRL',
@@ -87,8 +93,9 @@ export async function POST(req: Request) {
                 content_ids: [diagnosisId],
                 content_type: 'product'
             },
-            eventId: `api_pi_${diagnosisId}_${Date.now()}`
+            eventId: `pi_${diagnosisId}`
         });
+        console.log('CAPI AddPaymentInfo Result:', capiResult);
 
         return NextResponse.json({
             provider: 'mercadopago',

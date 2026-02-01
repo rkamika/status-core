@@ -83,7 +83,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                     content_name: 'Platinum Report',
                     content_ids: [id],
                     content_type: 'product'
-                });
+                }, `pur_${id}`);
                 // Remove parameter to avoid multiple triggers
                 const newRelativePathQuery = window.location.pathname;
                 history.replaceState(null, '', newRelativePathQuery);

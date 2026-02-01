@@ -4,11 +4,15 @@ import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
-export const trackFBEvent = (eventName: string, params?: Record<string, any>) => {
+export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string) => {
     if (typeof window !== 'undefined' && (window as any).fbq) {
         const testCode = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE;
         const finalParams = testCode ? { ...params, test_event_code: testCode } : params;
-        (window as any).fbq('track', eventName, finalParams);
+        if (eventID) {
+            (window as any).fbq('track', eventName, finalParams, { eventID });
+        } else {
+            (window as any).fbq('track', eventName, finalParams);
+        }
     }
 };
 

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { unlockDiagnosis } from '@/lib/storage';
+import { unlockDiagnosis, getDiagnosisById } from '@/lib/storage';
+import { sendMetaCapiEvent } from '@/lib/meta-capi';
+import { headers, cookies } from 'next/headers';
+import { getSystemSetting } from '@/lib/admin';
 
 const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
     ? new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN })
@@ -15,6 +18,13 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         console.log('[Payment API] Incoming Body:', JSON.stringify(body, null, 2));
+
+        const headersList = await headers();
+        const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
+        const userAgent = headersList.get('user-agent') || '';
+        const cookieStore = await cookies();
+        const fbp = cookieStore.get('_fbp')?.value;
+        const fbc = cookieStore.get('_fbc')?.value;
 
         const payment = new Payment(mpConfig);
 
@@ -67,6 +77,28 @@ export async function POST(req: Request) {
                     console.error('[Payment API] Admin Unlock Error:', unlockError);
                 } else {
                     console.log('[Payment API] Diagnosis unlocked successfully');
+
+                    // Send Meta CAPI Purchase Event
+                    const diagnosis = await getDiagnosisById(result.external_reference);
+                    if (diagnosis) {
+                        const settingsPrice = await getSystemSetting('report_price');
+                        const basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+                        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://status-core.vercel.app';
+
+                        await sendMetaCapiEvent({
+                            eventName: 'Purchase',
+                            eventSourceUrl: `${baseUrl}/${diagnosis.lang}/report/${diagnosis.id}`,
+                            userData: { ip, userAgent, externalId: diagnosis.id, email: body.payer?.email, fbp, fbc },
+                            customData: {
+                                value: basePrice,
+                                currency: 'BRL',
+                                content_name: 'Platinum Report',
+                                content_ids: [diagnosis.id],
+                                content_type: 'product'
+                            },
+                            eventId: `pur_${diagnosis.id}`
+                        });
+                    }
                 }
             }
             return NextResponse.json({

@@ -4,6 +4,12 @@ const FB_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 const FB_ACCESS_TOKEN = process.env.FB_ACCESS_TOKEN;
 const FB_TEST_EVENT_CODE = process.env.FB_TEST_EVENT_CODE;
 
+console.log('Meta CAPI Utility Initialized:', {
+    hasPixelId: !!FB_PIXEL_ID,
+    hasToken: !!FB_ACCESS_TOKEN,
+    testCode: FB_TEST_EVENT_CODE
+});
+
 /**
  * Hash data using SHA256 as required by Meta CAPI
  */
@@ -20,6 +26,8 @@ interface MetaCapiUser {
     ip?: string;
     userAgent?: string;
     externalId?: string;
+    fbp?: string;
+    fbc?: string;
 }
 
 interface MetaCapiEvent {
@@ -56,12 +64,20 @@ export async function sendMetaCapiEvent(event: MetaCapiEvent) {
                     client_ip_address: event.userData.ip,
                     client_user_agent: event.userData.userAgent,
                     external_id: hashData(event.userData.externalId),
+                    fbp: event.userData.fbp,
+                    fbc: event.userData.fbc,
                 },
                 custom_data: event.customData,
             },
         ],
         test_event_code: FB_TEST_EVENT_CODE,
     };
+
+    console.log(`Meta CAPI: Sending ${event.eventName} event...`, {
+        pixelId: FB_PIXEL_ID,
+        hasToken: !!FB_ACCESS_TOKEN,
+        testCode: FB_TEST_EVENT_CODE
+    });
 
     try {
         const response = await fetch(
@@ -76,7 +92,9 @@ export async function sendMetaCapiEvent(event: MetaCapiEvent) {
         const result = await response.json();
 
         if (!response.ok) {
-            console.error('Meta CAPI Error Response:', result);
+            console.error('Meta CAPI Error Response:', JSON.stringify(result, null, 2));
+        } else {
+            console.log(`Meta CAPI: ${event.eventName} sent successfully`, result);
         }
 
         return result;
