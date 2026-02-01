@@ -61,6 +61,7 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
     // Data State
     const [stats, setStats] = useState<GlobalStats | null>(null);
     const [price, setPrice] = useState("97.00");
+    const [originalPrice, setOriginalPrice] = useState("197.00");
     const [promoCodes, setPromoCodes] = useState<PromoCode[]>([]);
     const [isLoadingData, setIsLoadingData] = useState(false);
 
@@ -71,13 +72,15 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
     const refreshData = useCallback(async () => {
         setIsLoadingData(true);
         try {
-            const [s, p, pc] = await Promise.all([
+            const [s, p, pc, op] = await Promise.all([
                 getGlobalStats(),
                 getSystemSetting('report_price'),
-                getPromoCodes()
+                getPromoCodes(),
+                getSystemSetting('original_price')
             ]);
             setStats(s);
             if (p) setPrice(p);
+            if (op) setOriginalPrice(op);
             setPromoCodes(pc);
         } catch (err) {
             console.error(err);
@@ -168,8 +171,11 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
     };
 
     const handleUpdatePrice = async () => {
-        await updateSystemSetting('report_price', price);
-        alert("Preço atualizado!");
+        await Promise.all([
+            updateSystemSetting('report_price', price),
+            updateSystemSetting('original_price', originalPrice)
+        ]);
+        alert("Preços atualizados!");
     };
 
     const handleCreatePromo = async () => {
@@ -392,21 +398,34 @@ export default function AdminDashboard({ params }: { params: Promise<{ lang: Loc
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Global Report Price (BRL)</label>
-                                <div className="flex gap-2">
-                                    <div className="relative flex-1">
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Anchor Price (Strikethrough - BRL)</label>
+                                    <div className="relative">
+                                        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">R$</div>
+                                        <Input
+                                            value={originalPrice}
+                                            onChange={(e) => setOriginalPrice(e.target.value)}
+                                            className="bg-black border-zinc-800 pl-10 font-bold text-lg opacity-60"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Selling Price (Charge Amount - BRL)</label>
+                                    <div className="relative">
                                         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 font-bold">R$</div>
                                         <Input
                                             value={price}
                                             onChange={(e) => setPrice(e.target.value)}
-                                            className="bg-black border-zinc-800 pl-10 font-bold text-lg"
+                                            className={`bg-black border-zinc-800 pl-10 font-bold text-lg ${parseFloat(price) < parseFloat(originalPrice) ? 'text-emerald-500' : ''}`}
                                         />
                                     </div>
-                                    <Button onClick={handleUpdatePrice} className="bg-primary hover:bg-primary/90 text-black font-black">
-                                        Set
-                                    </Button>
                                 </div>
+
+                                <Button onClick={handleUpdatePrice} className="w-full bg-primary hover:bg-primary/90 text-black font-black py-6">
+                                    Update Payment Nodes
+                                </Button>
                             </div>
 
                             <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">

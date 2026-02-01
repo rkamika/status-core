@@ -30,6 +30,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
     // Pricing & Promo State
     const [basePrice, setBasePrice] = useState(97.00);
+    const [anchorPrice, setAnchorPrice] = useState<number | null>(null);
     const [promoCode, setPromoCode] = useState("");
     const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
     const [promoError, setPromoError] = useState(false);
@@ -37,9 +38,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
     useEffect(() => {
         const loadData = async () => {
-            const [savedDiagnosis, settingsPrice] = await Promise.all([
+            const [savedDiagnosis, settingsPrice, settingsAnchor] = await Promise.all([
                 getDiagnosisById(id),
-                getSystemSetting('report_price')
+                getSystemSetting('report_price'),
+                getSystemSetting('original_price')
             ]);
 
             if (!savedDiagnosis) {
@@ -60,6 +62,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
             if (settingsPrice) {
                 setBasePrice(parseFloat(settingsPrice));
+            }
+            if (settingsAnchor) {
+                setAnchorPrice(parseFloat(settingsAnchor));
             }
         };
         loadData();
@@ -246,7 +251,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
                                         <span className="text-xs font-black uppercase tracking-widest opacity-40 italic">Subtotal</span>
-                                        <span className="font-bold">R$ {basePrice.toFixed(2)}</span>
+                                        <div className="flex flex-col items-end">
+                                            {anchorPrice && anchorPrice > basePrice && (
+                                                <span className="text-[10px] line-through opacity-30 font-bold mb-[-4px]">R$ {anchorPrice.toFixed(2)}</span>
+                                            )}
+                                            <span className="font-bold">R$ {basePrice.toFixed(2)}</span>
+                                        </div>
                                     </div>
 
                                     {appliedPromo && (
