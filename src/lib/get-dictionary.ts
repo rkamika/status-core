@@ -8,7 +8,7 @@ const dictionaryPromises: Partial<Record<string, Promise<any>>> = {};
 
 export const getDictionary = (locale: "en" | "pt" | "es") => {
     if (!dictionaryPromises[locale]) {
-        dictionaryPromises[locale] = dictionaries[locale] ? dictionaries[locale]() : dictionaries.en();
+        dictionaryPromises[locale] = dictionaries[locale] ? dictionaries[locale]() : dictionaries.pt();
     }
     return dictionaryPromises[locale]!;
 };

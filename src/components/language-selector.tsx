@@ -26,7 +26,7 @@ export function LanguageSelector({ currentLang }: { currentLang: string }) {
         router.push(segments.join("/"));
     };
 
-    const currentLocale = locales.find((l) => l.code === currentLang) || locales[1];
+    const currentLocale = locales.find((l) => l.code === currentLang) || locales[0];
 
     return (
         <DropdownMenu>
