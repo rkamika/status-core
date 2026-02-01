@@ -4,6 +4,16 @@ import { useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
+const sanitizeUrl = (url: string) => {
+    try {
+        const u = new URL(url);
+        u.searchParams.delete('unlocked');
+        return u.toString();
+    } catch {
+        return url;
+    }
+};
+
 export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string, externalId?: string) => {
     // 1. Ensure we have a unique eventID for deduplication
     const finalEventId = eventID || `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
@@ -12,10 +22,13 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
 
     // 2. Browser Tracking (Pixel)
     const testCode = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE || (window as any)._fb_test_code) : undefined;
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const cleanUrl = sanitizeUrl(currentUrl);
 
     const finalParams = {
         ...(params || {}),
         external_id: externalId,
+        event_source_url: cleanUrl,
         ...(testCode ? { test_event_code: testCode } : {})
     };
 
@@ -36,7 +49,7 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
                 params: finalParams, // Use standardized params with test_event_code and external_id
                 eventID: finalEventId,
                 externalId,
-                url: window.location.href
+                url: cleanUrl // Use sanitized URL here too
             }),
         }).catch(err => console.warn('Meta CAPI Proxy Error:', err));
     }
