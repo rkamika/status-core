@@ -57,7 +57,7 @@ export async function POST(req: Request) {
                         content_ids: [diagnosisId],
                         content_type: 'product'
                     },
-                    eventId: `stripe_${session.id}` // For deduplication
+                    eventId: `pur_${diagnosisId}` // Consistent deduplication ID
                 });
             }
         }
