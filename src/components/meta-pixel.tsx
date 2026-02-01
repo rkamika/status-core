@@ -11,14 +11,18 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
     console.log(`[Meta Tracking] Triggering ${eventName}`, { finalEventId, externalId });
 
     // 2. Browser Tracking (Pixel)
+    const testCode = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE || (window as any)._fb_test_code) : undefined;
+
+    const finalParams = {
+        ...(params || {}),
+        external_id: externalId,
+        ...(testCode ? { test_event_code: testCode } : {})
+    };
+
     if (typeof window !== 'undefined' && (window as any).fbq) {
-        const testCode = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE;
-        // Pass externalId in the params to help Pixel's automatic matching
-        const finalParams = {
-            ...(params || {}),
-            external_id: externalId,
-            ...(testCode ? { test_event_code: testCode } : {})
-        };
+        if (externalId) {
+            (window as any).fbq('set', 'user_data', { external_id: externalId });
+        }
         (window as any).fbq('track', eventName, finalParams, { eventID: finalEventId });
     }
 
@@ -29,7 +33,7 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 eventName,
-                params,
+                params: finalParams, // Use standardized params with test_event_code and external_id
                 eventID: finalEventId,
                 externalId,
                 url: window.location.href
