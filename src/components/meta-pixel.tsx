@@ -5,14 +5,28 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 
 export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string) => {
+    // 1. Ensure we have a unique eventID for deduplication
+    const finalEventId = eventID || `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+
+    // 2. Browser Tracking (Pixel)
     if (typeof window !== 'undefined' && (window as any).fbq) {
         const testCode = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE;
         const finalParams = testCode ? { ...params, test_event_code: testCode } : params;
-        if (eventID) {
-            (window as any).fbq('track', eventName, finalParams, { eventID });
-        } else {
-            (window as any).fbq('track', eventName, finalParams);
-        }
+        (window as any).fbq('track', eventName, finalParams, { eventID: finalEventId });
+    }
+
+    // 3. Server Tracking Backup (CAPI via Proxy)
+    if (typeof window !== 'undefined') {
+        fetch('/api/meta-track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                eventName,
+                params,
+                eventID: finalEventId,
+                url: window.location.href
+            }),
+        }).catch(err => console.warn('Meta CAPI Proxy Error:', err));
     }
 };
 
@@ -23,9 +37,7 @@ export default function MetaPixel() {
 
     useEffect(() => {
         if (!pixelId) return;
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-            (window as any).fbq('track', 'PageView');
-        }
+        trackFBEvent('PageView');
     }, [pathname, searchParams, pixelId]);
 
     if (!pixelId) return null;
