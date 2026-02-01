@@ -80,22 +80,7 @@ export async function POST(req: Request) {
 
         console.log('Mercado Pago preference created for:', { diagnosisId, lang });
 
-        // Send CAPI AddPaymentInfo
-        console.log('Attempting to send CAPI AddPaymentInfo for:', diagnosisId);
-        const capiResult = await sendMetaCapiEvent({
-            eventName: 'AddPaymentInfo',
-            eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-            userData: { ip, userAgent, externalId: diagnosisId, fbp, fbc },
-            customData: {
-                value: basePrice,
-                currency: 'BRL',
-                content_name: 'Platinum Report',
-                content_ids: [diagnosisId],
-                content_type: 'product'
-            },
-            eventId: `pi_${diagnosisId}`
-        });
-        console.log('CAPI AddPaymentInfo Result:', capiResult);
+        console.log('Mercado Pago preference created for:', { diagnosisId, lang });
 
         return NextResponse.json({
             provider: 'mercadopago',

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import { useTheme } from "./theme-provider";
 
 interface MercadoPagoBricksProps {
     preferenceId: string;
@@ -18,6 +19,7 @@ declare global {
 }
 
 export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess, onError }: MercadoPagoBricksProps) {
+    const { theme } = useTheme();
     const containerRef = useRef<HTMLDivElement>(null);
     const mpInstance = useRef<any>(null);
     const [isSdkLoaded, setIsSdkLoaded] = useState(false);
@@ -64,7 +66,13 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                     },
                     visual: {
                         style: {
-                            theme: "dark",
+                            theme: theme === "dark" ? "dark" : "default",
+                            customVariables: {
+                                background: theme === "dark" ? "#000000" : "#ffffff",
+                                baseColor: theme === "dark" ? "#ffffff" : "#000000",
+                                secondaryColor: theme === "dark" ? "#ffffff" : "#000000",
+                                elementsColor: theme === "dark" ? "#ffffff" : "#000000",
+                            }
                         },
                     },
                 },
@@ -125,7 +133,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
         if (isSdkLoaded && preferenceId) {
             initBricks();
         }
-    }, [isSdkLoaded, preferenceId]);
+    }, [isSdkLoaded, preferenceId, theme]);
 
     return (
         <div className="w-full">
@@ -135,7 +143,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                 strategy="afterInteractive"
             />
 
-            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full bg-card/10 rounded-2xl flex items-center justify-center border border-white/5">
+            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full rounded-2xl flex items-center justify-center">
                 {!isSdkLoaded && !initError && (
                     <div className="flex flex-col items-center gap-2">
                         <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
