@@ -8,6 +8,8 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
     // 1. Ensure we have a unique eventID for deduplication
     const finalEventId = eventID || `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
+    console.log(`[Meta Tracking] Triggering ${eventName}`, { finalEventId, externalId });
+
     // 2. Browser Tracking (Pixel)
     if (typeof window !== 'undefined' && (window as any).fbq) {
         const testCode = process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE;
@@ -43,7 +45,9 @@ export default function MetaPixel() {
 
     useEffect(() => {
         if (!pixelId) return;
-        trackFBEvent('PageView');
+        // Standardized ID for PageView based on path to ensure Navigator and Server Match
+        const pageId = `page_${pathname.replace(/\//g, '_')}`;
+        trackFBEvent('PageView', {}, pageId);
     }, [pathname, searchParams, pixelId]);
 
     if (!pixelId) return null;

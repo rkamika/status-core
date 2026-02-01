@@ -27,7 +27,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
         trackFBEvent('ViewContent', {
             content_name: 'Emotional Diagnostic Assessment',
             content_category: 'Diagnostic'
-        });
+        }, 'view_assessment');
     }, []);
 
     const isQualitativeStep = currentStep === questions.length;
