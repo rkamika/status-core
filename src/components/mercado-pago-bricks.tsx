@@ -72,6 +72,9 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                                 baseColor: theme === "dark" ? "#ffffff" : "#000000",
                                 secondaryColor: theme === "dark" ? "#ffffff" : "#000000",
                                 elementsColor: theme === "dark" ? "#ffffff" : "#000000",
+                                inputBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                                inputTextColor: theme === "dark" ? "#ffffff" : "#000000",
+                                outlinePrimaryColor: theme === "dark" ? "#1a1a1a" : "#f0f0f0",
                             }
                         },
                     },
