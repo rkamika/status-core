@@ -276,7 +276,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                 </Badge>
                                 <div className="space-y-1">
                                     <span className="text-xs uppercase tracking-[0.4em] text-muted-foreground font-bold opacity-40 italic">{dict.report.analysis}</span>
-                                    <h1 className="text-6xl md:text-8xl font-black font-heading tracking-tighter text-foreground leading-[0.85] pb-2">
+                                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-heading tracking-tighter text-foreground leading-[0.85] pb-2">
                                         {diagnosis.label}
                                     </h1>
                                 </div>
@@ -297,7 +297,9 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                         <div className="lg:col-span-5 flex justify-center">
                             <div className="relative group">
                                 <div className="absolute inset-0 bg-primary/20 blur-[100px] rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-1000" />
-                                <RadarChart data={diagnosis.pillarScores} size={380} />
+                                <div className="scale-75 sm:scale-100 origin-center">
+                                    <RadarChart data={diagnosis.pillarScores} size={380} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -308,7 +310,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            className="p-10 rounded-[3rem] bg-card/40 border border-border/40 relative overflow-hidden group shadow-2xl"
+                            className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] bg-card/40 border border-border/40 relative overflow-hidden group shadow-2xl"
                         >
                             <div className="absolute top-0 right-0 p-8 opacity-5 print:hidden">
                                 <Zap className="h-32 w-32" />
@@ -364,7 +366,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="p-10 rounded-[3rem] bg-gradient-to-br from-primary/5 via-card/40 to-card/20 border border-primary/20 relative overflow-hidden group shadow-2xl"
+                            className="p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] bg-gradient-to-br from-primary/5 via-card/40 to-card/20 border border-primary/20 relative overflow-hidden group shadow-2xl"
                         >
                             <div className="absolute bottom-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity print:hidden">
                                 <Sparkles className="h-48 w-48 text-primary" />
@@ -375,7 +377,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary opacity-60 italic">
                                         {dict.report.state_identity}
                                     </span>
-                                    <h3 className="text-4xl font-black uppercase tracking-tighter leading-tight italic">
+                                    <h3 className="text-2xl sm:text-4xl font-black uppercase tracking-tighter leading-tight italic">
                                         {diagnosis.v3Insights?.archetype}
                                     </h3>
                                 </div>
@@ -443,7 +445,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
 
                                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                                         <div className="lg:col-span-8 flex flex-col gap-8">
-                                            <Card className="bg-primary/5 border-primary/20 rounded-[3rem] p-10 space-y-6 shadow-2xl relative overflow-hidden group flex-1 print:bg-white print:border-black/20">
+                                            <Card className="bg-primary/5 border-primary/20 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 space-y-6 shadow-2xl relative overflow-hidden group flex-1 print:bg-white print:border-black/20">
                                                 {isAiLoading ? (
                                                     <div className="animate-pulse space-y-4 print:hidden">
                                                         <div className="h-8 w-1/3 bg-primary/10 rounded" />
@@ -454,7 +456,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform print:hidden"><Brain className="h-24 w-24 text-primary" /></div>
                                                         <div className="space-y-4 relative z-10">
                                                             <h3 className="text-2xl font-black font-heading tracking-tight italic uppercase print:text-black">{dict.report.executive_summary}</h3>
-                                                            <p className="text-lg md:text-xl text-foreground font-medium leading-relaxed italic whitespace-pre-wrap print:text-black print:not-italic">
+                                                            <p className="text-base sm:text-lg md:text-xl text-foreground font-medium leading-relaxed italic whitespace-pre-wrap print:text-black print:not-italic">
                                                                 {diagnosis.v3Insights?.aiAnalysis?.executiveSummary || (lang === 'pt' ? "Processando padrões neurais..." : lang === 'es' ? "Procesando patrones neurales..." : "Processing neural patterns...")}
                                                             </p>
                                                         </div>
@@ -541,7 +543,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     whileInView={{ opacity: 1, y: 0 }}
-                                                    className="relative p-10 md:p-14 rounded-[3.5rem] bg-gradient-to-br from-rose-500/10 via-card/40 to-card/20 border border-rose-500/20 shadow-2xl overflow-hidden group"
+                                                    className="relative p-6 sm:p-10 md:p-14 rounded-[2.5rem] sm:rounded-[3.5rem] bg-gradient-to-br from-rose-500/10 via-card/40 to-card/20 border border-rose-500/20 shadow-2xl overflow-hidden group"
                                                 >
                                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity print:hidden">
                                                         <Icon className="h-48 w-48 text-rose-500" />
@@ -553,8 +555,8 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                                 {dict.report.alpha_priority}
                                                             </Badge>
                                                             <div className="space-y-2">
-                                                                <h4 className="text-4xl font-black uppercase tracking-tighter italic">{bottleneck.label}</h4>
-                                                                <div className="text-6xl font-black text-rose-500">{bottleneck.value}%</div>
+                                                                <h4 className="text-2xl sm:text-4xl font-black uppercase tracking-tighter italic">{bottleneck.label}</h4>
+                                                                <div className="text-4xl sm:text-6xl font-black text-rose-500">{bottleneck.value}%</div>
                                                             </div>
                                                         </div>
 
@@ -703,7 +705,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
 
                                 {/* 4.7. STOIC NEURO-PROTOCOL (The Command) */}
                                 <div className="space-y-10 pt-24">
-                                    <div className="p-12 md:p-16 rounded-[4rem] bg-gradient-to-br from-zinc-900 to-black border border-primary/30 relative overflow-hidden group shadow-[0_0_50px_rgba(var(--primary),0.1)]">
+                                    <div className="p-8 sm:p-12 md:p-16 rounded-[2.5rem] sm:rounded-[4rem] bg-gradient-to-br from-zinc-900 to-black border border-primary/30 relative overflow-hidden group shadow-[0_0_50px_rgba(var(--primary),0.1)]">
                                         <div className="absolute top-0 right-0 p-12 opacity-[0.05] group-hover:rotate-45 transition-transform duration-1000 print:hidden">
                                             <InfinityIcon className="h-64 w-64 text-primary" />
                                         </div>

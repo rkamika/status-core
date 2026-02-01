@@ -29,8 +29,8 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             <Link href={`/${lang}/login`} className="text-sm font-black hidden sm:block hover:text-primary uppercase tracking-widest opacity-40 hover:opacity-100 transition-all ml-4">{dict.header.login}</Link>
             <Link href={`/${lang}/assessment`} className="shrink-0">
               <Button variant="default" size="sm" className="font-bold px-2 sm:px-6 shadow-lg shadow-primary/20 text-[10px] sm:text-xs md:text-sm whitespace-nowrap min-w-0">
-                <span className="hidden min-[400px]:inline">{dict.landing.cta_button}</span>
-                <span className="min-[400px]:hidden">Iniciar</span>
+                <span className="hidden sm:inline">{dict.landing.cta_button}</span>
+                <span className="sm:hidden">Iniciar</span>
               </Button>
             </Link>
           </div>
