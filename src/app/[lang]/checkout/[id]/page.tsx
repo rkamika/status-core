@@ -55,7 +55,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                     content_category: 'Diagnostic',
                     value: basePrice,
                     currency: 'BRL'
-                });
+                }, `ic_${id}`, id);
             }
 
             if (settingsPrice) {
