@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 import { ThemeProvider } from "@/components/theme-provider";
+import MetaPixel from "@/components/meta-pixel";
+import { Suspense } from "react";
 
 export default async function RootLayout({
   children,
@@ -30,6 +32,9 @@ export default async function RootLayout({
   return (
     <html lang={lang} className={`${inter.variable} ${outfit.variable}`} suppressHydrationWarning>
       <body className="antialiased bg-background text-foreground transition-colors duration-300">
+        <Suspense fallback={null}>
+          <MetaPixel />
+        </Suspense>
         <ThemeProvider>
           {children}
         </ThemeProvider>

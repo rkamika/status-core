@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { RadarChart } from "@/components/ui/radar-chart";
+import { trackFBEvent } from "@/components/meta-pixel";
 import { calculateDiagnosis, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { saveDiagnosis, generateId } from "@/lib/storage";
@@ -36,8 +37,23 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
         console.error('Error parsing answers:', e);
     }
 
-    const diagnosis = calculateDiagnosis(answers, lang);
-    const { label: statusLabel, color: statusColor, confidence, one_liner, pillarScores } = diagnosis;
+    const diagnosis = calculateDiagnosis(answers);
+    const { color: statusColor, confidence } = diagnosis;
+    const statusLabel = dict.states[diagnosis.state].label;
+    const one_liner = dict.states[diagnosis.state].one_liner;
+
+    const localizedPillarScores = diagnosis.pillarScores.map(p => ({
+        ...p,
+        label: dict.pillars[p.pillarKey],
+        insight: dict.pillar_insights[p.pillarKey][p.tier]
+    }));
+
+    const localizedV3Insights = diagnosis.v3Insights ? {
+        ...diagnosis.v3Insights,
+        bottleneckLabel: dict.pillars[diagnosis.v3Insights.bottleneckPillarKey],
+        correlations: diagnosis.v3Insights.correlationKeys.map(k => dict.correlations[k]),
+        archetype: dict.archetypes[diagnosis.v3Insights.archetypeKey]
+    } : undefined;
 
     // Save diagnosis to storage on mount
     useEffect(() => {
@@ -59,20 +75,20 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                 label: statusLabel,
                 color: statusColor,
                 oneLiner: one_liner,
-                dimensions: pillarScores,
+                dimensions: localizedPillarScores as any, // Cast to any to satisfy Dimension vs PillarScore difference if any
                 isUnlocked: false,
-                v3Insights: diagnosis.v3Insights ? {
-                    ...diagnosis.v3Insights,
-                    aiAnalysis: diagnosis.v3Insights.aiAnalysis ? {
-                        ...diagnosis.v3Insights.aiAnalysis,
-                        deepDiveAnalysis: "" // Placeholder to satisfy V3Insights type
-                    } : undefined
-                } : undefined
+                v3Insights: localizedV3Insights as any
             };
 
             try {
                 await saveDiagnosis(savedData);
                 setDiagnosisId(newId);
+
+                // Track Completion
+                trackFBEvent('CompleteRegistration', {
+                    content_name: 'Emotional Diagnostic Result',
+                    status: diagnosis.state
+                });
             } catch (e) {
                 console.error('Error saving diagnosis:', e);
             }
@@ -166,7 +182,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                         >
                             <div className="relative group p-4 rounded-full">
                                 <div className="absolute inset-0 bg-primary/10 rounded-full blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity duration-1000" />
-                                <RadarChart data={pillarScores.length > 0 ? pillarScores : []} size={420} />
+                                <RadarChart data={localizedPillarScores.length > 0 ? localizedPillarScores : []} size={420} />
                             </div>
                         </motion.div>
 
@@ -189,7 +205,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
 
                             {/* Dimension Progress Mini-Bars */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-                                {pillarScores.map((dim, i) => (
+                                {localizedPillarScores.map((dim: any, i: number) => (
                                     <motion.div
                                         key={i}
                                         initial={{ opacity: 0, y: 10 }}

@@ -367,6 +367,9 @@
         "archetype_desc": "This profile reflects a high level of execution, but with a support structure starting to show signs of systemic fatigue.",
         "profile_shared_by": "Profile shared by 4% of users",
         "results_pilar_desc": "A deep analysis of each fundamental area of your existence, prioritizing your biggest current bottleneck.",
+        "pilar_neural_insight": "Systemic Intelligence (Neural Insights)",
+        "pilar_antifragility": "Neural Antifragility Index",
+        "pilar_strategic_plan": "7-Day Strategic Plan",
         "pilar_bottleneck_neural": "Critical bottleneck identified by neural system",
         "projection_desc": "Neuro-systemic simulation based on your current state vs. application of the strategic plan.",
         "trajectory_desc": "With alpha bottleneck correction and systemic rebalancing.",
@@ -382,12 +385,245 @@
         "act_desc": "Execute without judgment.",
         "protocol_quote": "“It doesn't matter what you've done until today. The protocol only requires that, in the next 7 days, you protect your Vital Energy like a treasure and execute your Impact Leverage like a biological command.”",
         "golden_action": "The Golden Action",
-        "golden_action_desc": "We have identified the systemic game-changer for your current reality."
+        "golden_action_desc": "We have identified the systemic game-changer for your current reality.",
+        "risk_warnings_data": [
+            {
+                "label": "Systemic Fatigue",
+                "desc": "Your Executive Power is masking a critical drop in Vital Energy.",
+                "risk": "High"
+            },
+            {
+                "label": "Focus Erosion",
+                "desc": "Lack of Cognitive Clarity is generating an inefficient reactivity loop.",
+                "risk": "Moderate"
+            }
+        ]
     },
-    "archetypes": {
-        "architect_of_destiny": "Architect of Destiny",
-        "transition_explorer": "Transition Explorer",
-        "the_observer": "The Observer"
+    "states": {
+        "CONFUSION": {
+            "label": "CONFUSION",
+            "one_liner": "Mixed signals between your pillars are generating mental fog.",
+            "report": {
+                "meaning": "Confusion v4 occurs when the Identity and Spirituality pillars are misaligned, preventing a clear view of the whole.",
+                "characteristics": [
+                    "Difficulty prioritizing which pillar to focus on",
+                    "Feeling lost despite taking action",
+                    "Conflict between values and daily actions"
+                ],
+                "primary_risk": "Wasting energy on areas that do not bring real fulfillment.",
+                "recommended_focus": [
+                    "Value review (Identity)",
+                    "Meditation (Spirituality)",
+                    "Journaling"
+                ],
+                "next_step": "Choose one pillar to ignore for 24h and one to focus on 100%.",
+                "immediate_win": "Define your 3 non-negotiable values now.",
+                "the_no_to_say": "Say NO to commitments that harm your identity.",
+                "mindset_shift": "From 'I need more data' to 'I need more silence'.",
+                "stoic_lesson": "Clarity doesn't come from outside, but from organizing what is already inside.",
+                "stoic_principles": [
+                    "Listen to your inner voice",
+                    "Define what is essential",
+                    "Act with integrity"
+                ]
+            }
+        },
+        "OVERLOAD": {
+            "label": "OVERLOAD",
+            "one_liner": "Health and Leisure pillars are being drained by Work.",
+            "report": {
+                "meaning": "Overload v4 is a systemic imbalance where the volume of one pillar suffocates the others.",
+                "characteristics": [
+                    "Persistent fatigue",
+                    "Lack of time for oneself",
+                    "Neglect of physical health"
+                ],
+                "primary_risk": "Physical collapse or burnout due to lack of recovery.",
+                "recommended_focus": [
+                    "Sleep restoration",
+                    "Work boundaries",
+                    "Mandatory leisure"
+                ],
+                "next_step": "Schedule an unconditional hour of leisure for today.",
+                "immediate_win": "Sleep 1 hour earlier tonight.",
+                "the_no_to_say": "Say NO to overtime and secondary tasks.",
+                "mindset_shift": "From 'I am a machine' to 'I am a biological system that needs recharging'.",
+                "stoic_lesson": "He who is everywhere is nowhere.",
+                "stoic_principles": [
+                    "Protect your peace",
+                    "Catch your breath",
+                    "Limit the battlefield"
+                ]
+            }
+        },
+        "REACTIVITY": {
+            "label": "REACTIVITY",
+            "one_liner": "Conflicts in the Relationships pillar are generating emotional triggers.",
+            "report": {
+                "meaning": "Reactivity v4 indicates that your emotional security in relationships is fragile.",
+                "characteristics": [
+                    "Short patience with close ones",
+                    "Feeling of isolation",
+                    "Excessive defensiveness"
+                ],
+                "primary_risk": "Breakdown of important bonds and loneliness.",
+                "recommended_focus": [
+                    "Non-violent communication",
+                    "Active listening",
+                    "Forgiveness"
+                ],
+                "next_step": "Have a 5-min honest conversation with a loved one.",
+                "immediate_win": "Listen to someone today without interrupting or judging.",
+                "the_no_to_say": "Say NO to impulsive reactive arguments.",
+                "mindset_shift": "From 'They are attacking me' to 'I am lacking emotional support'.",
+                "stoic_lesson": "The best revenge is to not be like him who performed the injury.",
+                "stoic_principles": [
+                    "Empathy as a shield",
+                    "Control your response",
+                    "Seek real connection"
+                ]
+            }
+        },
+        "UNCERTAINTY": {
+            "label": "UNCERTAINTY",
+            "one_liner": "Instability in the Financial pillar generates fear of the future.",
+            "report": {
+                "meaning": "Uncertainty v4 is linked to the lack of a material safety net or future plan.",
+                "characteristics": [
+                    "Excessive worry about money",
+                    "Hesitation to invest in oneself",
+                    "Fear of scarcity"
+                ],
+                "primary_risk": "Paralysis and loss of autonomy.",
+                "recommended_focus": [
+                    "Financial planning",
+                    "Emergency fund",
+                    "Professional growth"
+                ],
+                "next_step": "Write down all your fixed costs today.",
+                "immediate_win": "Save or generate a symbolic amount today.",
+                "the_no_to_say": "Say NO to impulsive spending due to anxiety.",
+                "mindset_shift": "From 'I will go broke' to 'I am building my foundation'.",
+                "stoic_lesson": "Poverty is not the lack of possessions, but the greedy longing for more. Focus on internal stability.",
+                "stoic_principles": [
+                    "Wise frugality",
+                    "Prepare for winter",
+                    "Wealth lies in freedom"
+                ]
+            }
+        },
+        "DISCONNECTION": {
+            "label": "DISCONNECTION",
+            "one_liner": "The Spirituality and Meaning pillar is eroding.",
+            "report": {
+                "meaning": "Disconnection v4 is existential emptiness. You are 'doing' but not 'being'.",
+                "characteristics": [
+                    "Sense of worthlessness",
+                    "Spiritual apathy",
+                    "Lack of connection with something larger"
+                ],
+                "primary_risk": "Situational depression or mid-life crisis.",
+                "recommended_focus": [
+                    "Retreat or silence",
+                    "Social contribution",
+                    "Philosophy"
+                ],
+                "next_step": "Do something for someone without expecting anything in return.",
+                "immediate_win": "Spend 15 minutes looking at the sky or nature, without thinking.",
+                "the_no_to_say": "Say NO to empty materialism.",
+                "mindset_shift": "From 'What do I get out of this?' to 'How do I serve the world?'.",
+                "stoic_lesson": "We are part of a larger whole. Reconnect with your place in the cosmos.",
+                "stoic_principles": [
+                    "Cosmopolitanism",
+                    "Amor Fati",
+                    "Universal Connection"
+                ]
+            }
+        },
+        "STAGNATION": {
+            "label": "STAGNATION",
+            "one_liner": "Identity pillar has stopped evolving due to lack of new challenges.",
+            "report": {
+                "meaning": "Stagnation v4 occurs when you have stopped investing in your own growth.",
+                "characteristics": [
+                    "Boredom with your routine",
+                    "Lack of new learning",
+                    "Excessive comfort"
+                ],
+                "primary_risk": "Obsolescence and loss of personal spark.",
+                "recommended_focus": [
+                    "Difficult courses",
+                    "Travel",
+                    "New social circles"
+                ],
+                "next_step": "Start a new learning path today.",
+                "immediate_win": "Read 10 pages of a complex book on a new topic.",
+                "the_no_to_say": "Say NO to the same old routine.",
+                "mindset_shift": "From 'I know enough' to 'I am a lifelong learner'.",
+                "stoic_lesson": "He who has stopped getting better has stopped being good.",
+                "stoic_principles": [
+                    "Eudaimonia",
+                    "Pursuit of virtue",
+                    "Constant challenge"
+                ]
+            }
+        },
+        "CLARITY": {
+            "label": "CLARITY",
+            "one_liner": "Work and Purpose pillars are in high harmony.",
+            "report": {
+                "meaning": "Clarity v4 is when you know who you are and where you are going professionally.",
+                "characteristics": [
+                    "Intentional focus",
+                    "High productivity",
+                    "Sense of direction"
+                ],
+                "primary_risk": "Burnout from high performance.",
+                "recommended_focus": [
+                    "Maintenance",
+                    "Systematization",
+                    "Legacy"
+                ],
+                "next_step": "Write your personal work manifesto for the next six months.",
+                "immediate_win": "Spend 30 min planning your next strategic week.",
+                "the_no_to_say": "Say NO to opportunities that don't align with your purpose.",
+                "mindset_shift": "From 'I am busy' to 'I am focused'.",
+                "stoic_lesson": "If a man knows not which port he sails, no wind is favorable.",
+                "stoic_principles": [
+                    "Archer's Focus",
+                    "Prosenxe (Attention)",
+                    "Intentional Action"
+                ]
+            }
+        },
+        "ALIGNMENT": {
+            "label": "ALIGNMENT",
+            "one_liner": "Systemic harmony between the 7 fundamental pillars.",
+            "report": {
+                "meaning": "Alignment v4 is the peace of someone who has a solid foundation in all areas of life.",
+                "characteristics": [
+                    "Deep gratitude",
+                    "Total resilience",
+                    "Existential flow"
+                ],
+                "primary_risk": "Arrogance or excessive relaxation.",
+                "recommended_focus": [
+                    "Mentoring",
+                    "Constant gratitude",
+                    "Sustainability"
+                ],
+                "next_step": "Thank 3 people who are part of your support network today.",
+                "immediate_win": "Share a lesson learned with someone.",
+                "the_no_to_say": "Say NO to complacency.",
+                "mindset_shift": "From 'I achieved it' to 'I sustain it with virtue'.",
+                "stoic_lesson": "Happiness is a smooth and unobstructed flow of life.",
+                "stoic_principles": [
+                    "Stoic Gratitude",
+                    "Apatheia (Inner Peace)",
+                    "Virtuous Life"
+                ]
+            }
+        }
     },
     "correlations": {
         "work_vs_health": "High Work performance is suffocating your Physical Recovery.",
@@ -397,14 +633,64 @@
         "harmony": "Your pillars operate in relative systemic harmony."
     },
     "pillars": {
-        "health": "Health",
-        "work": "Work",
-        "relationships": "Relationships",
-        "finances": "Finances",
-        "identity": "Identity",
-        "leisure": "Leisure",
-        "spirituality": "Meaning",
-        "stoic": "Stoic"
+        "SAUDE": "Health",
+        "TRABALHO": "Work",
+        "RELACIONAMENTOS": "Relationships",
+        "FINANCEIRO": "Finances",
+        "IDENTIDADE": "Identity",
+        "LAZER": "Leisure",
+        "ESPIRITUALIDADE": "Meaning"
+    },
+    "pillar_insights": {
+        "SAUDE": {
+            "low": "Critical vitality level. Your biological response capacity is compromised.",
+            "mid": "Basic maintenance state. Energy exists, but lacks reserve for high performance.",
+            "high": "Exceptional vitality. Your body is a support machine for your mind."
+        },
+        "TRABALHO": {
+            "low": "Severe professional misalignment or lack of clear progress.",
+            "mid": "Stable execution, but impact potential has not yet been fully released.",
+            "high": "Professional mastery. You operate in a state of flow and constant value generation."
+        },
+        "RELACIONAMENTOS": {
+            "low": "Isolation or systemic toxicity. Your connections are draining your energy.",
+            "mid": "Stable circles, but lack depth or genuine emotional support.",
+            "high": "Powerful relational ecosystem. Your network is your greatest source of security and support."
+        },
+        "FINANCEIRO": {
+            "low": "Severe scarcity or disorganization generating constant anxiety.",
+            "mid": "Basic stability, but without the autonomy needed for audacious decisions.",
+            "high": "Financial antifragility. Your resources sustain your freedom and expansion."
+        },
+        "IDENTIDADE": {
+            "low": "Self-crisis. Lack of clarity about personal values and boundaries.",
+            "mid": "You know who you are, but still bow to excessive external pressures.",
+            "high": "Absolute sovereignty. Your identity is the unshakable axis of all your actions."
+        },
+        "LAZER": {
+            "low": "Anhedonia or total neglect of fun. High risk of collapse due to rigidity.",
+            "mid": "Pauses occur, but do not generate deep regeneration.",
+            "high": "Active regeneration. You use leisure as a strategic high-performance tool."
+        },
+        "ESPIRITUALIDADE": {
+            "low": "Deep existential emptiness. Your actions lack a higher why.",
+            "mid": "Sporadic connection with purpose, but everyday life still feels purely material.",
+            "high": "Transcendental purpose. There is a clear connection with the Meaning that guides your life."
+        }
+    },
+    "archetypes": {
+        "architect_of_destiny": "Architect of Destiny",
+        "transition_explorer": "Transition Explorer",
+        "the_observer": "The Observer"
+    },
+    "leverages": {
+        "SAUDE": "Zero caffeine intake after 1 PM and move your last meal to 3 hours before sleep.",
+        "TRABALHO": "Define your \"One Thing\" the night before and do not open email before finishing it.",
+        "RELACIONAMENTOS": "Schedule a 15-minute distraction-free conversation with a strategic ally for alignment.",
+        "FINANCEIRO": "Voluntarily expose yourself to physical discomfort (cold shower) to recalibrate your stress threshold.",
+        "IDENTIDADE": "Implement the \"Habit Stacking\" technique to tie a difficult new habit to your morning coffee.",
+        "LAZER": "Eliminate all digital notifications for 4 hours daily during your Golden Hour.",
+        "ESPIRITUALIDADE": "Practice 10 minutes of \"Non-Sleep Deep Rest\" (NSDR) immediately after stress peaks."
     },
     "login": {
         "title": "Access your Diagnosis",

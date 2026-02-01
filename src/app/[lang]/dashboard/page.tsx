@@ -47,17 +47,22 @@ export default function DashboardPage({ params }: { params: Promise<{ lang: Loca
 
             // Re-localize all diagnoses based on the current URL 'lang'
             const localizedDiagnoses = allDiagnoses.map(d => {
-                const localized = calculateDiagnosis(d.answers, lang);
+                const localized = calculateDiagnosis(d.answers);
                 return {
                     ...d,
-                    label: localized.label,
-                    oneLiner: localized.one_liner,
-                    dimensions: localized.pillarScores,
+                    label: dict.states[localized.state].label,
+                    oneLiner: dict.states[localized.state].one_liner,
+                    dimensions: localized.pillarScores.map(p => ({
+                        ...p,
+                        label: dict.pillars[p.pillarKey],
+                        insight: dict.pillar_insights[p.pillarKey][p.tier]
+                    })),
                     v3Insights: d.v3Insights ? {
-                        ...d.v3Insights,
-                        archetype: localized.v3Insights?.archetype || d.v3Insights.archetype,
-                        antifragilityScore: localized.v3Insights?.antifragilityScore || d.v3Insights.antifragilityScore,
-                        correlations: localized.v3Insights?.correlations || d.v3Insights.correlations,
+                        ...localized.v3Insights,
+                        archetype: dict.archetypes[localized.v3Insights.archetypeKey],
+                        bottleneckLabel: dict.pillars[localized.v3Insights.bottleneckPillarKey],
+                        correlations: localized.v3Insights.correlationKeys.map(k => dict.correlations[k]),
+                        antifragilityScore: localized.v3Insights.antifragilityScore,
                     } : undefined
                 };
             });

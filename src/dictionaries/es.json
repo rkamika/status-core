@@ -16,15 +16,12 @@
     "footer": {
         "terms": "Términos de Uso",
         "privacy": "Política de Privacidad",
-        "contact": "Contacto",
-        "footer_tagline": "Inteligencia Personal Avanzada para el Alto Rendimiento.",
-        "footer_copyright": "© 2025 Status Core Systems.",
-        "team_name": "Equipo Status Core"
+        "contact": "Contacto"
     },
     "landing": {
         "hero_badge": "Status Core V1.0",
         "hero_title": "Claridad Radical para tu Caos Interno",
-        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental y emocional actual para desbloquear tu próximo nível de performance.",
+        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental e emocional actual para desbloquear tu próximo nível de performance.",
         "hero_anonymous": "100% Anónimo & Seguro • Sin necesidad de registro inicial",
         "cta_button": "Iniciar Diagnóstico Gratuito",
         "demo_link": "Ver Ejemplo de Informe",
@@ -35,7 +32,18 @@
         "step2_title": "02. Perfil Core",
         "step2_desc": "Identificamos en cuál de los 8 estados operativos te encuentras a través de nuestro motor de análisis.",
         "step3_title": "03. Plan de Salida",
-        "step3_desc": "Informe detallado con acciones prácticas inmediatas para restaurar su alineación."
+        "step3_desc": "Informe detallado con acciones prácticas inmediatas para restaurar su alineación.",
+        "methodology_badge": "Metodología",
+        "methodology_title": "La Ciencia de los 7 Pilares",
+        "methodology_desc": "No es solo un cuestionario. Es un algoritmo sistémico que evalúa la interconexión entre Salud, Trabajo, Relaciones, Finanzas, Identidad, Ocio y Sentido.",
+        "enterprise_badge": "Enterprise",
+        "enterprise_title": "STATUS CORE para Equipos de Élite",
+        "enterprise_desc": "Reduce el burnout y maximiza la claridad operativa. Diagnósticos anónimos para grupos de alto rendimiento que buscan el siguiente nivel de alineación.",
+        "contact_sales": "Contactar Ventas",
+        "trusted_by": "Confiado por líderes con visión de futuro en",
+        "footer_tagline": "Inteligência Personal Avançada para Alta Performance.",
+        "footer_copyright": "© 2025 Status Core Systems.",
+        "team_name": "Equipo Status Core"
     },
     "dashboard": {
         "title": "Dashboard",
@@ -43,7 +51,7 @@
         "empty_desc": "Aún no has realizado ninguna evaluación. Comienza ahora para descubrir tu estado actual en 7 pilares.",
         "start_assessment": "Iniciar Evaluación v4",
         "current_diagnosis": "Diagnóstico Actual",
-        "overview_v4": "Visión General v4",
+        "overview_v4": "Visión Geral v4",
         "new_diagnosis": "Nuevo Diagnóstico",
         "active_v4": "Activo v4",
         "performed_at": "Realizado el",
@@ -98,7 +106,7 @@
                     "Mucha reactividad",
                     "Inestable",
                     "Equilibrado",
-                    "Serenidade total"
+                    "Serenidad total"
                 ]
             },
             "4": {
@@ -112,7 +120,7 @@
                 ]
             },
             "5": {
-                "text": "Tengo claridad sobre mis próximas metas de crescimento profissional.",
+                "text": "Tengo claridad sobre mis próximas metas de crecimiento profesional.",
                 "options": [
                     "Totalmente perdido",
                     "Mucha duda",
@@ -132,10 +140,10 @@
                 ]
             },
             "7": {
-                "text": "Siento que tengo un sistema de apoyo sólido en mis relaciones (familia/amigos).",
+                "text": "Siento que tengo un sistema de apoio sólido en mis relaciones (familia/amigos).",
                 "options": [
                     "Solitario",
-                    "Poco apoyo",
+                    "Poco apoio",
                     "Moderado",
                     "Buen soporte",
                     "Red sólida"
@@ -268,11 +276,11 @@
                     "Sentido débil",
                     "Neutro",
                     "Profundo",
-                    "Plenitud existencial"
+                    "Plenitude existencial"
                 ]
             },
             "21": {
-                "text": "Praticó momentos de reflexión, meditación o conexión interior con regularidade.",
+                "text": "Pratikó momentos de reflexión, meditación o conexión interior con regularidade.",
                 "options": [
                     "Nunca lo hago",
                     "Raramente",
@@ -294,14 +302,14 @@
         "empty_desc": "Completa la evaluación para ver tu resultado.",
         "empty_button": "Iniciar Evaluación",
         "pillars_tagline": "7 Pilares de la Experiencia Humana",
-        "pillars_overview": "Visión General de los Pilares",
+        "pillars_overview": "Visión Geral de los Pilares",
         "platinum_v4": "PLATINUM v4",
         "premium_desc": "Desbloquea la versión completa de Status Core v4 Platinum. Recibe un plan táctico de 7 días, análisis de antifragilidad e identifica tu mayor cuello de botella existencial.",
         "view_demo_v4": "Ver Demo Platinum",
         "pilar_neural_insight": "Inteligencia Sistémica (Neural Insights)",
         "pilar_antifragility": "Índice de Antifragilidad Neural",
         "pilar_strategic_plan": "Plan Estratégico de 7 Días",
-        "pilar_alpha_priority": "Identificación del Pilar Alpha (Gargalo)"
+        "pilar_alpha_priority": "Identificación del Pilar Alpha (Cuello de botella)"
     },
     "report": {
         "title": "Informe Completo",
@@ -313,13 +321,13 @@
         "risk": "Riesgo Primario",
         "focus": "Enfoque Recomendado",
         "next_step": "Próximo Paso Sugerido",
-        "tactical_exit_plan": "Plan de Salida Táctico",
+        "tactical_exit_plan": "Plan de Salida Tático",
         "immediate_win": "Ganancia Inmediata",
         "no_to_say": "El 'No' para Decir",
         "mindset_shift": "Cambio de Mentalidad",
         "mandatory": "Obligatorio",
         "strategy": "Estrategia",
-        "general_next_step": "Próximo Paso General",
+        "general_next_step": "Próximo Paso Geral",
         "qualitative_analysis": "Análisis de Contexto Personal",
         "stoic_wisdom": "Sabiduría Estoica",
         "stoic_lesson": "Lección para tu Estado",
@@ -359,44 +367,330 @@
         "archetype_desc": "Este perfil refleja un alto nivel de ejecución, pero con una estructura de soporte que comienza a mostrar signos de fatiga sistémica.",
         "profile_shared_by": "Perfil compartido por el 4% de los usuarios",
         "results_pilar_desc": "Un análisis profundo de cada área fundamental de tu existencia, priorizando tu mayor cuello de botella actual.",
+        "pilar_neural_insight": "Inteligência Sistémica (Neural Insights)",
+        "pilar_antifragility": "Índice de Antifragilidade Neural",
+        "pilar_strategic_plan": "Plano Estratégico de 7 Dias",
         "pilar_bottleneck_neural": "Cuello de botella crítico identificado por el sistema neural",
         "projection_desc": "Simulación neuro-sistémica basada en tu estado actual frente a la aplicación del plan estratégico.",
-        "trajectory_desc": "Con corrección de cuello de botella alfa y reequilibrio sistémico.",
-        "inertia_desc": "Manteniendo los patrones actuales e ignorando las alertas de riesgo detectadas.",
-        "forecast_quote": "“En 90 días, su sistema neural se habrá adaptado al nuevo patrón. La inercia hoy cuesta aproximadamente 3 veces más esfuerzo de recuperación en el futuro.”",
+        "trajectory_desc": "Con corrección de cuello de botella alfa e reequilibrio sistémico.",
+        "inertia_desc": "Manteniendo los padrões atuais e ignorando os alertas de risco detectados.",
+        "forecast_quote": "“En 90 días, su sistema neural se habrá adaptado al nuevo patrón. La inércia hoy cuesta aproximadamente 3 veces más esfuerzo de recuperación en el futuro.”",
         "forecast_calc_label": "Cálculo del Costo de Oportunidades Neural",
         "immediate_command": "Comando Inmediato v1.0",
         "shift_label": "CAMBIO",
-        "shift_desc": "Interromper el patrón reactivo.",
+        "shift_desc": "Interrumpir el patrón reactivo.",
         "focus_label": "FOCO",
         "focus_desc": "Anclarse en la palanca única.",
         "act_label": "ACCIÓN",
         "act_desc": "Ejecutar sin juzgar.",
-        "protocol_quote": "“No importa lo que hayas hecho hasta hoy. El protocolo solo exige que, en los próximos 7 días, protejas tu Energía Vital como um tesoro e ejecutes tu Palanca de Impacto como um comando biológico.”",
+        "protocol_quote": "“No importa lo que hayas hecho hasta hoy. El protocolo solo exige que, en los próximos 7 días, protejas tu Energía Vital como um tesouro e ejecutes tu Palanca de Impacto como um comando biológico.”",
         "golden_action": "La Acción de Oro",
-        "golden_action_desc": "Identificamos el cambio de juego sistémico para tu realidad actual."
+        "golden_action_desc": "Identificamos el cambio de juego sistémico para tu realidad actual.",
+        "risk_warnings_data": [
+            {
+                "label": "Fatiga Sistémica",
+                "desc": "Tu Poder Ejecutivo está enmascarando una caída crítica en la Energía Vital.",
+                "risk": "Alta"
+            },
+            {
+                "label": "Erosión de Foco",
+                "desc": "La falta de Claridad Cognitiva está generando un bucle de reactividad ineficiente.",
+                "risk": "Moderada"
+            }
+        ]
+    },
+    "states": {
+        "CONFUSION": {
+            "label": "CONFUSIÓN",
+            "one_liner": "Señales mixtas entre tus pilares están generando niebla mental.",
+            "report": {
+                "meaning": "La Confusión v4 ocurre cuando los pilares de Identidad y Espiritualidade están desalineados, impidiendo uma visión clara del todo.",
+                "characteristics": [
+                    "Dificultad para priorizar en qué pilar enfocarse",
+                    "Sentimiento de estar perdido a pesar de actuar",
+                    "Conflicto entre valores e acciones diarias"
+                ],
+                "primary_risk": "Gasto de energía en áreas que no aportan uma realización real.",
+                "recommended_focus": [
+                    "Revisión de valores (Identidad)",
+                    "Meditación (Espiritualidad)",
+                    "Journaling"
+                ],
+                "next_step": "Elige un pilar para ignorar por 24h y uno para enfocarte al 100%.",
+                "immediate_win": "Define tus 3 valores no negociables ahora.",
+                "the_no_to_say": "Di NO a los compromisos que agreden tu identidad.",
+                "mindset_shift": "De 'Necesito más datos' a 'Necesito más silencio'.",
+                "stoic_lesson": "La claridad no viene de fuera, sino de organizar lo que ya está dentro.",
+                "stoic_principles": [
+                    "Escucha tu voz interior",
+                    "Define lo que es esencial",
+                    "Actúa con integridad"
+                ]
+            }
+        },
+        "OVERLOAD": {
+            "label": "SOBRECARGA",
+            "one_liner": "Los pilares de Salud y Ocio están siendo drenados por el Trabajo.",
+            "report": {
+                "meaning": "La Sobrecarga v4 es un desequilibrio sistémico donde el volumen de un pilar asfixia a los demás.",
+                "characteristics": [
+                    "Fatiga persistente",
+                    "Falta de tiempo para uno mismo",
+                    "Negligencia con la salud física"
+                ],
+                "primary_risk": "Colapso físico o burnout por falta de recuperación.",
+                "recommended_focus": [
+                    "Restablecimiento del sueño",
+                    "Límites en el trabajo",
+                    "Ocio obligatorio"
+                ],
+                "next_step": "Programa uma hora de ocio innegociable para hoy.",
+                "immediate_win": "Duerme 1 hora más temprano esta noche.",
+                "the_no_to_say": "Di NO a las horas extras y tareas secundarias.",
+                "mindset_shift": "De 'Soy uma máquina' a 'Soy un sistema biológico que necesita recarga'.",
+                "stoic_lesson": "Quien está en todas partes, no está en ninguna parte.",
+                "stoic_principles": [
+                    "Protege tu paz",
+                    "Recupera el aliento",
+                    "Limita el campo de batalla"
+                ]
+            }
+        },
+        "REACTIVITY": {
+            "label": "REACTIVIDAD",
+            "one_liner": "Conflictos en el pilar de Relaciones están generando disparadores emocionales.",
+            "report": {
+                "meaning": "La Reactividad v4 indica que tu seguridad emocional en las relaciones está debilitada.",
+                "characteristics": [
+                    "Poca paciencia con los allegados",
+                    "Sentimiento de aislamiento",
+                    "Defensividad excesiva"
+                ],
+                "primary_risk": "Ruptura de vínculos importantes y soledad.",
+                "recommended_focus": [
+                    "Comunicación no violenta",
+                    "Escucha activa",
+                    "Perdón"
+                ],
+                "next_step": "Ten una charla honesta de 5 min con un ser querido.",
+                "immediate_win": "Escucha a alguien hoy sin interrumpir ni juzgar.",
+                "the_no_to_say": "Di NO a discusiones reactivas por impulso.",
+                "mindset_shift": "De 'Ellos me atacan' a 'Me falta apoio emocional'.",
+                "stoic_lesson": "La mejor venganza es no ser como quien te hirió.",
+                "stoic_principles": [
+                    "Empatía como escudo",
+                    "Controla tu respuesta",
+                    "Busca conexión real"
+                ]
+            }
+        },
+        "UNCERTAINTY": {
+            "label": "INCERTIDUMBRE",
+            "one_liner": "Inestabilidad en el pilar Financiero genera miedo al futuro.",
+            "report": {
+                "meaning": "La Incertidumbre v4 está ligada a la falta de uma red de seguridad material o un plan futuro.",
+                "characteristics": [
+                    "Preocupación excesiva por el dinero",
+                    "Dudas para invertir en uno mismo",
+                    "Miedo a la escasez"
+                ],
+                "primary_risk": "Parálisis y pérdida de autonomía.",
+                "recommended_focus": [
+                    "Planificación financiera",
+                    "Reserva de emergencia",
+                    "Crecimiento profesional"
+                ],
+                "next_step": "Anota todos tus costos fijos hoy.",
+                "immediate_win": "Ahorra o genera un valor simbólico hoy.",
+                "the_no_to_say": "Di NO a gastos impulsivos por ansiedad.",
+                "mindset_shift": "De 'Voy a quebrar' a 'Estoy construyendo mi base'.",
+                "stoic_lesson": "La pobreza no es la falta de bienes, sino el ansia de tener más. Enfócate en la estabilidad interna.",
+                "stoic_principles": [
+                    "Frugalidad sabia",
+                    "Prepárate para el invierno",
+                    "La riqueza está en la libertad"
+                ]
+            }
+        },
+        "DISCONNECTION": {
+            "label": "DESCONEXIÓN",
+            "one_liner": "El pilar de Espiritualidad y Sentido está en erosión.",
+            "report": {
+                "meaning": "La Desconexión v4 es el vacío existencial. Estás 'haciendo', pero no estás 'siendo'.",
+                "characteristics": [
+                    "Sentimiento de inutilidad",
+                    "Apatía espiritual",
+                    "Falta de conexión con algo más grande"
+                ],
+                "primary_risk": "Depresión situacional o crisis de identidad.",
+                "recommended_focus": [
+                    "Retiro o silencio",
+                    "Contribución social",
+                    "Filosofía"
+                ],
+                "next_step": "Haz algo por alguien sin esperar nada a cambio.",
+                "immediate_win": "Pasa 15 minutos mirando al cielo o la naturaleza, sin pensar.",
+                "the_no_to_say": "Di NO al materialismo vacío.",
+                "mindset_shift": "De '¿Qué gano yo con esto?' a '¿Cómo sirvo al mundo?'.",
+                "stoic_lesson": "Somos parte de un todo mayor. Reencuentra tu lugar en el cosmos.",
+                "stoic_principles": [
+                    "Cosmopolitismo",
+                    "Amor Fati",
+                    "Conexión Universal"
+                ]
+            }
+        },
+        "STAGNATION": {
+            "label": "ESTANCAMIENTO",
+            "one_liner": "El pilar de Identidad ha dejado de evolucionar por falta de nuevos desafíos.",
+            "report": {
+                "meaning": "El Estancamiento v4 ocurre cuando has dejado de invertir en tu propio crecimiento.",
+                "characteristics": [
+                    "Aburrimiento con la propia rutina",
+                    "Falta de nuevos aprendizajes",
+                    "Comodidad excesiva"
+                ],
+                "primary_risk": "Obsolescencia y pérdida del brillo personal.",
+                "recommended_focus": [
+                    "Cursos difíciles",
+                    "Viajes",
+                    "Nuevos círculos sociales"
+                ],
+                "next_step": "Inicia un nuevo aprendizaje hoy.",
+                "immediate_win": "Lee 10 páginas de un libro complejo sobre um tema nuevo.",
+                "the_no_to_say": "Di NO a la misma rutina de siempre.",
+                "mindset_shift": "De 'Ya sé lo suficiente' a 'Soy un eterno aprendiz'.",
+                "stoic_lesson": "El que ha dejado de mejorar, ha dejado de ser bueno.",
+                "stoic_principles": [
+                    "Eudaimonia",
+                    "Búsqueda de la virtud",
+                    "Desafío constante"
+                ]
+            }
+        },
+        "CLARITY": {
+            "label": "CLARIDAD",
+            "one_liner": "Los pilares de Trabajo y Propósito están en alta sintonía.",
+            "report": {
+                "meaning": "Claridad v4 es cuando sabes quién eres y hacia dónde te diriges profesionalmente.",
+                "characteristics": [
+                    "Enfoque intencional",
+                    "Alta productividad",
+                    "Sentido de dirección"
+                ],
+                "primary_risk": "Agotamiento por alto rendimiento.",
+                "recommended_focus": [
+                    "Mantenimiento",
+                    "Sistematización",
+                    "Legado"
+                ],
+                "next_step": "Escribe tu manifiesto de trabajo personal para el próximo semestre.",
+                "immediate_win": "Pasa 30 min planificando tu próxima semana estratégica.",
+                "the_no_to_say": "Di NO a oportunidades que no se alineen con tu propósito.",
+                "mindset_shift": "De 'Estoy ocupado' a 'Estoy enfocado'.",
+                "stoic_lesson": "Si un hombre no sabe a qué puerto navega, ningún viento es favorable.",
+                "stoic_principles": [
+                    "Enfoque del Arquero",
+                    "Prosenxe (Atención)",
+                    "Action Intencional"
+                ]
+            }
+        },
+        "ALIGNMENT": {
+            "label": "ALINEACIÓN",
+            "one_liner": "Armonía sistémica entre los 7 pilares fundamentales.",
+            "report": {
+                "meaning": "Alineación v4 es la paz de quien tiene uma base sólida en todas las áreas de la vida.",
+                "characteristics": [
+                    "Gratitud profunda",
+                    "Resiliencia total",
+                    "Flujo existencial"
+                ],
+                "primary_risk": "Arrogancia o relajación excesiva.",
+                "recommended_focus": [
+                    "Mentoría",
+                    "Gratitude constante",
+                    "Sostenibilidad"
+                ],
+                "next_step": "Agradece a 3 personas que forman parte de tu red de apoio hoy.",
+                "immediate_win": "Comparte uma lección aprendida con alguien.",
+                "the_no_to_say": "Di NO a la complacencia.",
+                "mindset_shift": "De 'Lo logré' a 'Lo mantengo con virtud'.",
+                "stoic_lesson": "La felicidad es un flujo de vida suave y sin obstáculos.",
+                "stoic_principles": [
+                    "Gratitud estoica",
+                    "Apatheia (Paz interior)",
+                    "Vida virtuosa"
+                ]
+            }
+        }
+    },
+    "correlations": {
+        "work_vs_health": "Tu alto desempeño en el Trabajo está asfixiando tu Recuperación Física.",
+        "finance_vs_rel": "La inestabilidad Financiera está generando reactividad en tus Relaciones.",
+        "id_vs_spir": "Tu fuerte Identidad necesita un Propósito mayor para evitar el vacío existencial.",
+        "vitality_brake": "Tu baja Vitalidad es el principal freno para tu claridad mental hoy.",
+        "harmony": "Tus pilares operan en relativa armonía sistémica."
+    },
+    "pillars": {
+        "SAUDE": "Salud",
+        "TRABALHO": "Trabajo",
+        "RELACIONAMENTOS": "Relaciones",
+        "FINANCEIRO": "Finanzas",
+        "IDENTIDADE": "Identidad",
+        "LAZER": "Ocio",
+        "ESPIRITUALIDADE": "Sentido"
+    },
+    "pillar_insights": {
+        "SAUDE": {
+            "low": "Nivel crítico de vitalidad. Su capacidad de respuesta biológica está comprometida.",
+            "mid": "Estado de mantenimiento básico. Hay energía, pero falta reserva para el alto rendimiento.",
+            "high": "Vitalidad excepcional. Su cuerpo es una máquina de soporte para su mente."
+        },
+        "TRABALHO": {
+            "low": "Desalineación profesional severa o falta de progreso claro.",
+            "mid": "Ejecución estable, pero el potencial de impacto aún no se ha liberado por completo.",
+            "high": "Maestría profesional. Usted opera en un estado de flujo y generación de valor constante."
+        },
+        "RELACIONAMENTOS": {
+            "low": "Aislamiento o toxicidad sistémica. Sus conexiones están drenando su energía.",
+            "mid": "Círculos estables, pero falta profundidad o apoyo emocional genuino.",
+            "high": "Ecosistema relacional poderoso. Su red es su mayor fuente de seguridad y apoyo."
+        },
+        "FINANCEIRO": {
+            "low": "Escasez severa o desorganización que genera ansiedad constante.",
+            "mid": "Estabilidad básica, pero sin la autonomía necesaria para decisiones audaces.",
+            "high": "Antifragilidad financiera. Sus recursos sostienen su libertad y expansión."
+        },
+        "IDENTIDADE": {
+            "low": "Crisis de identidad. Falta de claridad sobre valores y límites personales.",
+            "mid": "Sabe quién es, pero todavía se pliega a presiones externas excesivas.",
+            "high": "Soberanía absoluta. Su identidad es el eje inquebrantable de todas sus acciones."
+        },
+        "LAZER": {
+            "low": "Anhedonia o negligencia total con la diversión. Alto riesgo de colapso por rigidez.",
+            "mid": "Hay momentos de pausa, pero no generan una regeneración profunda.",
+            "high": "Regeneración activa. Utiliza el ocio como herramienta estratégica de alto rendimiento."
+        },
+        "ESPIRITUALIDADE": {
+            "low": "Vacío existencial profundo. Sus acciones carecem de um porquê mayor.",
+            "mid": "Conexión esporádica con el propósito, pero lo cotidiano aún parece puramente material.",
+            "high": "Propósito trascendental. Existe una conexión clara con el Sentido que guía su vida."
+        }
     },
     "archetypes": {
         "architect_of_destiny": "Arquitecto del Destino",
         "transition_explorer": "Explorador en Transición",
         "the_observer": "El Observador"
     },
-    "correlations": {
-        "work_vs_health": "Tu alto desempeño en el Trabajo está asfixiando tu Recuperación Física.",
-        "finance_vs_rel": "La inestabilidad Financiera está generando reactividad en tus Relaciones.",
-        "id_vs_spir": "Tu fuerte Identidad necesita un Propósito mayor para evitar el vacío existencial.",
-        "vitality_brake": "Tu baja Vitalidade é o principal freno para tu claridad mental hoy.",
-        "harmony": "Tus pilares operan en relativa armonía sistémica."
-    },
-    "pillars": {
-        "health": "Salud",
-        "work": "Trabajo",
-        "relationships": "Relaciones",
-        "finances": "Finanzas",
-        "identity": "Identidad",
-        "leisure": "Ocio",
-        "spirituality": "Sentido",
-        "stoic": "Estoica"
+    "leverages": {
+        "SAUDE": "Elimina la cafeína después de la 1 PM y cena 3 horas antes de dormir.",
+        "TRABALHO": "Define tu \"Única Cosa\" la noche anterior y no abras el correo antes de terminarla.",
+        "RELACIONAMENTOS": "Programa una conversación de 15 minutos sin distracciones con un aliado estratégico para alinearte.",
+        "FINANCEIRO": "Exponte voluntariamente al malestar físico (ducha fría) para recalibrar tu umbral de estrés.",
+        "IDENTIDADE": "Implementa la técnica de \"Habit Stacking\" para unir un nuevo hábito difícil a tu café matutino.",
+        "LAZER": "Elimina todas las notificaciones digitales por 4 horas diarias en tu Golden Hour.",
+        "ESPIRITUALIDADE": "Practica 10 minutos de \"Non-Sleep Deep Rest\" (NSDR) inmediatamente después de los picos de estrés."
     },
     "login": {
         "title": "Accede a tu Diagnóstico",
@@ -410,7 +704,7 @@
         "not_received": "¿No lo recibiste? Verifica el spam o inténtalo de nuevo.",
         "try_another_email": "Intentar con otro correo",
         "demo_link": "Acceder al Modo Demo (Vista previa)",
-        "demo_link_success": "(Enlace a Demo: Ir al Dashboard)",
+        "demo_link_success": "(Enlace a Demo: Ir ao Dashboard)",
         "back_to_home": "Volver al Inicio",
         "no_passwords": "Sin contraseñas",
         "agreement": "Al continuar, aceptas nuestros {terms} e {privacy}."

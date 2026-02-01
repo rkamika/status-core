@@ -43,6 +43,7 @@ import { RadarChart } from "@/components/ui/radar-chart";
 import { getDiagnosisById, updateDiagnosis } from "@/lib/storage";
 import { SavedDiagnosis, V3Insights } from "@/lib/types";
 import { Logo } from "@/components/logo";
+import { trackFBEvent } from "@/components/meta-pixel";
 
 export default function ReportPage({ params }: { params: Promise<{ id: string, lang: Locale }> }) {
     const { lang, id } = use(params);
@@ -70,6 +71,25 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
         };
         loadDiagnosis();
     }, [id, isDemo, lang, router]);
+
+    // Track Purchase on browser if unlocked via URL parameter (to deduplicate with CAPI)
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('unlocked') === 'true' && savedDiagnosis && !isDemo) {
+                trackFBEvent('Purchase', {
+                    value: 97.00, // Idealmente pegar do sistema, mas 97 é o padrão
+                    currency: 'BRL',
+                    content_name: 'Platinum Report',
+                    content_ids: [id],
+                    content_type: 'product'
+                });
+                // Remove parameter to avoid multiple triggers
+                const newRelativePathQuery = window.location.pathname;
+                history.replaceState(null, '', newRelativePathQuery);
+            }
+        }
+    }, [savedDiagnosis, isDemo, id]);
 
     const demoAnswers = {
         // Saúde: 2, 1, 2
@@ -121,14 +141,27 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                 : "Your current reality is a paradox: you've never been so well 'on the outside' and so exhausted 'on the inside'. The analysis of your 7 pillars reveals that you have turned Work and Finance into a shield to avoid facing the void in the Leisure and Relationships pillars. Your Health pillar has reached a critical level; your biological machine is running on its overdraft limit.\n\nThe hidden logic here is the 'Devaluation of Human Capital': you are investing all your time capital into external assets that generate money, while your most valuable asset — your mental and physical health — is suffering accelerated depreciation. In the long run, without the Health pillar, Finances become just a reserve fund for medical expenses and lack of quality of life.\n\nThe identified systemic bottleneck is the 'Non-existence of Antifragility in Rest'. You are fragile because your system depends on continuous effort. If you stop, you feel everything falls apart. True antifragility would come from a system where your well-being is independent of your daily productivity.\n\nThe risk of keeping this path is not just burnout, but the total erosion of your Identity, transforming who you are into just 'what you deliver'. It is imperative that you reintegrate Leisure not as passive rest (Netflix/Social Media), but as Active Leisure that feeds your soul and reconnects you with the people who matter.\n\nYour financial mastery is commendable, but now it must be used to buy your freedom back. Delegating and saying 'no' are the only tools capable of restoring balance before the body forces a mandatory stop. Stoicism invites you to look at what you truly control: and time is the only thing that, once lost, is never recovered."
     };
 
-    const diagnosis = isDemo ? calculateDiagnosis(demoAnswers, lang) : (savedDiagnosis ? {
-        ...calculateDiagnosis(savedDiagnosis.answers, lang),
-        state: savedDiagnosis.state,
-    } : null);
+    const rawDiagnosis = isDemo ? calculateDiagnosis(demoAnswers) : (savedDiagnosis ? calculateDiagnosis(savedDiagnosis.answers) : null);
 
-    if (isDemo && diagnosis?.v3Insights) {
-        diagnosis.v3Insights.aiAnalysis = demoAiAnalysis;
-    }
+    const diagnosis = rawDiagnosis ? {
+        ...rawDiagnosis,
+        label: dict.states[rawDiagnosis.state].label,
+        one_liner: dict.states[rawDiagnosis.state].one_liner,
+        report: dict.states[rawDiagnosis.state].report,
+        pillarScores: rawDiagnosis.pillarScores.map(p => ({
+            ...p,
+            label: dict.pillars[p.pillarKey],
+            insight: dict.pillar_insights[p.pillarKey][p.tier],
+            icon: [Activity, Briefcase, Users, Wallet, Fingerprint, Palmtree, Compass][rawDiagnosis.pillarScores.indexOf(p)] || Activity
+        })),
+        v3Insights: {
+            ...rawDiagnosis.v3Insights,
+            archetype: dict.archetypes[rawDiagnosis.v3Insights.archetypeKey],
+            bottleneckLabel: dict.pillars[rawDiagnosis.v3Insights.bottleneckPillarKey],
+            correlations: rawDiagnosis.v3Insights.correlationKeys.map(k => dict.correlations[k]),
+            aiAnalysis: isDemo ? demoAiAnalysis : (savedDiagnosis?.v3Insights?.aiAnalysis || (rawDiagnosis.v3Insights as any).aiAnalysis)
+        }
+    } : null;
 
     const qualitativeContext = isDemo ? demoContext : savedDiagnosis?.qualitativeContext || "";
     const isUnlocked = isDemo || savedDiagnosis?.isUnlocked || false;
@@ -539,7 +572,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                                     />
                                                                 </div>
                                                                 <p className="text-xs uppercase tracking-[0.2em] font-black text-muted-foreground opacity-60">
-                                                                    {lang === 'pt' ? 'Gargalo crítico identificado pelo sistema neural' : lang === 'es' ? 'Cuello de botella crítico identificado por el sistema neural' : 'Critical bottleneck identified by neural system'}
+                                                                    {dict.report.bottleneck_neural}
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -612,11 +645,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                             {dict.report.future_90_days}
                                         </h3>
                                         <p className="text-muted-foreground text-sm font-medium max-w-2xl mx-auto">
-                                            {lang === 'pt'
-                                                ? 'Simulação neuro-sistêmica baseada no seu estado atual vs. aplicação do plano estratégico.'
-                                                : lang === 'es'
-                                                    ? 'Simulación neuro-sistémica basada en tu estado actual frente a la aplicación del plan estratégico.'
-                                                    : 'Neuro-systemic simulation based on your current state vs. application of the strategic plan.'}
+                                            {dict.report.projection_desc}
                                         </p>
                                     </div>
 
@@ -626,22 +655,14 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                 {[
                                                     {
                                                         label: dict.report.evolution_trajectory,
-                                                        desc: {
-                                                            pt: 'Com a correção do gargalo alpha e rebalanceamento sistêmico.',
-                                                            en: 'With alpha bottleneck correction and systemic rebalancing.',
-                                                            es: 'Con corrección de cuello de botella alfa y reequilibrio sistémico.'
-                                                        },
+                                                        desc: dict.report.trajectory_desc,
                                                         target: 85,
                                                         color: 'text-primary',
                                                         bg: 'bg-primary'
                                                     },
                                                     {
                                                         label: dict.report.price_of_inertia,
-                                                        desc: {
-                                                            pt: 'Mantendo os padrões atuais e ignorando os alertas de risco detectados.',
-                                                            en: 'Maintaining current patterns and ignoring detected risk warnings.',
-                                                            es: 'Manteniendo los patrones actuales e ignorando las alertas de riesgo detectadas.'
-                                                        },
+                                                        desc: dict.report.inertia_desc,
                                                         target: 42,
                                                         color: 'text-rose-500',
                                                         bg: 'bg-rose-500'
@@ -651,7 +672,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                         <div className="flex justify-between items-end">
                                                             <div className="space-y-1">
                                                                 <span className={`text-xs font-black uppercase tracking-widest ${path.color}`}>{path.label}</span>
-                                                                <p className="text-[10px] text-muted-foreground font-medium italic">{path.desc[lang] || path.desc['en']}</p>
+                                                                <p className="text-[10px] text-muted-foreground font-medium italic">{path.desc}</p>
                                                             </div>
                                                             <span className={`text-lg font-black italic ${path.color}`}>{path.target}%</span>
                                                         </div>
@@ -670,14 +691,10 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                             <div className="p-8 rounded-2xl bg-muted/20 border border-border/40 space-y-4 flex flex-col justify-center text-center italic">
                                                 <Sparkles className="h-6 w-6 text-primary mx-auto opacity-40 print:hidden" />
                                                 <p className="text-sm text-foreground/80 leading-relaxed font-medium">
-                                                    {lang === 'pt'
-                                                        ? '“Em 90 dias, seu sistema neural terá se adaptado ao novo padrão. A inércia hoje custa aproximadamente 3x mais esforço de recuperação no futuro.”'
-                                                        : lang === 'es'
-                                                            ? '“En 90 días, su sistema neural se habrá adaptado al nuevo patrón. La inercia hoy cuesta aproximadamente 3 veces más esfuerzo de recuperación en el futuro.”'
-                                                            : '“In 90 days, your neural system will have adapted to the new pattern. Inertia today costs approximately 3x more recovery effort in the future.”'}
+                                                    {dict.report.forecast_quote}
                                                 </p>
                                                 <span className="text-[9px] font-black uppercase tracking-[0.4em] opacity-40">
-                                                    {lang === 'pt' ? 'Cálculo de Custo de Oportunidade Neural' : lang === 'es' ? 'Cálculo del Costo de Oportunidad Neural' : 'Neural Opportunity Cost Calculation'}
+                                                    {dict.report.forecast_calc_label}
                                                 </span>
                                             </div>
                                         </div>
@@ -701,7 +718,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                         Stoic<br />Neuro<br />Protocol
                                                     </h3>
                                                     <p className="text-xs text-primary font-black uppercase tracking-widest opacity-80">
-                                                        {lang === 'pt' ? 'Comando Imediato v1.0' : lang === 'es' ? 'Comando Inmediato v1.0' : 'Immediate Command v1.0'}
+                                                        {dict.report.immediate_command}
                                                     </p>
                                                 </div>
                                             </div>
@@ -711,48 +728,32 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                     {[
                                                         {
                                                             step: "01",
-                                                            label: { pt: 'MUDANÇA', en: 'SHIFT', es: 'CAMBIO' },
-                                                            text: {
-                                                                pt: 'Interromper o padrão reativo.',
-                                                                en: 'Interrupt the reactive pattern.',
-                                                                es: 'Interrumpir el patrón reactivo.'
-                                                            }
+                                                            label: dict.report.shift_label,
+                                                            text: dict.report.shift_desc
                                                         },
                                                         {
                                                             step: "02",
-                                                            label: { pt: 'FOCO', en: 'FOCUS', es: 'FOCO' },
-                                                            text: {
-                                                                pt: 'Ancorar na única alavanca.',
-                                                                en: 'Anchor on the single leverage.',
-                                                                es: 'Anclarse en la palanca única.'
-                                                            }
+                                                            label: dict.report.focus_label,
+                                                            text: dict.report.focus_desc
                                                         },
                                                         {
                                                             step: "03",
-                                                            label: { pt: 'AÇÃO', en: 'ACT', es: 'ACCIÓN' },
-                                                            text: {
-                                                                pt: 'Executar sem julgamento.',
-                                                                en: 'Execute without judgment.',
-                                                                es: 'Ejecutar sin juzgar.'
-                                                            }
+                                                            label: dict.report.act_label,
+                                                            text: dict.report.act_desc
                                                         },
                                                     ].map((item, i) => (
                                                         <div key={i} className="space-y-3">
                                                             <span className="text-3xl font-black italic text-primary/40">{item.step}</span>
                                                             <div className="h-px w-8 bg-primary/20" />
-                                                            <h4 className="text-xs font-black uppercase tracking-widest text-white">{item.label[lang] || item.label['en']}</h4>
-                                                            <p className="text-[11px] text-zinc-400 font-medium italic">{item.text[lang] || item.text['en']}</p>
+                                                            <h4 className="text-xs font-black uppercase tracking-widest text-white">{item.label}</h4>
+                                                            <p className="text-[11px] text-zinc-400 font-medium italic">{item.text}</p>
                                                         </div>
                                                     ))}
                                                 </div>
 
                                                 <div className="p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                                                     <p className="text-sm md:text-base text-zinc-300 font-serif leading-relaxed italic">
-                                                        {lang === 'pt'
-                                                            ? '“Não importa o que você fez até hoje. O protocolo exige apenas que, nos próximos 7 dias, você proteja sua Energia Vital como um tesouro e execute sua Alavanca de Impacto como um comando biológico.”'
-                                                            : lang === 'es'
-                                                                ? '“No importa lo que hayas hecho hasta hoy. El protocolo solo exige que, en los próximos 7 días, protejas tu Energía Vital como um tesoro e ejecutes tu Palanca de Impacto como um comando biológico.”'
-                                                                : '“It doesn\'t matter what you\'ve done until today. The protocol only requires that, in the next 7 days, you protect your Vital Energy like a treasure and execute your Impact Leverage like a biological command.”'}
+                                                        {dict.report.protocol_quote}
                                                     </p>
                                                 </div>
                                             </div>
@@ -779,61 +780,18 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
 
                                             <div className="space-y-2">
                                                 <h3 className="text-3xl font-black uppercase tracking-tighter leading-tight italic">
-                                                    {lang === 'pt' ? 'A Ação de Ouro' : lang === 'es' ? 'La Acción de Oro' : 'The Golden Action'}
+                                                    {dict.report.golden_action}
                                                 </h3>
                                                 <p className="text-sm text-muted-foreground font-medium italic">
-                                                    {lang === 'pt'
-                                                        ? 'Identificamos o divisor de águas sistêmico para sua realidade atual.'
-                                                        : lang === 'es'
-                                                            ? 'Identificamos el cambio de juego sistémico para tu realidad actual.'
-                                                            : 'We have identified the systemic game-changer for your current reality.'}
+                                                    {dict.report.golden_action_desc}
                                                 </p>
                                             </div>
 
                                             <div className="p-6 rounded-2xl bg-background/60 border border-primary/20 shadow-inner">
                                                 <p className="text-lg font-black italic text-foreground leading-relaxed">
                                                     "{(() => {
-                                                        const bottleneck = diagnosis?.v3Insights?.bottleneckLabel;
-                                                        const leverageMap: Record<string, Record<Locale, string>> = {
-                                                            'Clareza Cognitiva': {
-                                                                pt: 'Elimine todas as notificações digitais por 4 horas diárias durante sua Golden Hour.',
-                                                                en: 'Eliminate all digital notifications for 4 hours daily during your Golden Hour.',
-                                                                es: 'Elimina todas las notificaciones digitales por 4 horas diarias en tu Golden Hour.'
-                                                            },
-                                                            'Energia Vital': {
-                                                                pt: 'Zere a ingestão de cafeína após as 13h e mova sua última refeição para 3h antes de dormir.',
-                                                                en: 'Zero caffeine intake after 1 PM and move your last meal to 3 hours before sleep.',
-                                                                es: 'Elimina la cafeína después de la 1 PM y cena 3 horas antes de dormir.'
-                                                            },
-                                                            'Arquitetura de Hábitos': {
-                                                                pt: 'Implemente a técnica de "Habit Stacking" para amarrar um novo hábito difícil a um café matinal.',
-                                                                en: 'Implement the "Habit Stacking" technique to tie a difficult new habit to your morning coffee.',
-                                                                es: 'Implementa la técnica de "Habit Stacking" para unir un nuevo hábito difícil a tu café matutino.'
-                                                            },
-                                                            'Estabilidade Emocional': {
-                                                                pt: 'Pratique 10 minutos de "Non-Sleep Deep Rest" (NSDR) imediatamente após picos de estresse.',
-                                                                en: 'Practice 10 minutes of "Non-Sleep Deep Rest" (NSDR) immediately after stress peaks.',
-                                                                es: 'Practica 10 minutos de "Non-Sleep Deep Rest" (NSDR) inmediatamente después de los picos de estrés.'
-                                                            },
-                                                            'Poder Executivo': {
-                                                                pt: 'Defina sua "Única Coisa" na noite anterior e não abra o e-mail antes de concluí-la.',
-                                                                en: 'Define your "One Thing" the night before and do not open email before finishing it.',
-                                                                es: 'Define tu "Única Cosa" la noche anterior y no abras el correo antes de terminarla.'
-                                                            },
-                                                            'Resiliência Antifrágil': {
-                                                                pt: 'Exponha-se voluntariamente ao desconforto físico (ducha fria) para recalibrar seu limiar de estresse.',
-                                                                en: 'Voluntarily expose yourself to physical discomfort (cold shower) to recalibrate your stress threshold.',
-                                                                es: 'Exponte voluntariamente al malestar físico (ducha fría) para recalibrar tu umbral de estrés.'
-                                                            },
-                                                            'Conexão Social': {
-                                                                pt: 'Agende uma conversa de 15 minutos sem distrações com um aliado estratégico para alinhamento.',
-                                                                en: 'Schedule a 15-minute distraction-free conversation with a strategic ally for alignment.',
-                                                                es: 'Programa una conversación de 15 minutos sin distracciones con un aliado estratégico para alinearte.'
-                                                            }
-                                                        };
-                                                        const bottleneckLabel = diagnosis?.v3Insights?.bottleneckLabel;
-                                                        const pillarMap = leverageMap[bottleneckLabel || ''] || leverageMap['Poder Executivo'];
-                                                        return pillarMap[lang] || pillarMap['en'];
+                                                        const bKey = rawDiagnosis?.v3Insights?.bottleneckPillarKey || 'SAUDE';
+                                                        return dict.leverages[bKey] || dict.leverages['SAUDE'];
                                                     })()}"
                                                 </p>
                                             </div>
@@ -856,34 +814,15 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                             </Badge>
 
                                             <div className="space-y-4">
-                                                {[
-                                                    {
-                                                        label: { pt: 'Fadiga Sistêmica', en: 'Systemic Fatigue', es: 'Fatiga Sistémica' },
-                                                        desc: {
-                                                            pt: 'Seu Poder Executivo está mascarando uma queda crítica na Energia Vital.',
-                                                            en: 'Your Executive Power is masking a critical drop in Vital Energy.',
-                                                            es: 'Tu Poder Ejecutivo está enmascarando una caída crítica en la Energía Vital.'
-                                                        },
-                                                        risk: 'High'
-                                                    },
-                                                    {
-                                                        label: { pt: 'Erosão de Foco', en: 'Focus Erosion', es: 'Erosión de Foco' },
-                                                        desc: {
-                                                            pt: 'A falta de Clareza Cognitiva está gerando um loop de reatividade ineficiente.',
-                                                            en: 'Lack of Cognitive Clarity is generating an inefficient reactivity loop.',
-                                                            es: 'La falta de Claridad Cognitiva está generando un bucle de reactividad ineficiente.'
-                                                        },
-                                                        risk: 'Moderate'
-                                                    }
-                                                ].map((warning, i) => (
+                                                {dict.report.risk_warnings_data.map((warning: any, i: number) => (
                                                     <div key={i} className="flex gap-4 items-start p-4 rounded-2xl bg-rose-500/5 border border-rose-500/10 hover:bg-rose-500/10 transition-colors group/item">
                                                         <div className="h-2 w-2 rounded-full bg-rose-500 mt-2 group-hover/item:animate-ping" />
                                                         <div className="space-y-1">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-xs font-black uppercase italic">{warning.label[lang]}</span>
+                                                                <span className="text-xs font-black uppercase italic">{warning.label}</span>
                                                                 <Badge className="text-[8px] bg-rose-500/10 text-rose-500 border-none px-1.5 py-0">Risk: {warning.risk}</Badge>
                                                             </div>
-                                                            <p className="text-[11px] text-muted-foreground font-medium italic leading-relaxed">{warning.desc[lang]}</p>
+                                                            <p className="text-[11px] text-muted-foreground font-medium italic leading-relaxed">{warning.desc}</p>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -1127,8 +1066,8 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                             </>
                         );
                     })()}
-                </div>
-            </main>
-        </div>
+                </div >
+            </main >
+        </div >
     );
 }

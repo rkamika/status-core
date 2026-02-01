@@ -102,7 +102,7 @@
             "3": {
                 "text": "Consigo manter o equilíbrio emocional mesmo diante de imprevistos estressantes.",
                 "options": [
-                    "Descontrole total",
+                    "Descontrol total",
                     "Muita reatividade",
                     "Instável",
                     "Equilibrado",
@@ -315,7 +315,7 @@
         "title": "Relatório Completo",
         "analysis": "Análise de Estado",
         "systemic_intelligence": "INTELIGÊNCIA SISTÊMICA v4",
-        "results_by_pilar": "Resultados por Pilar",
+        "results_by_pillar": "Resultados por Pilar",
         "meaning": "O que isso significa",
         "characteristics": "Características Observadas",
         "risk": "Risco Primário",
@@ -329,7 +329,7 @@
         "strategy": "Estratégia",
         "general_next_step": "Próximo Passo Geral",
         "qualitative_analysis": "Análise de Contexto Pessoal",
-        "stoic_wisdom": "Sabedoria Estoica",
+        "stoic_wisdom": "Sabidoria Estoica",
         "stoic_lesson": "Lição para o seu Estado",
         "antifragility_index": "Índice de Antifragilidade",
         "antifragility_desc": "Resiliência sistêmica baseada em Identidade, Saúde e Sentido.",
@@ -367,6 +367,9 @@
         "archetype_desc": "Este perfil reflete um alto nível de execução, mas com uma estrutura de suporte que começa a mostrar sinais de fadiga sistêmica.",
         "profile_shared_by": "Perfil compartilhado por 4% dos usuários",
         "results_pilar_desc": "Uma análise profunda de cada área fundamental da sua existência, priorizando o seu maior gargalo atual.",
+        "pilar_neural_insight": "Inteligência Sistêmica (Neural Insights)",
+        "pilar_antifragility": "Índice de Antifragilidade Neural",
+        "pilar_strategic_plan": "Plano Estratégico de 7 Dias",
         "pilar_bottleneck_neural": "Gargalo crítico identificado pelo sistema neural",
         "projection_desc": "Simulação neuro-sistêmica baseada no seu estado atual vs. aplicação do plano estratégico.",
         "trajectory_desc": "Com a correção do gargalo alpha e rebalanceamento sistêmico.",
@@ -382,12 +385,245 @@
         "act_desc": "Executar sem julgamento.",
         "protocol_quote": "“Não importa o que você fez até hoje. O protocolo exige apenas que, nos próximos 7 dias, você proteja sua Energia Vital como um tesouro e execute sua Alavanca de Impacto como um comando biológico.”",
         "golden_action": "A Ação de Ouro",
-        "golden_action_desc": "Identificamos o divisor de águas sistêmico para sua realidade atual."
+        "golden_action_desc": "Identificamos o divisor de águas sistêmico para sua realidade atual.",
+        "risk_warnings_data": [
+            {
+                "label": "Fadiga Sistêmica",
+                "desc": "Seu Poder Executivo está mascarando uma queda crítica na Energia Vital.",
+                "risk": "Alta"
+            },
+            {
+                "label": "Erosão de Foco",
+                "desc": "A falta de Clareza Cognitiva está gerando um loop de reatividade ineficiente.",
+                "risk": "Moderada"
+            }
+        ]
     },
-    "archetypes": {
-        "architect_of_destiny": "Arquiteto do Destino",
-        "transition_explorer": "Explorador em Transição",
-        "the_observer": "O Observador"
+    "states": {
+        "CONFUSION": {
+            "label": "CONFUSÃO",
+            "one_liner": "Sinais mistos entre seus pilares estão gerando neblina mental.",
+            "report": {
+                "meaning": "A Confusão v4 ocorre quando os pilares de Identidade e Espiritualidade estão desalinhados, impedindo uma visão clara do todo.",
+                "characteristics": [
+                    "Dificuldade em priorizar qual pilar focar",
+                    "Sentimento de estar perdido mesmo agindo",
+                    "Conflito entre valores e ações diárias"
+                ],
+                "primary_risk": "Gasto de energia em áreas que não trazem realização real.",
+                "recommended_focus": [
+                    "Revisão de valores (Identidade)",
+                    "Meditação (Espiritualidade)",
+                    "Journaling"
+                ],
+                "next_step": "Escolha um pilar para ignorar por 24h e um para focar 100%.",
+                "immediate_win": "Defina seus 3 valores não-negociáveis agora.",
+                "the_no_to_say": "Diga NÃO a compromissos que agridem sua identidade.",
+                "mindset_shift": "De 'Eu preciso de mais dados' para 'Eu preciso de mais silêncio'.",
+                "stoic_lesson": "A clareza não vem de fora, mas de organizar o que já está dentro.",
+                "stoic_principles": [
+                    "Escute sua voz interior",
+                    "Defina o que é essencial",
+                    "Aja com integridade"
+                ]
+            }
+        },
+        "OVERLOAD": {
+            "label": "SOBRECARGA",
+            "one_liner": "Os pilares de Saúde e Lazer estão sendo drenados pelo Trabalho.",
+            "report": {
+                "meaning": "A Sobrecarga v4 é um desequilíbrio sistêmico onde o volume de um pilar asfixia os outros.",
+                "characteristics": [
+                    "Fadiga persistente",
+                    "Falta de tempo para si mesmo",
+                    "Negligência com a saúde física"
+                ],
+                "primary_risk": "Colapso físico ou burnout por falta de recuperação.",
+                "recommended_focus": [
+                    "Restabelecimento do sono",
+                    "Limites no trabalho",
+                    "Lazer obrigatório"
+                ],
+                "next_step": "Agende uma hora de lazer inegociável para hoje.",
+                "immediate_win": "Durma 1 hora mais cedo esta noite.",
+                "the_no_to_say": "Diga NÃO a horas extras e tarefas secundárias.",
+                "mindset_shift": "De 'Eu sou uma máquina' para 'Eu sou um sistema biológico que precisa de recarga'.",
+                "stoic_lesson": "Aquele que está em todo lugar, não está em lugar nenhum.",
+                "stoic_principles": [
+                    "Proteja sua paz",
+                    "Recupere o fôlego",
+                    "Limite o campo de batalha"
+                ]
+            }
+        },
+        "REACTIVITY": {
+            "label": "REATIVIDADE",
+            "one_liner": "Conflitos no pilar de Relacionamentos estão gerando gatilhos emocionais.",
+            "report": {
+                "meaning": "A Reatividade v4 indica que sua segurança emocional nos relacionamentos está fragilizada.",
+                "characteristics": [
+                    "Paciência curta com pessoas próximas",
+                    "Sentimento de isolamento",
+                    "Defensividade excessiva"
+                ],
+                "primary_risk": "Ruptura de laços importantes e solidão.",
+                "recommended_focus": [
+                    "Comunicação não-violenta",
+                    "Escuta ativa",
+                    "Perdão"
+                ],
+                "next_step": "Tenha uma conversa honesta de 5 min com alguém querido.",
+                "immediate_win": "Ouça alguém hoje sem interromper ou julgar.",
+                "the_no_to_say": "Diga NÃO a discussões reativas por impulso.",
+                "mindset_shift": "De 'Eles me atacam' para 'Eu estou sem suporte emocional'.",
+                "stoic_lesson": "A melhor vingança é não ser como quem te feriu.",
+                "stoic_principles": [
+                    "Empatia como escudo",
+                    "Controle sua resposta",
+                    "Busque conexão real"
+                ]
+            }
+        },
+        "UNCERTAINTY": {
+            "label": "INCERTEZA",
+            "one_liner": "Instabilidade no pilar Financeiro gera medo do futuro.",
+            "report": {
+                "meaning": "A Incerteza v4 está ligada à falta de uma rede de segurança material ou plano futuro.",
+                "characteristics": [
+                    "Preocupação excessiva com dinheiro",
+                    "Hesitação em investir em si",
+                    "Medo da escassez"
+                ],
+                "primary_risk": "Paralisia e perda de autonomia.",
+                "recommended_focus": [
+                    "Planejamento financeiro",
+                    "Reserva de emergência",
+                    "Crescimento profissional"
+                ],
+                "next_step": "Anote todos os seus custos fixos hoje.",
+                "immediate_win": "Economize ou gere um valor simbólico hoje.",
+                "the_no_to_say": "Diga NÃO a gastos impulsivos por ansiedade.",
+                "mindset_shift": "De 'Eu vou quebrar' para 'Eu estou construindo minha base'.",
+                "stoic_lesson": "A pobreza não é a falta de bens, mas a ânsia de ter mais. Foque na estabilidade interna.",
+                "stoic_principles": [
+                    "Frugalidade sábia",
+                    "Prepare-se para o inverno",
+                    "A riqueza está na liberdade"
+                ]
+            }
+        },
+        "DISCONNECTION": {
+            "label": "DESCONEXÃO",
+            "one_liner": "O pilar de Espiritualidade e Sentido está em erosão.",
+            "report": {
+                "meaning": "A Desconexão v4 é o vazio existencial. Você está fazendo, mas não está 'sendo'.",
+                "characteristics": [
+                    "Sentimento de inutilidade",
+                    "Apatia espiritual",
+                    "Falta de conexão com algo maior"
+                ],
+                "primary_risk": "Depressão situacional ou crise de meia idade.",
+                "recommended_focus": [
+                    "Retiro ou silêncio",
+                    "Contribuição social",
+                    "Filosofia"
+                ],
+                "next_step": "Faça algo por alguém sem esperar nada em troca.",
+                "immediate_win": "Passe 15 minutos olhando para o céu ou para a natureza, sem pensar.",
+                "the_no_to_say": "Diga NÃO ao materialismo vazio.",
+                "mindset_shift": "De 'O que eu ganho com isso?' para 'Como eu sirvo ao mundo?'.",
+                "stoic_lesson": "Nós somos parte de um todo maior. Reencontre seu lugar no cosmos.",
+                "stoic_principles": [
+                    "Cosmopolitismo",
+                    "Amor Fati",
+                    "Conexão Universal"
+                ]
+            }
+        },
+        "STAGNATION": {
+            "label": "ESTAGNAÇÃO",
+            "one_liner": "O pilar de Identidade parou de evoluir por falta de novos desafios.",
+            "report": {
+                "meaning": "Estagnação v4 ocorre quando você parou de investir no próprio crescimento.",
+                "characteristics": [
+                    "Tédio com a própria rotina",
+                    "Falta de novos aprendizados",
+                    "Conforto excessivo"
+                ],
+                "primary_risk": "Obsolescência e perda do brilho pessoal.",
+                "recommended_focus": [
+                    "Cursos difíceis",
+                    "Viagens",
+                    "Novos círculos sociais"
+                ],
+                "next_step": "Inicie um novo aprendizado hoje.",
+                "immediate_win": "Leia 10 páginas de um livro complexo sobre um tema novo.",
+                "the_no_to_say": "Diga NÃO à mesma rotina de sempre.",
+                "mindset_shift": "De 'Eu já sei o suficiente' para 'Eu sou um eterno aprendiz'.",
+                "stoic_lesson": "Aquele que parou de ser melhor, parou de ser bom.",
+                "stoic_principles": [
+                    "Eudaimonia",
+                    "Busca pela virtude",
+                    "Desafio constante"
+                ]
+            }
+        },
+        "CLARITY": {
+            "label": "CLAREZA",
+            "one_liner": "Os pilares de Trabalho e Propósito estão em alta sintonia.",
+            "report": {
+                "meaning": "Clareza v4 é quando você sabe quem é e para onde está indo profissionalmente.",
+                "characteristics": [
+                    "Foco intencional",
+                    "Produtividade alta",
+                    "Senso de direção"
+                ],
+                "primary_risk": "Exaustão por alta performance.",
+                "recommended_focus": [
+                    "Manutenção",
+                    "Sistematização",
+                    "Legado"
+                ],
+                "next_step": "Escreva seu manifesto pessoal de trabalho para o próximo semestre.",
+                "immediate_win": "Passe 30 min planejando sua próxima semana estratégica.",
+                "the_no_to_say": "Diga NÃO a oportunidades que não alinham com seu propósito.",
+                "mindset_shift": "De 'Eu estou ocupado' para 'Eu estou focado'.",
+                "stoic_lesson": "Se o homem não sabe a que porto navega, nenhum vento é favorável.",
+                "stoic_principles": [
+                    "Foco do Arqueiro",
+                    "Prosenxe (Atenção)",
+                    "Ação Intencional"
+                ]
+            }
+        },
+        "ALIGNMENT": {
+            "label": "ALINHAMENTO",
+            "one_liner": "Harmonia sistêmica entre os 7 pilares fundamentais.",
+            "report": {
+                "meaning": "Alinhamento v4 é a paz de quem tem uma base sólida em todas as áreas da vida.",
+                "characteristics": [
+                    "Gratidão profunda",
+                    "Resiliência total",
+                    "Flow existencial"
+                ],
+                "primary_risk": "Arrogância ou relaxamento excessivo.",
+                "recommended_focus": [
+                    "Mentorização",
+                    "Gratidão constante",
+                    "Sustentabilidade"
+                ],
+                "next_step": "Agradeça a 3 pessoas que fazem parte da sua rede de suporte hoje.",
+                "immediate_win": "Compartilhe uma lição aprendida com alguém.",
+                "the_no_to_say": "Diga NÃO à complacência.",
+                "mindset_shift": "De 'Eu conquistei' para 'Eu sustento com virtude'.",
+                "stoic_lesson": "A felicidade é um fluxo de vida suave e sem obstáculos.",
+                "stoic_principles": [
+                    "Gratidão estoica",
+                    "Apatheia (Paz interior)",
+                    "Vida virtuosa"
+                ]
+            }
+        }
     },
     "correlations": {
         "work_vs_health": "Sua alta performance no Trabalho está asfixiando sua Recuperação Física.",
@@ -397,14 +633,64 @@
         "harmony": "Seus pilares operam em relativa harmonia sistêmica."
     },
     "pillars": {
-        "health": "Saúde",
-        "work": "Trabalho",
-        "relationships": "Relacionamentos",
-        "finances": "Financeiro",
-        "identity": "Identidade",
-        "leisure": "Lazer",
-        "spirituality": "Sentido",
-        "stoic": "Estoica"
+        "SAUDE": "Saúde",
+        "TRABALHO": "Trabalho",
+        "RELACIONAMENTOS": "Relacionamentos",
+        "FINANCEIRO": "Financeiro",
+        "IDENTIDADE": "Identidade",
+        "LAZER": "Lazer",
+        "ESPIRITUALIDADE": "Sentido"
+    },
+    "pillar_insights": {
+        "SAUDE": {
+            "low": "Nível crítico de vitalidade. Sua capacidade de resposta biológica está comprometida.",
+            "mid": "Estado de manutenção básica. Existe energia, mas falta reserva para alta performance.",
+            "high": "Vitalidade excepcional. Seu corpo é uma máquina de suporte para sua mente."
+        },
+        "TRABALHO": {
+            "low": "Desalinhamento profissional severo ou falta de progresso claro.",
+            "mid": "Execução estável, mas o potencial de impacto ainda não foi totalmente liberado.",
+            "high": "Maestria profissional. Você opera em estado de fluxo e geração de valor constante."
+        },
+        "RELACIONAMENTOS": {
+            "low": "Isolamento ou toxicidade sistêmica. Suas conexões estão drenando sua energia.",
+            "mid": "Círculos estáveis, mas falta profundidade ou suporte emocional genuíno.",
+            "high": "Ecossistema relacional poderoso. Sua rede é sua maior fonte de segurança e suporte."
+        },
+        "FINANCEIRO": {
+            "low": "Escassez severa ou desorganização que gera ansiedade constante.",
+            "mid": "Estabilidade básica, mas sem a autonomia necessária para decisões audaciosas.",
+            "high": "Antifragilidade financeira. Seus recursos sustentam sua liberdade e expansão."
+        },
+        "IDENTIDADE": {
+            "low": "Crise de self. Falta clareza sobre valores e limites pessoais.",
+            "mid": "Você sabe quem é, mas ainda se curva a pressões externas excessivas.",
+            "high": "Sobraniedade absoluta. Sua identidade é o eixo inabalável de todas as suas ações."
+        },
+        "LAZER": {
+            "low": "Anedonia ou negligência total com a diversão. Risco alto de colapso por rigidez.",
+            "mid": "Momentos de pausa ocorrem, mas não geram regeneração profunda.",
+            "high": "Regeneração ativa. Você utiliza o lazer como ferramenta estratégica de alta performance."
+        },
+        "ESPIRITUALIDADE": {
+            "low": "Vazio existencial profundo. Suas ações carecem de um porquê maior.",
+            "mid": "Conexão esporádica com propósito, mas o cotidiano ainda parece puramente material.",
+            "high": "Propósito transcendental. Existe uma conexão clara com o Sentido que guia sua vida."
+        }
+    },
+    "archetypes": {
+        "architect_of_destiny": "Arquiteto do Destino",
+        "transition_explorer": "Explorador em Transição",
+        "the_observer": "O Observador"
+    },
+    "leverages": {
+        "SAUDE": "Zere a ingestão de cafeína após as 13h e mova sua última refeição para 3h antes de dormir.",
+        "TRABALHO": "Defina sua \"Única Coisa\" na noite anterior e não abra o e-mail antes de concluí-la.",
+        "RELACIONAMENTOS": "Agende uma conversa de 15 minutos sem distrações com um aliado estratégico para alinhamento.",
+        "FINANCEIRO": "Exponha-se voluntariamente ao desconforto físico (ducha fria) para recalibrar seu limiar de estresse.",
+        "IDENTIDADE": "Implemente a técnica de \"Habit Stacking\" para amarrar um novo hábito difícil a um café matinal.",
+        "LAZER": "Elimine todas as notificações digitais por 4 horas diárias durante sua Golden Hour.",
+        "ESPIRITUALIDADE": "Pratique 10 minutos de \"Non-Sleep Deep Rest\" (NSDR) imediatamente após picos de estresse."
     },
     "login": {
         "title": "Acesse seu Diagnóstico",

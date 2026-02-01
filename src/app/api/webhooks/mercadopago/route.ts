@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { unlockDiagnosis } from '@/lib/storage';
+import { unlockDiagnosis, getDiagnosisById } from '@/lib/storage';
+import { sendMetaCapiEvent } from '@/lib/meta-capi';
 
 // Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
 const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
@@ -27,6 +28,27 @@ export async function POST(req: Request) {
                 if (diagnosisId) {
                     console.log(`Unlocking diagnosis ${diagnosisId} via MercadoPago...`);
                     await unlockDiagnosis(diagnosisId);
+
+                    // Send Meta CAPI Purchase Event
+                    const diagnosis = await getDiagnosisById(diagnosisId);
+                    if (diagnosis) {
+                        await sendMetaCapiEvent({
+                            eventName: 'Purchase',
+                            eventSourceUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${diagnosis.lang}/report/${diagnosisId}`,
+                            userData: {
+                                email: data.payer?.email,
+                                externalId: diagnosisId,
+                            },
+                            customData: {
+                                value: data.transaction_amount,
+                                currency: 'BRL',
+                                content_name: 'Platinum Report',
+                                content_ids: [diagnosisId],
+                                content_type: 'product'
+                            },
+                            eventId: `mp_${resourceId}` // For deduplication
+                        });
+                    }
                 }
             }
         }

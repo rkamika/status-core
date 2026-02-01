@@ -8,18 +8,27 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { QUESTIONS, Locale } from "@/lib/diagnostic";
+import { QUESTION_METADATA, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Logo } from "@/components/logo";
+import { trackFBEvent } from "@/components/meta-pixel";
+import { useEffect } from "react";
 
 export default function AssessmentPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
     const dict = use(getDictionary(lang));
 
-    const questions = QUESTIONS[lang];
+    const questions = QUESTION_METADATA;
     const [currentStep, setCurrentStep] = useState(0);
     const [answers, setAnswers] = useState<Record<number, number>>({});
     const [qualitative, setQualitative] = useState("");
+
+    useEffect(() => {
+        trackFBEvent('ViewContent', {
+            content_name: 'Emotional Diagnostic Assessment',
+            content_category: 'Diagnostic'
+        });
+    }, []);
 
     const isQualitativeStep = currentStep === questions.length;
 

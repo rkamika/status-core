@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getDiagnosisById, unlockDiagnosis } from "@/lib/storage";
 import { getSystemSetting, validatePromoCode, PromoCode } from "@/lib/admin";
+import { trackFBEvent } from "@/components/meta-pixel";
 import { Logo } from "@/components/logo";
 import { MercadoPagoBricks } from "@/components/mercado-pago-bricks";
 import { Locale, SavedDiagnosis } from "@/lib/types";
@@ -47,6 +48,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                 router.push(`/${lang}/report/${id}`);
             } else {
                 setDiagnosis(savedDiagnosis);
+
+                // Track Initiate Checkout
+                trackFBEvent('InitiateCheckout', {
+                    content_name: 'Platinum Report',
+                    content_category: 'Diagnostic',
+                    value: basePrice,
+                    currency: 'BRL'
+                });
             }
 
             if (settingsPrice) {
