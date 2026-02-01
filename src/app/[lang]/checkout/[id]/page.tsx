@@ -90,6 +90,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const handleUnlock = async () => {
         setIsProcessing(true);
 
+        // Track Add Payment Info (Pixel)
+        trackFBEvent('AddPaymentInfo', {
+            content_name: 'Platinum Report',
+            content_category: 'Diagnostic',
+            value: finalPrice,
+            currency: 'BRL'
+        });
+
         try {
             const response = await fetch('/api/checkout', {
                 method: 'POST',

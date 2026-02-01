@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { getDiagnosisById } from '@/lib/storage';
 import { getSystemSetting } from '@/lib/admin';
+import { sendMetaCapiEvent } from '@/lib/meta-capi';
 
 // Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -13,7 +14,6 @@ const stripe = process.env.STRIPE_SECRET_KEY
 const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
     ? new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN })
     : null;
-
 export async function POST(req: Request) {
     try {
         if (!stripe || !mpConfig) {
@@ -29,6 +29,8 @@ export async function POST(req: Request) {
 
         const headersList = await headers();
         const country = headersList.get('x-vercel-ip-country') || 'US';
+        const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
+        const userAgent = headersList.get('user-agent') || '';
 
         // Verify diagnosis exists
         const diagnosis = await getDiagnosisById(diagnosisId);
@@ -72,6 +74,21 @@ export async function POST(req: Request) {
 
             console.log('Mercado Pago preference created:', result.id);
 
+            // Send CAPI AddPaymentInfo
+            await sendMetaCapiEvent({
+                eventName: 'AddPaymentInfo',
+                eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+                userData: { ip, userAgent, externalId: diagnosisId },
+                customData: {
+                    value: basePrice,
+                    currency: 'BRL',
+                    content_name: 'Platinum Report',
+                    content_ids: [diagnosisId],
+                    content_type: 'product'
+                },
+                eventId: `api_pi_${diagnosisId}_${Date.now()}`
+            });
+
             return NextResponse.json({
                 provider: 'mercadopago',
                 checkoutUrl: result.init_point,
@@ -105,6 +122,21 @@ export async function POST(req: Request) {
         });
 
         console.log('Stripe session created:', session.id);
+
+        // Send CAPI AddPaymentInfo
+        await sendMetaCapiEvent({
+            eventName: 'AddPaymentInfo',
+            eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+            userData: { ip, userAgent, externalId: diagnosisId },
+            customData: {
+                value: basePrice,
+                currency: 'USD',
+                content_name: 'Platinum Report',
+                content_ids: [diagnosisId],
+                content_type: 'product'
+            },
+            eventId: `api_pi_${diagnosisId}_${Date.now()}`
+        });
 
         return NextResponse.json({
             provider: 'stripe',
