@@ -27,8 +27,8 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             <ThemeToggle />
             <LanguageSelector currentLang={lang} />
             <Link href={`/${lang}/login`} className="text-sm font-black hidden sm:block hover:text-primary uppercase tracking-widest opacity-40 hover:opacity-100 transition-all ml-4">{dict.header.login}</Link>
-            <Link href={`/${lang}/assessment`}>
-              <Button variant="default" size="sm" className="font-bold px-6 shadow-lg shadow-primary/20">
+            <Link href={`/${lang}/assessment`} className="shrink-0">
+              <Button variant="default" size="sm" className="font-bold px-3 sm:px-6 shadow-lg shadow-primary/20 text-xs sm:text-sm whitespace-nowrap">
                 {dict.landing.cta_button}
               </Button>
             </Link>
@@ -84,7 +84,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-5xl font-heading font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-8xl leading-[0.85] text-foreground"
+                  className="text-3xl font-heading font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-8xl leading-[0.85] text-foreground"
                 >
                   {dict.landing.hero_title}
                 </motion.h1>
@@ -104,14 +104,14 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto"
               >
-                <Link href={`/${lang}/assessment`}>
-                  <Button size="lg" className="h-16 px-12 text-xl font-black w-full sm:w-auto shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms]">
+                <Link href={`/${lang}/assessment`} className="w-full sm:w-auto">
+                  <Button size="lg" className="h-14 sm:h-16 px-8 sm:px-12 text-lg sm:text-xl font-black w-full shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms]">
                     {dict.landing.cta_button}
                   </Button>
                 </Link>
-                <Link href={`/${lang}/report/demo`}>
-                  <Button variant="outline" size="lg" className="h-16 px-12 text-xl font-black w-full sm:w-auto border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:bg-white/[0.05]">
-                    <PlayCircle className="mr-3 h-6 w-6 group-hover:text-primary transition-colors" /> {dict.landing.demo_link}
+                <Link href={`/${lang}/report/demo`} className="w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="h-14 sm:h-16 px-8 sm:px-12 text-lg sm:text-xl font-black w-full border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:bg-white/[0.05]">
+                    <PlayCircle className="mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:text-primary transition-colors" /> {dict.landing.demo_link}
                   </Button>
                 </Link>
               </motion.div>
@@ -195,15 +195,15 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 <p className="text-xl text-muted-foreground leading-relaxed">
                   {dict.landing.methodology_desc}
                 </p>
-                <div className="grid grid-cols-2 gap-6 pt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                   {[
-                    dict.pillars.health,
-                    dict.pillars.work,
-                    dict.pillars.relationships,
-                    dict.pillars.finances,
-                    dict.pillars.identity,
-                    dict.pillars.leisure,
-                    dict.pillars.spirituality
+                    dict.pillars.SAUDE,
+                    dict.pillars.TRABALHO,
+                    dict.pillars.RELACIONAMENTOS,
+                    dict.pillars.FINANCEIRO,
+                    dict.pillars.IDENTIDADE,
+                    dict.pillars.LAZER,
+                    dict.pillars.ESPIRITUALIDADE
                   ].map((tag) => (
                     <div key={tag} className="flex items-center gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -219,10 +219,10 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                   </Link>
                 </div>
               </div>
-              <div className="bg-background/40 backdrop-blur-3xl p-10 rounded-[3rem] border border-white/5 shadow-3xl">
+              <div className="bg-background/40 backdrop-blur-3xl p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-3xl">
                 <div className="space-y-6">
-                  <div className="h-2 w-20 bg-primary/40 rounded-full" />
-                  <p className="text-2xl font-serif italic text-foreground opacity-80 leading-snug">
+                  <div className="h-1.5 w-16 bg-primary/40 rounded-full" />
+                  <p className="text-xl md:text-2xl font-serif italic text-foreground opacity-80 leading-snug">
                     {lang === 'pt'
                       ? '"A performance de elite não é sobre trabalhar mais, mas sobre alinhar as tensões internas entre as 7 áreas fundamentais da vida."'
                       : lang === 'es'

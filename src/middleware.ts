@@ -12,8 +12,14 @@ function getLocale(request: NextRequest): string | undefined {
 
     const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
 
+    // For the Brazilian market, we prioritize PT if it's anywhere in the accepted list
+    // or as a hard fallback.
+    const preferredLanguages = languages.includes('pt') || languages.some(l => l.startsWith('pt-'))
+        ? ["pt", ...languages.filter(l => !l.startsWith('pt'))]
+        : languages;
+
     try {
-        return matchLocale(languages, locales, defaultLocale);
+        return matchLocale(preferredLanguages, locales, defaultLocale);
     } catch (e) {
         return defaultLocale;
     }
