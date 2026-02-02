@@ -159,6 +159,54 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
         }
     }, [isSdkLoaded, preferenceId, theme]);
 
+    // Poll payment status when Pix QR Code is displayed
+    useEffect(() => {
+        if (!pixPaymentData) {
+            // Clear polling if no Pix payment
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+            }
+            return;
+        }
+
+        console.log("[POLLING] Starting payment status polling for:", pixPaymentData.id);
+
+        // Check immediately
+        checkPaymentStatus();
+
+        // Then check every 3 seconds
+        pollingIntervalRef.current = setInterval(checkPaymentStatus, 3000);
+
+        async function checkPaymentStatus() {
+            try {
+                const response = await fetch(`/api/check_payment_status?paymentId=${pixPaymentData.id}`);
+                const data = await response.json();
+
+                console.log("[POLLING] Payment status:", data.status);
+
+                if (data.status === "approved") {
+                    console.log("[POLLING] Payment approved! Calling onSuccess");
+                    if (pollingIntervalRef.current) {
+                        clearInterval(pollingIntervalRef.current);
+                        pollingIntervalRef.current = null;
+                    }
+                    onSuccess(data.id);
+                }
+            } catch (error) {
+                console.error("[POLLING] Error checking payment status:", error);
+            }
+        }
+
+        // Cleanup on unmount
+        return () => {
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+            }
+        };
+    }, [pixPaymentData, onSuccess]);
+
     return (
         <div className="w-full">
             <Script
