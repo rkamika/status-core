@@ -91,30 +91,31 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                         console.log("SUCCESS: Payment Brick rendered");
                         setInitError(null);
                     },
-                    onSubmit: ({ selectedPaymentMethod, formData }: any) => {
-                        return new Promise((resolve, reject) => {
-                            fetch("/api/process_payment", {
+                    onSubmit: async ({ selectedPaymentMethod, formData }: any) => {
+                        try {
+                            const response = await fetch("/api/process_payment", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
                                 body: JSON.stringify({
                                     ...formData,
                                     external_reference: diagnosisId
                                 }),
-                            })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                    // Only trigger parent success/redirect if payment is actually approved (Credit Card)
-                                    // For Pix/Boleto (pending), we just resolve so the Brick shows the instructions
-                                    if (data.status === "approved") {
-                                        onSuccess(data.id);
-                                    }
-                                    resolve(data);
-                                })
-                                .catch((error) => {
-                                    onError(error);
-                                    reject();
-                                });
-                        });
+                            });
+
+                            const data = await response.json();
+
+                            // Only trigger parent success/redirect if payment is actually approved (Credit Card)
+                            // For Pix/Boleto (pending), the Brick will handle showing the QR Code/Instructions
+                            if (data.status === "approved") {
+                                onSuccess(data.id);
+                            }
+
+                            // Return the full response so the Brick can render the appropriate UI
+                            return data;
+                        } catch (error) {
+                            onError(error);
+                            throw error;
+                        }
                     },
                     onError: (error: any) => {
                         console.error("MP BRICK ERROR:", error);
