@@ -72,9 +72,15 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                                 baseColor: theme === "dark" ? "#ffffff" : "#000000",
                                 secondaryColor: theme === "dark" ? "#ffffff" : "#000000",
                                 elementsColor: theme === "dark" ? "#ffffff" : "#000000",
+                                // Standard keys
                                 inputBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
                                 inputTextColor: theme === "dark" ? "#ffffff" : "#000000",
-                                outlinePrimaryColor: theme === "dark" ? "#1a1a1a" : "#f0f0f0",
+                                // More specific/alternative keys often used in different SDK versions
+                                formInputsBackground: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                                formInputsText: theme === "dark" ? "#ffffff" : "#000000",
+                                formControlBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                                formControlTextColor: theme === "dark" ? "#ffffff" : "#000000",
+                                outlinePrimaryColor: theme === "dark" ? "#ffffff" : "#000000",
                             }
                         },
                     },
@@ -145,6 +151,20 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                 onLoad={() => setIsSdkLoaded(true)}
                 strategy="afterInteractive"
             />
+
+            {/* Local CSS fix for Mercado Pago Bricks inputs contrast */}
+            <style jsx global>{`
+                #paymentBrick_container input {
+                    color: ${theme === 'dark' ? 'white' : 'black'} !important;
+                    background-color: ${theme === 'dark' ? '#1a1a1a' : 'white'} !important;
+                }
+                /* Target specific MP Brick classes if they leak */
+                .mp-brick-payment-form__input, 
+                .svelte-input-container input {
+                    color: ${theme === 'dark' ? 'white' : 'black'} !important;
+                    background-color: ${theme === 'dark' ? '#1a1a1a' : 'white'} !important;
+                }
+            `}</style>
 
             <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full rounded-2xl flex items-center justify-center">
                 {!isSdkLoaded && !initError && (
