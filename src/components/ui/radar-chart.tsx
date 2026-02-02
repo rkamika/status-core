@@ -44,8 +44,8 @@ export function RadarChart({ data, size = 320, showBenchmark = true }: RadarChar
     const gridLevels = [0.25, 0.5, 0.75, 1.0];
 
     return (
-        <div className="relative flex items-center justify-center select-none" style={{ width: size, height: size }}>
-            <svg width={size} height={size} className="overflow-visible drop-shadow-2xl">
+        <div className="relative flex items-center justify-center select-none w-full" style={{ maxWidth: size, aspectRatio: '1/1' }}>
+            <svg viewBox={`0 0 ${size} ${size}`} className="overflow-visible drop-shadow-2xl w-full h-full">
                 {/* Glow behind the chart */}
                 <defs>
                     <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">

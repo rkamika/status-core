@@ -156,7 +156,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                         </AnimatePresence>
                     </div>
 
-                    <div className="flex items-center justify-between pt-2">
+                    <div className="flex items-center justify-between pt-4 pb-2">
                         <Button
                             variant="ghost"
                             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}

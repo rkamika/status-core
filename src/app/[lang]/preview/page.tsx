@@ -178,11 +178,13 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="flex justify-center"
+                            className="flex justify-center w-full px-4 sm:px-0"
                         >
-                            <div className="relative group p-4 rounded-full">
+                            <div className="relative group p-4 rounded-full max-w-full">
                                 <div className="absolute inset-0 bg-primary/10 rounded-full blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity duration-1000" />
-                                <RadarChart data={localizedPillarScores.length > 0 ? localizedPillarScores : []} size={420} />
+                                <div className="w-full max-w-[min(420px,calc(100vw-4rem))] mx-auto">
+                                    <RadarChart data={localizedPillarScores.length > 0 ? localizedPillarScores : []} size={420} />
+                                </div>
                             </div>
                         </motion.div>
 
