@@ -13,6 +13,7 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { getDiagnosisById, unlockDiagnosis } from "@/lib/storage";
 import { getSystemSetting, validatePromoCode, PromoCode } from "@/lib/admin";
 import { trackFBEvent } from "@/components/meta-pixel";
+import { trackPurchase, trackBeginCheckout } from "@/lib/gtm";
 import { Logo } from "@/components/logo";
 import { MercadoPagoBricks } from "@/components/mercado-pago-bricks";
 import { Locale, SavedDiagnosis } from "@/lib/types";
@@ -66,6 +67,13 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             if (settingsAnchor) {
                 setAnchorPrice(parseFloat(settingsAnchor));
             }
+
+            // Track Begin Checkout (GTM)
+            trackBeginCheckout({
+                value: settingsPrice ? parseFloat(settingsPrice) : 97.00,
+                currency: 'BRL',
+                item_name: 'Platinum Report'
+            });
         };
         loadData();
     }, [id, lang, router]);
@@ -102,6 +110,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             value: finalPrice,
             currency: 'BRL'
         }, `pi_${id}`, id);
+
+        // Track Purchase (GTM)
+        trackPurchase({
+            transaction_id: `gtm_${id}_${Date.now()}`,
+            value: finalPrice,
+            currency: 'BRL',
+            item_name: 'Platinum Report',
+            coupon: appliedPromo?.code,
+        });
 
         try {
             const response = await fetch('/api/checkout', {
@@ -246,41 +263,82 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                 </div>
                             </Card>
 
-                            {/* PRICE SUMMARY */}
-                            <Card className="border-border dark:border-white/5 bg-muted/30 dark:bg-zinc-900/20 backdrop-blur-sm p-6 overflow-hidden relative">
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-xs font-black uppercase tracking-widest opacity-40 italic">Subtotal</span>
-                                        <div className="flex flex-col items-end">
-                                            {anchorPrice && anchorPrice > basePrice && (
-                                                <span className="text-[10px] line-through opacity-30 font-bold mb-[-4px]">R$ {anchorPrice.toFixed(2)}</span>
+                            {/* PRICE SUMMARY - HIGH IMPACT REDESIGN */}
+                            <Card className="border-primary/20 bg-muted/30 dark:bg-zinc-900/40 backdrop-blur-md overflow-hidden relative group">
+                                <div className="p-6 space-y-5 relative z-10">
+                                    <div className="flex justify-between items-start">
+                                        <div className="space-y-1">
+                                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px] font-black uppercase italic tracking-tighter mb-2">
+                                                <Sparkles className="h-3 w-3 mr-1" /> Oferta Exclusiva
+                                            </Badge>
+                                            <h3 className="text-sm font-black uppercase tracking-widest italic opacity-60">Resumo do Pedido</h3>
+                                        </div>
+                                        <div className="text-right">
+                                            {anchorPrice && anchorPrice > finalPrice && (
+                                                <div className="flex flex-col items-end">
+                                                    <span className="text-xs font-bold text-muted-foreground/50 line-through">
+                                                        R$ {anchorPrice.toFixed(2)}
+                                                    </span>
+                                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-bold mt-1">
+                                                        -{Math.round(((anchorPrice - finalPrice) / anchorPrice) * 100)}% OFF
+                                                    </Badge>
+                                                </div>
                                             )}
-                                            <span className="font-bold">R$ {basePrice.toFixed(2)}</span>
                                         </div>
                                     </div>
 
-                                    {appliedPromo && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            className="flex justify-between items-center text-emerald-500"
-                                        >
-                                            <span className="text-xs font-black uppercase tracking-widest italic flex items-center gap-1">
-                                                <Ticket className="h-3 w-3" /> Discount ({appliedPromo.code})
-                                            </span>
-                                            <span className="font-bold">- R$ {discountAmount.toFixed(2)}</span>
-                                        </motion.div>
-                                    )}
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center text-xs font-bold opacity-60 italic">
+                                            <span>Subtotal</span>
+                                            <span>R$ {basePrice.toFixed(2)}</span>
+                                        </div>
 
-                                    <div className="pt-4 border-t border-border dark:border-white/5 flex justify-between items-center">
-                                        <span className="text-lg font-black uppercase tracking-widest italic">Total</span>
-                                        <span className={`text-4xl font-black italic ${isFree ? 'text-primary' : 'text-foreground'}`}>
-                                            {isFree ? 'FREE' : `R$ ${finalPrice.toFixed(2)}`}
-                                        </span>
+                                        {appliedPromo && (
+                                            <motion.div
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                className="flex justify-between items-center text-emerald-500 text-xs font-bold italic"
+                                            >
+                                                <span className="flex items-center gap-1">
+                                                    <Ticket className="h-3 w-3" /> Cupom: {appliedPromo.code}
+                                                </span>
+                                                <span>- R$ {discountAmount.toFixed(2)}</span>
+                                            </motion.div>
+                                        )}
+
+                                        {anchorPrice && anchorPrice > finalPrice && (
+                                            <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-between text-emerald-500">
+                                                <span className="text-[10px] font-black uppercase tracking-tighter italic mr-2">Sua Economia Total:</span>
+                                                <span className="text-sm font-black italic">R$ {(anchorPrice - finalPrice).toFixed(2)}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="pt-4 border-t border-border/50 flex justify-between items-end">
+                                        <div className="space-y-1">
+                                            <span className="text-base font-black uppercase tracking-widest italic">Total</span>
+                                            <div className="text-[9px] font-medium text-muted-foreground italic max-w-[120px] leading-tight opacity-40">
+                                                *Impostos inclusos e acesso imediato.
+                                            </div>
+                                        </div>
+                                        <div className="relative group">
+                                            {/* Glow effect */}
+                                            <div className={`absolute inset-0 blur-2xl opacity-20 ${isFree ? 'bg-primary' : 'bg-primary'}`} />
+                                            <span className={`text-5xl font-black italic relative z-10 tracking-tighter ${isFree ? 'text-primary' : 'text-foreground'}`}>
+                                                {isFree ? 'FREE' : (
+                                                    <span className="flex items-baseline">
+                                                        <span className="text-xl mr-1">R$</span>
+                                                        {finalPrice.toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="absolute top-0 right-0 p-8 opacity-5">
-                                    <DollarSign className="h-24 w-24" />
+
+                                {/* Background decoration */}
+                                <div className="absolute -bottom-4 -right-4 opacity-[0.03] rotate-12 group-hover:rotate-0 transition-transform duration-700">
+                                    <DollarSign className="h-32 w-32" />
                                 </div>
                             </Card>
                         </motion.div>

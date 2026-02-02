@@ -1,0 +1,245 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2026-02-01 21:40:00",
+    "container": {
+        "name": "Status Core",
+        "publicId": "GTM-WGVTM3SJ",
+        "usageContext": [
+            "WEB"
+        ]
+    },
+    "containerVersion": {
+        "name": "Status Core - GA4 (V18)",
+        "container": {
+            "name": "Status Core",
+            "publicId": "GTM-WGVTM3SJ",
+            "usageContext": [
+                "WEB"
+            ]
+        },
+        "variable": [
+            {
+                "name": "GA4_MEASUREMENT_ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "G-G24FHEC06W"
+                    }
+                ]
+            }
+        ],
+        "builtInVariable": [
+            {
+                "name": "Page URL",
+                "type": "PAGE_URL"
+            },
+            {
+                "name": "Page Path",
+                "type": "PAGE_PATH"
+            },
+            {
+                "name": "Event",
+                "type": "EVENT"
+            }
+        ],
+        "trigger": [
+            {
+                "name": "All Pages",
+                "type": "PAGEVIEW",
+                "triggerId": "2147483647"
+            },
+            {
+                "name": "CE - generate_lead",
+                "type": "CUSTOM_EVENT",
+                "triggerId": "1",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "key": "arg0",
+                                "type": "TEMPLATE",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "key": "arg1",
+                                "type": "TEMPLATE",
+                                "value": "generate_lead"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CE - view_item",
+                "type": "CUSTOM_EVENT",
+                "triggerId": "2",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "key": "arg0",
+                                "type": "TEMPLATE",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "key": "arg1",
+                                "type": "TEMPLATE",
+                                "value": "view_item"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CE - begin_checkout",
+                "type": "CUSTOM_EVENT",
+                "triggerId": "3",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "key": "arg0",
+                                "type": "TEMPLATE",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "key": "arg1",
+                                "type": "TEMPLATE",
+                                "value": "begin_checkout"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "CE - purchase",
+                "type": "CUSTOM_EVENT",
+                "triggerId": "4",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "key": "arg0",
+                                "type": "TEMPLATE",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "key": "arg1",
+                                "type": "TEMPLATE",
+                                "value": "purchase"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "tag": [
+            {
+                "name": "GA4 - Configuration",
+                "type": "gaawc",
+                "tagId": "100",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendPageView",
+                        "value": "true"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "{{GA4_MEASUREMENT_ID}}"
+                    }
+                ],
+                "firingTriggerId": [
+                    "2147483647"
+                ]
+            },
+            {
+                "name": "GA4 Event - generate_lead",
+                "type": "gaawe",
+                "tagId": "101",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "generate_lead"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4_MEASUREMENT_ID}}"
+                    }
+                ],
+                "firingTriggerId": [
+                    "1"
+                ]
+            },
+            {
+                "name": "GA4 Event - view_item",
+                "type": "gaawe",
+                "tagId": "102",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "view_item"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4_MEASUREMENT_ID}}"
+                    }
+                ],
+                "firingTriggerId": [
+                    "2"
+                ]
+            },
+            {
+                "name": "GA4 Event - begin_checkout",
+                "type": "gaawe",
+                "tagId": "103",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "begin_checkout"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4_MEASUREMENT_ID}}"
+                    }
+                ],
+                "firingTriggerId": [
+                    "3"
+                ]
+            },
+            {
+                "name": "GA4 Event - purchase",
+                "type": "gaawe",
+                "tagId": "104",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "purchase"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4_MEASUREMENT_ID}}"
+                    }
+                ],
+                "firingTriggerId": [
+                    "4"
+                ]
+            }
+        ]
+    }
+}

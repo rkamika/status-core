@@ -12,6 +12,7 @@ import { QUESTION_METADATA, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Logo } from "@/components/logo";
 import { trackFBEvent } from "@/components/meta-pixel";
+import { trackSignUp } from "@/lib/gtm";
 import { useEffect } from "react";
 
 export default function AssessmentPage({ params }: { params: Promise<{ lang: Locale }> }) {
@@ -167,7 +168,11 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                         </Button>
 
                         {isLastStep ? (
-                            <Link href={`/${lang}/preview?answers=${encodeURIComponent(JSON.stringify(answers))}&q=${encodeURIComponent(qualitative)}`} className="w-full sm:w-auto">
+                            <Link
+                                href={`/${lang}/preview?answers=${encodeURIComponent(JSON.stringify(answers))}&q=${encodeURIComponent(qualitative)}`}
+                                className="w-full sm:w-auto"
+                                onClick={() => trackSignUp()}
+                            >
                                 <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 px-4 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-sm">
                                     {dict.common.finish}
                                     <ArrowRight className="h-4 w-4" />

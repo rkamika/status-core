@@ -11,6 +11,7 @@ import { Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { FloatingCTA } from "@/components/floating-cta";
 import { Logo } from "@/components/logo";
+import { trackViewItem, trackEvent } from "@/lib/gtm";
 
 export default function LandingPage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = use(params);
@@ -105,12 +106,12 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 transition={{ duration: 0.8, delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto"
               >
-                <Link href={`/${lang}/assessment`} className="w-full sm:w-auto">
+                <Link href={`/${lang}/assessment`} className="w-full sm:w-auto" onClick={() => trackViewItem()}>
                   <Button size="lg" className="h-14 sm:h-16 px-4 sm:px-12 text-sm sm:text-xl font-black w-full shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-105 transition-all animate-pulse duration-[3000ms] whitespace-normal">
                     {dict.landing.cta_button}
                   </Button>
                 </Link>
-                <Link href={`/${lang}/report/demo`} className="w-full sm:w-auto">
+                <Link href={`/${lang}/report/demo`} className="w-full sm:w-auto" onClick={() => trackViewItem('Demo Report', 0)}>
                   <Button variant="outline" size="lg" className="h-14 sm:h-16 px-4 sm:px-12 text-sm sm:text-xl font-black w-full border-white/5 bg-white/[0.02] backdrop-blur-xl group hover:bg-white/[0.05] whitespace-normal">
                     <PlayCircle className="mr-1.5 h-4 w-4 sm:mr-3 sm:h-6 sm:w-6 group-hover:text-primary transition-colors shrink-0" /> {dict.landing.demo_link}
                   </Button>
