@@ -72,14 +72,15 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                                 baseColor: theme === "dark" ? "#ffffff" : "#000000",
                                 secondaryColor: theme === "dark" ? "#ffffff" : "#000000",
                                 elementsColor: theme === "dark" ? "#ffffff" : "#000000",
-                                // Standard keys
-                                inputBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
-                                inputTextColor: theme === "dark" ? "#ffffff" : "#000000",
-                                // More specific/alternative keys often used in different SDK versions
-                                formInputsBackground: theme === "dark" ? "#1a1a1a" : "#ffffff",
-                                formInputsText: theme === "dark" ? "#ffffff" : "#000000",
+                                // Critical for inputs in many MP versions
                                 formControlBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
                                 formControlTextColor: theme === "dark" ? "#ffffff" : "#000000",
+                                formControlPlaceholderColor: theme === "dark" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)",
+                                // Legacy/Standard keys
+                                inputBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                                inputTextColor: theme === "dark" ? "#ffffff" : "#000000",
+                                formInputsBackground: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                                formInputsText: theme === "dark" ? "#ffffff" : "#000000",
                                 outlinePrimaryColor: theme === "dark" ? "#ffffff" : "#000000",
                             }
                         },
@@ -151,15 +152,22 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
 
             {/* Local CSS fix for Mercado Pago Bricks inputs contrast */}
             <style jsx global>{`
-                #paymentBrick_container input {
-                    color: ${theme === 'dark' ? 'white' : 'black'} !important;
-                    background-color: ${theme === 'dark' ? '#1a1a1a' : 'white'} !important;
+                #paymentBrick_container input,
+                #paymentBrick_container select,
+                #paymentBrick_container .mp-brick-payment-form__input,
+                #paymentBrick_container .svelte-input-container input,
+                #paymentBrick_container [class*="payment-form__input"],
+                #paymentBrick_container [class*="input-container"] input {
+                    color: ${theme === 'dark' ? '#ffffff' : '#000000'} !important;
+                    background-color: ${theme === 'dark' ? '#1a1a1a' : '#ffffff'} !important;
+                    border: 1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important;
                 }
-                /* Target specific MP Brick classes if they leak */
-                .mp-brick-payment-form__input, 
-                .svelte-input-container input {
-                    color: ${theme === 'dark' ? 'white' : 'black'} !important;
-                    background-color: ${theme === 'dark' ? '#1a1a1a' : 'white'} !important;
+                
+                /* Specific fix for Pix email field when it's white-on-white */
+                #paymentBrick_container .mp-brick-ticket-payment-method input,
+                #paymentBrick_container .mp-brick-ticket-payment-method__input {
+                    color: ${theme === 'dark' ? '#ffffff' : '#000000'} !important;
+                    background-color: ${theme === 'dark' ? '#1a1a1a' : '#ffffff'} !important;
                 }
             `}</style>
 
