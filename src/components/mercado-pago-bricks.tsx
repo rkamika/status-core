@@ -173,6 +173,17 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                     color: ${theme === 'dark' ? '#ffffff' : '#000000'} !important;
                     background-color: ${theme === 'dark' ? '#1a1a1a' : '#ffffff'} !important;
                 }
+
+                /* Critical: Override Chrome/Safari autocomplete styling */
+                #paymentBrick_container input:-webkit-autofill,
+                #paymentBrick_container input:-webkit-autofill:hover,
+                #paymentBrick_container input:-webkit-autofill:focus,
+                #paymentBrick_container input:-webkit-autofill:active {
+                    -webkit-text-fill-color: ${theme === 'dark' ? '#ffffff' : '#000000'} !important;
+                    -webkit-box-shadow: 0 0 0 1000px ${theme === 'dark' ? '#1a1a1a' : '#ffffff'} inset !important;
+                    box-shadow: 0 0 0 1000px ${theme === 'dark' ? '#1a1a1a' : '#ffffff'} inset !important;
+                    transition: background-color 5000s ease-in-out 0s;
+                }
             `}</style>
 
             <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full rounded-2xl flex items-center justify-center">
