@@ -131,7 +131,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           </div>
         </section>
 
-        <section className="w-full py-20 bg-zinc-950/50 relative overflow-hidden">
+        <section className="w-full py-12 md:py-20 bg-zinc-950/50 relative overflow-hidden">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center gap-12">
               <div className="text-center space-y-2 opacity-30 select-none">
@@ -148,7 +148,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           </div>
         </section>
 
-        <section className="w-full py-24 md:py-32 lg:py-40">
+        <section className="w-full py-16 md:py-32 lg:py-40">
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center space-y-16">
               <div className="text-center space-y-4 max-w-3xl">
@@ -181,7 +181,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
         </section>
 
         {/* New Methodology & Science Section */}
-        <section className="w-full py-24 md:py-32 bg-primary/5 border-y border-primary/10 relative overflow-hidden">
+        <section className="w-full py-16 md:py-32 bg-primary/5 border-y border-primary/10 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-20 opacity-[0.03] rotate-12">
             <InfinityIcon className="w-[500px] h-[500px]" />
           </div>
@@ -191,7 +191,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em]">
                   <Layers className="h-3 w-3" /> {dict.landing.methodology_badge}
                 </div>
-                <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter leading-none">
+                <h2 className="text-3xl md:text-6xl font-heading font-black tracking-tighter leading-tight">
                   {dict.landing.methodology_title}
                 </h2>
                 <p className="text-xl text-muted-foreground leading-relaxed">

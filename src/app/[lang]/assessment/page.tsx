@@ -59,7 +59,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col items-center justify-center p-4">
+            <main className="flex-1 max-w-2xl mx-auto w-full flex flex-col pt-4 md:pt-12 px-4 pb-6 overflow-y-auto">
                 <div className="w-full max-w-2xl space-y-6">
                     <div className="px-4">
                         <Progress value={progress} className="h-1.5 transition-all duration-700 ease-in-out" />
@@ -99,7 +99,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                                 <Zap className="h-3 w-3" />
                                                 {dict.assessment.question} {currentStep + 1} / {questions.length}
                                             </div>
-                                            <h2 className="text-xl md:text-3xl font-bold font-heading leading-tight tracking-tight text-balance">
+                                            <h2 className="text-lg md:text-3xl font-bold font-heading leading-tight tracking-tight text-balance">
                                                 {/* @ts-ignore - dynamic dictionary access */}
                                                 {dict.assessment.questions_data?.[(currentStep + 1).toString()]?.text || questions[currentStep].text}
                                             </h2>
@@ -124,7 +124,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                                         key={val}
                                                         onClick={() => handleAnswer(val)}
                                                         className={`
-                                                            group relative p-3 text-left rounded-xl border transition-all duration-300
+                                                            group relative p-4 text-left rounded-xl border transition-all duration-300
                                                             active:scale-[0.99] hover:scale-[1.005]
                                                             ${answers[questions[currentStep].id] === val
                                                                 ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
@@ -133,7 +133,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                                         `}
                                                     >
                                                         <div className="flex items-center justify-between">
-                                                            <span className="text-sm font-bold font-heading">
+                                                            <span className="text-sm md:text-base font-bold font-heading">
                                                                 {label}
                                                             </span>
                                                             <div className={`

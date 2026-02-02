@@ -265,7 +265,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                 </div>
             </header>
 
-            <main className="flex-1 p-4 md:p-6 relative z-10">
+            <main className="flex-1 p-4 md:p-6 pb-32 md:pb-12 relative z-10">
                 <div className="container mx-auto max-w-6xl space-y-16">
                     {/* 1. HERO SECTION */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-8">
@@ -503,7 +503,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                         {(diagnosis.v3Insights?.aiAnalysis?.sevenDayPlan ||
                                             demoAiAnalysis.sevenDayPlan
                                         ).map((plan: { day: string; action: string; pilar: string }, i: number) => (
-                                            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="flex flex-col p-5 rounded-2xl bg-muted/40 dark:bg-zinc-900/60 border border-border/40 hover:border-primary/40 transition-all group min-h-[160px]">
+                                            <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="flex flex-col p-5 rounded-2xl bg-muted/40 dark:bg-zinc-900/60 border border-border/40 hover:border-primary/40 transition-all group min-h-[140px] md:min-h-[160px]">
                                                 <div className="text-[10px] font-black text-primary mb-3 flex justify-between"><span>{plan.day}</span><Badge variant="outline" className="text-[8px] px-1 py-0">{plan.pilar}</Badge></div>
                                                 <div className="text-xs font-bold leading-tight group-hover:text-primary transition-colors flex-1">{plan.action}</div>
                                             </motion.div>
@@ -543,7 +543,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 20 }}
                                                     whileInView={{ opacity: 1, y: 0 }}
-                                                    className="relative p-6 sm:p-10 md:p-14 rounded-[2.5rem] sm:rounded-[3.5rem] bg-gradient-to-br from-rose-500/10 via-card/40 to-card/20 border border-rose-500/20 shadow-2xl overflow-hidden group"
+                                                    className="relative p-8 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[3.5rem] bg-gradient-to-br from-rose-500/10 via-card/40 to-card/20 border border-rose-500/20 shadow-2xl overflow-hidden group"
                                                 >
                                                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity print:hidden">
                                                         <Icon className="h-48 w-48 text-rose-500" />

@@ -216,7 +216,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                     </div>
                 </header>
 
-                <main className="flex-1 flex items-center justify-center p-4 py-12">
+                <main className="flex-1 flex items-center justify-center p-4 py-8 md:py-12 pb-24 md:pb-12">
                     <div className="w-full max-w-4xl grid md:grid-cols-2 gap-8">
                         {/* Left: Order Summary */}
                         <motion.div
@@ -225,7 +225,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                             className="space-y-6"
                         >
                             <div className="space-y-2">
-                                <h1 className="text-4xl font-bold font-heading tracking-tight italic uppercase">
+                                <h1 className="text-3xl md:text-4xl font-bold font-heading tracking-tight italic uppercase">
                                     {lang === 'pt' ? 'Desbloquear Inteligência' : lang === 'es' ? 'Desbloquear Inteligencia' : 'Unlock Intelligence'}
                                 </h1>
                                 <p className="text-muted-foreground font-medium italic">
@@ -324,7 +324,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                         <div className="relative group">
                                             {/* Glow effect */}
                                             <div className={`absolute inset-0 blur-2xl opacity-20 ${isFree ? 'bg-primary' : 'bg-primary'}`} />
-                                            <span className={`text-5xl font-black italic relative z-10 tracking-tighter ${isFree ? 'text-primary' : 'text-foreground'}`}>
+                                            <span className={`text-4xl md:text-5xl font-black italic relative z-10 tracking-tighter ${isFree ? 'text-primary' : 'text-foreground'}`}>
                                                 {isFree ? 'FREE' : (
                                                     <span className="flex items-baseline">
                                                         <span className="text-xl mr-1">R$</span>

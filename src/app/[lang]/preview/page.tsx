@@ -143,7 +143,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                 </div>
             </header>
 
-            <main className="flex-1 relative z-10 flex flex-col items-center p-4 lg:p-8">
+            <main className="flex-1 relative z-10 flex flex-col items-center p-4 lg:p-8 pb-24 md:pb-8">
                 <div className="w-full max-w-6xl space-y-12">
                     {/* Header Section */}
                     <motion.div
@@ -242,7 +242,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                             transition={{ delay: 0.6 }}
                         >
                             <Card className="bg-background/40 backdrop-blur-md border-border/40 hover:border-border transition-colors group h-full">
-                                <CardContent className="p-8 space-y-6">
+                                <CardContent className="p-6 md:p-8 space-y-6">
                                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                                         <Star className="h-6 w-6 text-primary" />
                                     </div>
@@ -279,7 +279,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                                 <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform">
                                     <Lock className="h-24 w-24 text-primary" />
                                 </div>
-                                <CardContent className="p-8 space-y-8 flex flex-col justify-between h-full relative z-10">
+                                <CardContent className="p-6 md:p-8 space-y-8 flex flex-col justify-between h-full relative z-10">
                                     <div className="space-y-4">
                                         <Badge className="bg-primary/20 text-primary border-primary/30 text-xs font-black px-3 py-0.5">{dict.preview.platinum_v4}</Badge>
                                         <h3 className="text-2xl font-bold font-heading">{dict.report.title}</h3>
