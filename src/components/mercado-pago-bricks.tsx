@@ -24,6 +24,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
     const mpInstance = useRef<any>(null);
     const [isSdkLoaded, setIsSdkLoaded] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
+    const [pixPaymentData, setPixPaymentData] = useState<any>(null);
 
     const initBricks = async () => {
         if (!window.MercadoPago || !containerRef.current || !preferenceId) return;
@@ -65,11 +66,11 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                 },
                 customization: {
                     paymentMethods: {
-                        ticket: "all",
+                        ticket: "off",
                         bankTransfer: "all",
                         creditCard: "all",
                         debitCard: "all",
-                        mercadoPago: "all",
+                        mercadoPago: "off",
                     },
                     visual: {
                         style: {
@@ -110,10 +111,13 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                             console.log("[BRICK] Has QR code?:", !!data.point_of_interaction?.transaction_data?.qr_code);
 
                             // Only trigger parent success/redirect if payment is actually approved (Credit Card)
-                            // For Pix/Boleto (pending), the Brick will handle showing the QR Code/Instructions
+                            // For Pix/Boleto (pending), store the data to show QR Code
                             if (data.status === "approved") {
                                 console.log("[BRICK] Payment approved, calling onSuccess");
                                 onSuccess(data.id);
+                            } else if (data.status === "pending" && data.payment_method_id === "pix") {
+                                console.log("[BRICK] Pix payment pending, showing QR Code screen");
+                                setPixPaymentData(data);
                             } else {
                                 console.log("[BRICK] Payment pending, Brick should show instructions");
                             }
@@ -196,7 +200,55 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                 }
             `}</style>
 
-            <div id="paymentBrick_container" ref={containerRef} className="min-h-[400px] w-full rounded-2xl flex items-center justify-center">
+            {/* Custom Pix QR Code Display */}
+            {pixPaymentData && (
+                <div className="space-y-6 p-6 bg-card rounded-2xl border border-border">
+                    <div className="text-center space-y-2">
+                        <h3 className="text-xl font-black uppercase tracking-wider">Pague com Pix</h3>
+                        <p className="text-sm text-muted-foreground">Escaneie o QR Code ou copie o código abaixo</p>
+                    </div>
+
+                    {pixPaymentData.point_of_interaction?.transaction_data?.qr_code_base64 && (
+                        <div className="flex justify-center p-4 bg-white rounded-xl">
+                            <img
+                                src={`data:image/png;base64,${pixPaymentData.point_of_interaction.transaction_data.qr_code_base64}`}
+                                alt="QR Code Pix"
+                                className="w-64 h-64"
+                            />
+                        </div>
+                    )}
+
+                    {pixPaymentData.point_of_interaction?.transaction_data?.qr_code && (
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold uppercase tracking-wider">Código Pix (Copia e Cola)</label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={pixPaymentData.point_of_interaction.transaction_data.qr_code}
+                                    readOnly
+                                    className="flex-1 px-3 py-2 text-xs bg-muted border border-border rounded-lg font-mono"
+                                />
+                                <button
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(pixPaymentData.point_of_interaction.transaction_data.qr_code);
+                                        alert("Código copiado!");
+                                    }}
+                                    className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-xs font-bold uppercase hover:opacity-90"
+                                >
+                                    Copiar
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="text-center text-xs text-muted-foreground space-y-1">
+                        <p>⏱️ Após o pagamento, seu acesso será liberado automaticamente</p>
+                        <p className="text-[10px]">ID do Pagamento: {pixPaymentData.id}</p>
+                    </div>
+                </div>
+            )}
+
+            <div id="paymentBrick_container" ref={containerRef} className={`min-h-[400px] w-full rounded-2xl flex items-center justify-center ${pixPaymentData ? 'hidden' : ''}`}>
                 {!isSdkLoaded && !initError && (
                     <div className="flex flex-col items-center gap-2">
                         <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
