@@ -103,8 +103,11 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                             })
                                 .then((response) => response.json())
                                 .then((data) => {
-                                    // Resolve always so the Brick can handle the visual state (QR Code, Success, etc.)
-                                    onSuccess(data.id);
+                                    // Only trigger parent success/redirect if payment is actually approved (Credit Card)
+                                    // For Pix/Boleto (pending), we just resolve so the Brick shows the instructions
+                                    if (data.status === "approved") {
+                                        onSuccess(data.id);
+                                    }
                                     resolve(data);
                                 })
                                 .catch((error) => {
