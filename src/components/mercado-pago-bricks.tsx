@@ -66,11 +66,9 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                 },
                 customization: {
                     paymentMethods: {
-                        ticket: "off",
                         bankTransfer: "all",
                         creditCard: "all",
                         debitCard: "all",
-                        mercadoPago: "off",
                     },
                     visual: {
                         style: {
