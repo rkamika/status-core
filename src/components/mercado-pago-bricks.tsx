@@ -47,8 +47,15 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
 
             const bricksBuilder = mpInstance.current.bricks();
 
+            // Properly clear container and wait for DOM to update
             if (containerRef.current) {
-                containerRef.current.innerHTML = "";
+                try {
+                    containerRef.current.innerHTML = "";
+                    // Wait for DOM to fully clear before creating new Brick
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (err) {
+                    console.warn("[BRICK] Error clearing container:", err);
+                }
             }
 
             await bricksBuilder.create("payment", "paymentBrick_container", {
