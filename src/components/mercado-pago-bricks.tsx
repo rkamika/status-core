@@ -25,6 +25,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
     const [isSdkLoaded, setIsSdkLoaded] = useState(false);
     const [initError, setInitError] = useState<string | null>(null);
     const [pixPaymentData, setPixPaymentData] = useState<any>(null);
+    const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const initBricks = async () => {
         if (!window.MercadoPago || !containerRef.current || !preferenceId) return;
