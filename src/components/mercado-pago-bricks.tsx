@@ -68,20 +68,14 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                         style: {
                             theme: theme === "dark" ? "dark" : "default",
                             customVariables: {
-                                background: theme === "dark" ? "#000000" : "#ffffff",
+                                // Only use officially documented variables
                                 baseColor: theme === "dark" ? "#ffffff" : "#000000",
-                                secondaryColor: theme === "dark" ? "#ffffff" : "#000000",
-                                elementsColor: theme === "dark" ? "#ffffff" : "#000000",
-                                // Critical for inputs in many MP versions
-                                formControlBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
-                                formControlTextColor: theme === "dark" ? "#ffffff" : "#000000",
-                                formControlPlaceholderColor: theme === "dark" ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.4)",
-                                // Legacy/Standard keys
+                                textPrimaryColor: theme === "dark" ? "#ffffff" : "#000000",
+                                textSecondaryColor: theme === "dark" ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)",
                                 inputBackgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
-                                inputTextColor: theme === "dark" ? "#ffffff" : "#000000",
-                                formInputsBackground: theme === "dark" ? "#1a1a1a" : "#ffffff",
-                                formInputsText: theme === "dark" ? "#ffffff" : "#000000",
-                                outlinePrimaryColor: theme === "dark" ? "#ffffff" : "#000000",
+                                borderRadiusSmall: "8px",
+                                borderRadiusMedium: "12px",
+                                borderRadiusLarge: "16px",
                             }
                         },
                     },
