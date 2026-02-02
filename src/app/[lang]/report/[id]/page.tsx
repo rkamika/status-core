@@ -30,7 +30,8 @@ import {
     Compass,
     Heart,
     BookOpen,
-    Link as LinkIcon
+    Link as LinkIcon,
+    RefreshCcw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -54,6 +55,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
     const [savedDiagnosis, setSavedDiagnosis] = useState<SavedDiagnosis | null>(null);
     const [isLoading, setIsLoading] = useState(!isDemo);
     const [isAiLoading, setIsAiLoading] = useState(false);
+    const [loadingStep, setLoadingStep] = useState(0);
     const [aiError, setAiError] = useState<string | null>(null);
 
     // Load diagnosis from storage if not demo
@@ -168,36 +170,80 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
 
     useEffect(() => {
         const generateAIInsights = async () => {
-            if (!isUnlocked || isDemo || !savedDiagnosis || !diagnosis || diagnosis?.v3Insights?.aiAnalysis || isAiLoading) return;
+            if (!isUnlocked || isDemo || !savedDiagnosis || !diagnosis || isAiLoading) return;
+
+            const existingAi = savedDiagnosis?.v3Insights?.aiAnalysis;
+            const hasBrief = existingAi?.executiveSummary && existingAi?.sevenDayPlan;
+            const hasDeep = existingAi?.deepDiveAnalysis;
+
+            if (hasBrief && hasDeep) return;
 
             setIsAiLoading(true);
+            setAiError(null);
+
             try {
-                const response = await fetch('/api/analyze', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        pillarScores: diagnosis.pillarScores,
-                        qualitativeContext,
-                        lang
-                    })
-                });
+                // Phase 1: Brief Analysis
+                if (!hasBrief) {
+                    setLoadingStep(1); // "Analisando padrões neurais..."
+                    const briefResp = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            pillarScores: diagnosis.pillarScores,
+                            qualitativeContext,
+                            lang,
+                            type: 'brief'
+                        })
+                    });
+                    const briefAnalysis = await briefResp.json();
+                    if (briefAnalysis.error) throw new Error(briefAnalysis.error);
 
-                const analysis = await response.json();
-                if (analysis.error) throw new Error(analysis.error);
+                    const updatedV3 = {
+                        ...diagnosis.v3Insights,
+                        aiAnalysis: { ...existingAi, ...briefAnalysis }
+                    };
+                    await updateDiagnosis(id, { v3Insights: updatedV3 as any });
+                    setSavedDiagnosis(prev => prev ? { ...prev, v3Insights: updatedV3 as any } : null);
 
-                const updatedV3 = { ...diagnosis.v3Insights, aiAnalysis: analysis };
-                updateDiagnosis(id, { v3Insights: updatedV3 as any });
-                setSavedDiagnosis(prev => prev ? { ...prev, v3Insights: updatedV3 as any } : null);
+                    // Small delay to show progress
+                    await new Promise(r => setTimeout(r, 800));
+                }
+
+                // Phase 2: Deep Analysis
+                if (!hasDeep) {
+                    setLoadingStep(2); // "Sintetizando análise sistêmica profunda..."
+                    const deepResp = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            pillarScores: diagnosis.pillarScores,
+                            qualitativeContext,
+                            lang,
+                            type: 'deep'
+                        })
+                    });
+                    const deepAnalysis = await deepResp.json();
+                    if (deepAnalysis.error) throw new Error(deepAnalysis.error);
+
+                    const currentAi = (await getDiagnosisById(id))?.v3Insights?.aiAnalysis;
+                    const finalV3 = {
+                        ...diagnosis.v3Insights,
+                        aiAnalysis: { ...currentAi, ...deepAnalysis }
+                    };
+                    await updateDiagnosis(id, { v3Insights: finalV3 as any });
+                    setSavedDiagnosis(prev => prev ? { ...prev, v3Insights: finalV3 as any } : null);
+                }
             } catch (err: any) {
                 console.error("AI Error:", err);
                 setAiError(err.message);
             } finally {
                 setIsAiLoading(false);
+                setLoadingStep(0);
             }
         };
 
         generateAIInsights();
-    }, [isUnlocked, isDemo, savedDiagnosis, id, lang, qualitativeContext, diagnosis, isAiLoading]);
+    }, [isUnlocked, isDemo, id, lang, qualitativeContext, diagnosis, isAiLoading]);
 
     const formatDate = (timestamp: number) => {
         const date = new Date(timestamp);
@@ -446,10 +492,34 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                                         <div className="lg:col-span-8 flex flex-col gap-8">
                                             <Card className="bg-primary/5 border-primary/20 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 space-y-6 shadow-2xl relative overflow-hidden group flex-1 print:bg-white print:border-black/20">
-                                                {isAiLoading ? (
-                                                    <div className="animate-pulse space-y-4 print:hidden">
-                                                        <div className="h-8 w-1/3 bg-primary/10 rounded" />
-                                                        <div className="h-32 bg-primary/5 rounded" />
+                                                {isAiLoading && !diagnosis.v3Insights?.aiAnalysis?.executiveSummary ? (
+                                                    <div className="animate-pulse space-y-6 print:hidden py-4">
+                                                        <div className="flex items-center gap-3">
+                                                            <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                                                            <span className="text-sm font-bold text-primary animate-pulse">
+                                                                {lang === 'pt' ? 'Mapeando padrões neurais...' : lang === 'es' ? 'Mapeando patrones neurales...' : 'Mapping neural patterns...'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="space-y-3">
+                                                            <div className="h-4 w-1/3 bg-primary/10 rounded" />
+                                                            <div className="h-20 bg-primary/5 rounded" />
+                                                        </div>
+                                                    </div>
+                                                ) : aiError && !diagnosis.v3Insights?.aiAnalysis?.executiveSummary ? (
+                                                    <div className="p-8 text-center space-y-4">
+                                                        <AlertTriangle className="h-10 w-10 text-rose-500 mx-auto" />
+                                                        <div className="space-y-1">
+                                                            <p className="font-bold text-rose-500">{lang === 'pt' ? 'Falha na conexão neural' : 'Neural connection failed'}</p>
+                                                            <p className="text-xs text-muted-foreground">{aiError}</p>
+                                                        </div>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() => setIsAiLoading(false)} // This triggers the useEffect again since isAiLoading changes
+                                                            className="gap-2 border-primary/20 hover:bg-primary/5"
+                                                        >
+                                                            <RefreshCcw className="h-4 w-4" /> {lang === 'pt' ? 'Tentar Novamente' : 'Try Again'}
+                                                        </Button>
                                                     </div>
                                                 ) : (
                                                     <>
@@ -845,11 +915,34 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                         <div className="h-px flex-1 bg-gradient-to-l from-transparent to-primary/40" />
                                     </div>
                                     <Card className="bg-muted/30 dark:bg-zinc-900/40 border-border/40 rounded-[3rem] p-12 md:p-16 shadow-inner relative overflow-hidden">
-                                        {isAiLoading ? (
-                                            <div className="space-y-6 print:hidden">
-                                                <div className="h-4 bg-primary/10 rounded w-full animate-pulse" />
-                                                <div className="h-4 bg-primary/10 rounded w-5/6 animate-pulse" />
-                                                <div className="h-4 bg-primary/10 rounded w-4/6 animate-pulse" />
+                                        {isAiLoading && !diagnosis.v3Insights?.aiAnalysis?.deepDiveAnalysis ? (
+                                            <div className="space-y-8 print:hidden py-10">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="h-6 w-6 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                                                    <span className="text-lg font-bold text-primary animate-pulse">
+                                                        {lang === 'pt' ? 'Sintetizando análise sistêmica profunda...' : lang === 'es' ? 'Sintetizando análisis sistémico profundo...' : 'Synthesizing deep systemic analysis...'}
+                                                    </span>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    <div className="h-4 bg-primary/10 rounded w-full animate-pulse" />
+                                                    <div className="h-4 bg-primary/10 rounded w-5/6 animate-pulse" />
+                                                    <div className="h-4 bg-primary/10 rounded w-4/6 animate-pulse" />
+                                                    <div className="h-4 bg-primary/10 rounded w-full animate-pulse opacity-50" />
+                                                    <div className="h-4 bg-primary/10 rounded w-3/4 animate-pulse opacity-40" />
+                                                </div>
+                                            </div>
+                                        ) : aiError && !diagnosis.v3Insights?.aiAnalysis?.deepDiveAnalysis && diagnosis.v3Insights?.aiAnalysis?.executiveSummary ? (
+                                            <div className="p-16 text-center space-y-6">
+                                                <div className="space-y-2">
+                                                    <p className="text-xl font-bold text-rose-500">{lang === 'pt' ? 'Interrupção na análise profunda' : 'Deep dive analysis interrupted'}</p>
+                                                    <p className="text-sm text-muted-foreground">{aiError}</p>
+                                                </div>
+                                                <Button
+                                                    onClick={() => setIsAiLoading(false)}
+                                                    className="gap-2 shadow-lg shadow-primary/20"
+                                                >
+                                                    <RefreshCcw className="h-4 w-4" /> {lang === 'pt' ? 'Retomar Análise' : 'Resume Analysis'}
+                                                </Button>
                                             </div>
                                         ) : (
                                             <div className="prose prose-invert prose-lg max-w-none text-foreground/80 dark:text-white/70 leading-[1.8] font-medium space-y-8 print:text-black">
