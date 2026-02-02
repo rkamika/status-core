@@ -102,12 +102,9 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                             })
                                 .then((response) => response.json())
                                 .then((data) => {
-                                    if (data.status === "approved") {
-                                        onSuccess(data.id);
-                                        resolve(data);
-                                    } else {
-                                        reject();
-                                    }
+                                    // Resolve always so the Brick can handle the visual state (QR Code, Success, etc.)
+                                    onSuccess(data.id);
+                                    resolve(data);
                                 })
                                 .catch((error) => {
                                     onError(error);

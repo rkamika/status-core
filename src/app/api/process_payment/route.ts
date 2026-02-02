@@ -101,17 +101,10 @@ export async function POST(req: Request) {
                     }
                 }
             }
-            return NextResponse.json({
-                status: result.status,
-                id: result.id
-            });
+            return NextResponse.json(result);
         } else {
             console.warn('[Payment API] Payment not approved:', result.status, result.status_detail);
-            return NextResponse.json({
-                status: result.status,
-                status_detail: result.status_detail,
-                id: result.id
-            });
+            return NextResponse.json(result);
         }
 
     } catch (error: any) {
