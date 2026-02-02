@@ -87,6 +87,7 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                     },
                     onSubmit: async ({ selectedPaymentMethod, formData }: any) => {
                         try {
+                            console.log("[BRICK] onSubmit called with:", { selectedPaymentMethod, formData });
                             const response = await fetch("/api/process_payment", {
                                 method: "POST",
                                 headers: { "Content-Type": "application/json" },
@@ -97,16 +98,24 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                             });
 
                             const data = await response.json();
+                            console.log("[BRICK] Payment API response:", data);
+                            console.log("[BRICK] Payment status:", data.status);
+                            console.log("[BRICK] Has QR code?:", !!data.point_of_interaction?.transaction_data?.qr_code);
 
                             // Only trigger parent success/redirect if payment is actually approved (Credit Card)
                             // For Pix/Boleto (pending), the Brick will handle showing the QR Code/Instructions
                             if (data.status === "approved") {
+                                console.log("[BRICK] Payment approved, calling onSuccess");
                                 onSuccess(data.id);
+                            } else {
+                                console.log("[BRICK] Payment pending, Brick should show instructions");
                             }
 
                             // Return the full response so the Brick can render the appropriate UI
+                            console.log("[BRICK] Returning data to Brick for rendering");
                             return data;
                         } catch (error) {
+                            console.error("[BRICK] onSubmit error:", error);
                             onError(error);
                             throw error;
                         }
