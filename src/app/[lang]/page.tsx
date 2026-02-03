@@ -256,11 +256,6 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
             </p>
           </div>
           <div className="flex flex-col items-center md:items-end gap-6 text-center md:text-right">
-            <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
-              <Link href="#" className="hover:text-primary hover:opacity-100 transition-all">{dict.footer.terms}</Link>
-              <Link href="#" className="hover:text-primary hover:opacity-100 transition-all">{dict.footer.privacy}</Link>
-              <Link href="#" className="hover:text-primary hover:opacity-100 transition-all">{dict.footer.contact}</Link>
-            </div>
             <div className="flex gap-4">
               <Link
                 href="https://www.instagram.com/statuscore.original"
