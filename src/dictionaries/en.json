@@ -28,7 +28,7 @@
         "how_it_works_title": "How it Works",
         "how_it_works_subtitle": "Three steps to understand what is blocking your potential.",
         "step1_title": "01. Diagnosis",
-        "step1_desc": "21 deep questions based on cognitive science and high-level performance.",
+        "step1_desc": "14 deep questions based on cognitive science and high-level performance.",
         "step2_title": "02. Core Profile",
         "step2_desc": "We identify which of the 8 operational states you are in through our analysis engine.",
         "step3_title": "03. Exit Plan",
@@ -100,26 +100,6 @@
                 ]
             },
             "3": {
-                "text": "I can maintain emotional balance even when faced with stressful setbacks.",
-                "options": [
-                    "Out of control",
-                    "Very reactive",
-                    "Unstable",
-                    "Balanced",
-                    "Total serenity"
-                ]
-            },
-            "4": {
-                "text": "I feel that my current work has a clear meaning and contributes to something larger.",
-                "options": [
-                    "Totally empty",
-                    "No purpose",
-                    "Indifferent",
-                    "Meaningful",
-                    "Full purpose"
-                ]
-            },
-            "5": {
                 "text": "I am clear about my next professional growth goals.",
                 "options": [
                     "Totally lost",
@@ -129,7 +109,7 @@
                     "Total vision"
                 ]
             },
-            "6": {
+            "4": {
                 "text": "I feel enthusiastic and appropriately challenged during my work routine.",
                 "options": [
                     "Boredom/Apathy",
@@ -139,7 +119,7 @@
                     "Total flow"
                 ]
             },
-            "7": {
+            "5": {
                 "text": "I feel I have a solid support system in my relationships (family/friends).",
                 "options": [
                     "Lonely",
@@ -149,7 +129,7 @@
                     "Solid network"
                 ]
             },
-            "8": {
+            "6": {
                 "text": "I can express my needs and feelings clearly in my relationships.",
                 "options": [
                     "Total suppression",
@@ -159,17 +139,7 @@
                     "Total transparency"
                 ]
             },
-            "9": {
-                "text": "I feel a sense of belonging and acceptance in the social groups I frequent.",
-                "options": [
-                    "Out of place",
-                    "Barely accepted",
-                    "Neutral",
-                    "Well accepted",
-                    "Total belonging"
-                ]
-            },
-            "10": {
+            "7": {
                 "text": "I have peace of mind regarding my current financial stability.",
                 "options": [
                     "Panic/Chaos",
@@ -179,7 +149,7 @@
                     "Total security"
                 ]
             },
-            "11": {
+            "8": {
                 "text": "I feel I have the autonomy to make financial decisions without excessive fear of the future.",
                 "options": [
                     "No autonomy",
@@ -189,17 +159,7 @@
                     "Full freedom"
                 ]
             },
-            "12": {
-                "text": "My financial life is organized enough not to generate constant anxiety.",
-                "options": [
-                    "Total chaos",
-                    "Daily anxiety",
-                    "Fair",
-                    "Organized",
-                    "Financial peace"
-                ]
-            },
-            "13": {
+            "9": {
                 "text": "I am clear about my core values and act in accordance with them.",
                 "options": [
                     "Misaligned",
@@ -209,7 +169,7 @@
                     "Total integrity"
                 ]
             },
-            "14": {
+            "10": {
                 "text": "I feel self-confident about my capabilities and personal worth.",
                 "options": [
                     "Totally insecure",
@@ -219,17 +179,7 @@
                     "Full confidence"
                 ]
             },
-            "15": {
-                "text": "I practice self-respect and know how to set healthy boundaries to protect my identity.",
-                "options": [
-                    "Totally passive",
-                    "Hard to say no",
-                    "Sometimes",
-                    "Clear boundaries",
-                    "Full sovereignty"
-                ]
-            },
-            "16": {
+            "11": {
                 "text": "I can fully disconnect from work and obligations during my downtime.",
                 "options": [
                     "Always on",
@@ -239,7 +189,7 @@
                     "Total disconnect"
                 ]
             },
-            "17": {
+            "12": {
                 "text": "I have hobbies or leisure activities that bring me genuine fun and joy.",
                 "options": [
                     "Anhedonia/None",
@@ -249,17 +199,7 @@
                     "Full joy"
                 ]
             },
-            "18": {
-                "text": "I feel my personal life is diverse and light, beyond responsibilities.",
-                "options": [
-                    "Totally heavy",
-                    "Monotonous",
-                    "Regular",
-                    "Balanced",
-                    "Full lightness"
-                ]
-            },
-            "19": {
+            "13": {
                 "text": "I feel a connection with something larger or an existential purpose that guides me.",
                 "options": [
                     "Empty skepticism",
@@ -269,7 +209,7 @@
                     "Deep connection"
                 ]
             },
-            "20": {
+            "14": {
                 "text": "My life makes sense to me on a deep level, beyond material success.",
                 "options": [
                     "Superficial",
@@ -277,16 +217,6 @@
                     "Neutral",
                     "Deep",
                     "Existential fullness"
-                ]
-            },
-            "21": {
-                "text": "I regularly practice moments of reflection, meditation, or inner connection.",
-                "options": [
-                    "Never do",
-                    "Rarely",
-                    "Sometimes",
-                    "Frequent",
-                    "Daily practice"
                 ]
             }
         }

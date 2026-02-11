@@ -94,20 +94,20 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
     }, [savedDiagnosis, isDemo, id]);
 
     const demoAnswers = {
-        // Saúde: 2, 1, 2
-        1: 2, 2: 1, 3: 2,
-        // Trabalho: 5, 4, 5
-        4: 5, 5: 4, 6: 5,
-        // Relações: 2, 3, 2
-        7: 2, 8: 3, 9: 2,
-        // Finanças: 5, 5, 4
-        10: 5, 11: 5, 12: 4,
-        // Espiritualidade: 3, 3, 2
-        13: 3, 14: 3, 15: 2,
-        // Lazer: 1, 2, 1
-        16: 1, 17: 2, 18: 1,
-        // Identidade: 4, 3, 4
-        19: 4, 20: 3, 21: 4
+        // Saúde: 2, 1
+        1: 2, 2: 1,
+        // Trabalho: 5, 4
+        3: 5, 4: 4,
+        // Relações: 2, 3
+        5: 2, 6: 3,
+        // Finanças: 5, 5
+        7: 5, 8: 5,
+        // Espiritualidade: 3, 3
+        9: 3, 10: 3,
+        // Lazer: 1, 2
+        11: 1, 12: 2,
+        // Identidade: 4, 3
+        13: 4, 14: 3
     };
 
     const demoContext = lang === "pt"

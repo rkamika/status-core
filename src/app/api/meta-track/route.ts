@@ -4,9 +4,9 @@ import { sendMetaCapiEvent } from '@/lib/meta-capi';
 
 export async function POST(req: Request) {
     try {
-        const { eventName, params, eventID, url, externalId: providedExternalId } = await req.json();
+        const { eventName, params, eventID, url, externalId: providedExternalId, userData: providedUserData } = await req.json();
 
-        console.log(`[Meta Track Proxy] Received ${eventName}`, { eventID, providedExternalId });
+        console.log(`[Meta Track Proxy] Received ${eventName}`, { eventID, providedExternalId, hasEmail: !!providedUserData?.email });
 
         const headersList = await headers();
         const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
@@ -28,7 +28,10 @@ export async function POST(req: Request) {
                 fbp,
                 fbc,
                 externalId,
-                email: params?.email
+                email: providedUserData?.email || params?.email,
+                firstName: providedUserData?.firstName,
+                lastName: providedUserData?.lastName,
+                phone: providedUserData?.phone
             },
             customData: params,
             eventId: eventID

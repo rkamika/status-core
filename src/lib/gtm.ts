@@ -1,4 +1,6 @@
 "use client";
+import { trackFBEvent } from "@/components/meta-pixel";
+
 
 type GTMEventParams = Record<string, any>;
 
@@ -25,6 +27,10 @@ export const trackSignUp = (method: string = "email") => {
     trackEvent("generate_lead", {
         method,
         lead_type: "Emotional Assessment"
+    });
+    trackFBEvent('Lead', {
+        content_name: 'Emotional Assessment Completion',
+        content_category: 'Assessment'
     });
 };
 

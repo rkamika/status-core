@@ -14,16 +14,36 @@ const sanitizeUrl = (url: string) => {
     }
 };
 
-export const trackFBEvent = (eventName: string, params?: Record<string, any>, eventID?: string, externalId?: string) => {
+export const trackFBEvent = (
+    eventName: string,
+    params?: Record<string, any>,
+    eventID?: string,
+    externalId?: string,
+    userData?: { email?: string; firstName?: string; lastName?: string; phone?: string }
+) => {
     // 1. Ensure we have a unique eventID for deduplication
     const finalEventId = eventID || `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
 
-    console.log(`[Meta Tracking] Triggering ${eventName}`, { finalEventId, externalId });
+    console.log(`[Meta Tracking] Triggering ${eventName}`, { finalEventId, externalId, hasEmail: !!userData?.email });
 
     // 2. Browser Tracking (Pixel)
     const testCode = typeof window !== 'undefined' ? (process.env.NEXT_PUBLIC_FB_TEST_EVENT_CODE || (window as any)._fb_test_code) : undefined;
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
     const cleanUrl = sanitizeUrl(currentUrl);
+
+    // Capture fbclid for cookie consistency if needed (CAPI helper)
+    if (typeof window !== 'undefined' && currentUrl.includes('fbclid=')) {
+        try {
+            const url = new URL(currentUrl);
+            const fbclid = url.searchParams.get('fbclid');
+            if (fbclid) {
+                // Set cookie for 90 days as per Meta best practices
+                document.cookie = `_fbc=fb.1.${Date.now()}.${fbclid}; path=/; max-age=${90 * 24 * 60 * 60}; sameSite=Lax`;
+            }
+        } catch (e) {
+            console.error('[Meta Tracking] Error capturing fbclid:', e);
+        }
+    }
 
     const finalParams = {
         ...(params || {}),
@@ -33,8 +53,16 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
     };
 
     if (typeof window !== 'undefined' && (window as any).fbq) {
-        if (externalId) {
-            (window as any).fbq('set', 'user_data', { external_id: externalId });
+        // Set Advanced Matching data if available
+        if (externalId || userData) {
+            const fbUserData: Record<string, any> = {};
+            if (externalId) fbUserData.external_id = externalId;
+            if (userData?.email) fbUserData.em = userData.email.trim().toLowerCase();
+            if (userData?.firstName) fbUserData.fn = userData.firstName.trim().toLowerCase();
+            if (userData?.lastName) fbUserData.ln = userData.lastName.trim().toLowerCase();
+            if (userData?.phone) fbUserData.ph = userData.phone.trim().replace(/\D/g, '');
+
+            (window as any).fbq('set', 'user_data', fbUserData);
         }
         (window as any).fbq('track', eventName, finalParams, { eventID: finalEventId });
     }
@@ -46,10 +74,11 @@ export const trackFBEvent = (eventName: string, params?: Record<string, any>, ev
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 eventName,
-                params: finalParams, // Use standardized params with test_event_code and external_id
+                params: finalParams,
                 eventID: finalEventId,
                 externalId,
-                url: cleanUrl // Use sanitized URL here too
+                userData, // Send raw PII to proxy, which will hash it using crypto-server-side
+                url: cleanUrl
             }),
         }).catch(err => console.warn('Meta CAPI Proxy Error:', err));
     }

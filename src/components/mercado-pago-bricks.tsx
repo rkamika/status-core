@@ -8,7 +8,7 @@ interface MercadoPagoBricksProps {
     preferenceId: string;
     diagnosisId: string;
     amount: number;
-    onSuccess: (id: string) => void;
+    onSuccess: (id: string, payerEmail?: string) => void;
     onError: (error: any) => void;
 }
 
@@ -113,7 +113,8 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                             // For Pix/Boleto (pending), store the data to show QR Code
                             if (data.status === "approved") {
                                 console.log("[BRICK] Payment approved, calling onSuccess");
-                                onSuccess(data.id);
+                                const email = formData?.payer?.email || data?.payer?.email;
+                                onSuccess(data.id, email);
                             } else if (data.status === "pending" && data.payment_method_id === "pix") {
                                 console.log("[BRICK] Pix payment pending, showing QR Code screen");
                                 setPixPaymentData(data);
@@ -191,7 +192,8 @@ export function MercadoPagoBricks({ preferenceId, diagnosisId, amount, onSuccess
                         clearInterval(pollingIntervalRef.current);
                         pollingIntervalRef.current = null;
                     }
-                    onSuccess(data.id);
+                    const email = pixPaymentData?.payer?.email;
+                    onSuccess(data.id, email);
                 }
             } catch (error) {
                 console.error("[POLLING] Error checking payment status:", error);

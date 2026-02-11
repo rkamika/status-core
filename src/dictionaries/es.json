@@ -28,7 +28,7 @@
         "how_it_works_title": "Cómo Funciona",
         "how_it_works_subtitle": "Tres pasos para entender qué está bloqueando tu potencial.",
         "step1_title": "01. Diagnóstico",
-        "step1_desc": "21 preguntas profundas basadas en ciencia cognitiva y performance de alto nivel.",
+        "step1_desc": "14 perguntas profundas baseadas em ciência cognitiva e performance de alto nível.",
         "step2_title": "02. Perfil Core",
         "step2_desc": "Identificamos en cuál de los 8 estados operativos te encuentras a través de nuestro motor de análisis.",
         "step3_title": "03. Plan de Salida",
@@ -100,26 +100,6 @@
                 ]
             },
             "3": {
-                "text": "Puedo mantener el equilibrio emocional incluso ante contratiempos estresantes.",
-                "options": [
-                    "Descontrol total",
-                    "Mucha reactividad",
-                    "Inestable",
-                    "Equilibrado",
-                    "Serenidad total"
-                ]
-            },
-            "4": {
-                "text": "Siento que mi trabajo actual tiene un sentido claro y contribuye a algo más grande.",
-                "options": [
-                    "Vacío total",
-                    "Sin propósito",
-                    "Indiferente",
-                    "Tiene sentido",
-                    "Propósito pleno"
-                ]
-            },
-            "5": {
                 "text": "Tengo claridad sobre mis próximas metas de crecimiento profesional.",
                 "options": [
                     "Totalmente perdido",
@@ -129,7 +109,7 @@
                     "Visión total"
                 ]
             },
-            "6": {
+            "4": {
                 "text": "Me siento entusiasmado y adecuadamente desafiado durante mi rutina laboral.",
                 "options": [
                     "Aburrimiento/Apatía",
@@ -139,7 +119,7 @@
                     "Flujo total"
                 ]
             },
-            "7": {
+            "5": {
                 "text": "Siento que tengo un sistema de apoio sólido en mis relaciones (familia/amigos).",
                 "options": [
                     "Solitario",
@@ -149,7 +129,7 @@
                     "Red sólida"
                 ]
             },
-            "8": {
+            "6": {
                 "text": "Puedo expresar mis necesidades y sentimientos con claridad en mis relaciones.",
                 "options": [
                     "Supresión total",
@@ -159,17 +139,7 @@
                     "Transparencia total"
                 ]
             },
-            "9": {
-                "text": "Me siento integrado y aceptado en los grupos sociales que frecuento.",
-                "options": [
-                    "Desplazado",
-                    "Poco aceptado",
-                    "Neutro",
-                    "Bien aceptado",
-                    "Pertenencia total"
-                ]
-            },
-            "10": {
+            "7": {
                 "text": "Tengo tranquilidad con respecto a mi estabilidad financiera actual.",
                 "options": [
                     "Pánico/Caos",
@@ -179,7 +149,7 @@
                     "Seguridad plena"
                 ]
             },
-            "11": {
+            "8": {
                 "text": "Siento que tengo autonomía para tomar decisiones financieras sin un miedo excesivo al futuro.",
                 "options": [
                     "Sin autonomía",
@@ -189,17 +159,7 @@
                     "Libertad plena"
                 ]
             },
-            "12": {
-                "text": "Mi vida financiera está lo suficientemente organizada como para no generar ansiedad constante.",
-                "options": [
-                    "Desorganización total",
-                    "Ansiedad diaria",
-                    "Razonable",
-                    "Organizado",
-                    "Paz financiera"
-                ]
-            },
-            "13": {
+            "9": {
                 "text": "Tengo claridad sobre mi valores fundamentales y actúo de acuerdo con ellos.",
                 "options": [
                     "Desalineado",
@@ -209,7 +169,7 @@
                     "Integridad total"
                 ]
             },
-            "14": {
+            "10": {
                 "text": "Me seguro de mis capacidades y de mi valor personal.",
                 "options": [
                     "Inseguridad total",
@@ -219,17 +179,7 @@
                     "Autoconfianza plena"
                 ]
             },
-            "15": {
-                "text": "Practico el autorespeto y sé poner límites saludables para proteger mi identidad.",
-                "options": [
-                    "Permisividad total",
-                    "Dificultad para decir no",
-                    "A veces",
-                    "Límites claros",
-                    "Soberanía plena"
-                ]
-            },
-            "16": {
+            "11": {
                 "text": "Puedo desconectarme totalmente del trabajo y las obligaciones durante mi tiempo libre.",
                 "options": [
                     "Siempre conectado",
@@ -239,7 +189,7 @@
                     "Desconexión total"
                 ]
             },
-            "17": {
+            "12": {
                 "text": "Tengo pasatiempos o actividades de ocio que me brindan diversión y alegría genuinas.",
                 "options": [
                     "Anedonia/Nulo",
@@ -249,17 +199,7 @@
                     "Alegría plena"
                 ]
             },
-            "18": {
-                "text": "Siento que mi vida personal é diversa y liviana, más allá de las responsabilidades.",
-                "options": [
-                    "Peso total",
-                    "Monótono",
-                    "Regular",
-                    "Equilibrado",
-                    "Levedad plena"
-                ]
-            },
-            "19": {
+            "13": {
                 "text": "Siento una conexión con algo más grande o con un propósito existencial que me guía.",
                 "options": [
                     "Escepticismo vacío",
@@ -269,7 +209,7 @@
                     "Conexión profunda"
                 ]
             },
-            "20": {
+            "14": {
                 "text": "Mi vida tiene sentido para mí a un nível profundo, más allá del éxito material.",
                 "options": [
                     "Superficial",
@@ -277,16 +217,6 @@
                     "Neutro",
                     "Profundo",
                     "Plenitude existencial"
-                ]
-            },
-            "21": {
-                "text": "Pratikó momentos de reflexión, meditación o conexión interior con regularidade.",
-                "options": [
-                    "Nunca lo hago",
-                    "Raramente",
-                    "A veces",
-                    "Frecuente",
-                    "Práctica diaria"
                 ]
             }
         }
@@ -616,7 +546,7 @@
                 "immediate_win": "Comparte uma lección aprendida con alguien.",
                 "the_no_to_say": "Di NO a la complacencia.",
                 "mindset_shift": "De 'Lo logré' a 'Lo mantengo con virtud'.",
-                "stoic_lesson": "La felicidad es un flujo de vida suave y sin obstáculos.",
+                "stoic_lesson": "La felicidad es un flujo de vida suave e sin obstáculos.",
                 "stoic_principles": [
                     "Gratitud estoica",
                     "Apatheia (Paz interior)",

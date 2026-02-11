@@ -57,13 +57,13 @@ export const STATE_CONFIGS: Record<DiagnosisState, StateConfig> = {
 
 // Simplified questions structure just to keep track of how many and which pillars
 export const QUESTION_METADATA = [
-    { id: 1, pillar: "SAUDE" }, { id: 2, pillar: "SAUDE" }, { id: 3, pillar: "SAUDE" },
-    { id: 4, pillar: "TRABALHO" }, { id: 5, pillar: "TRABALHO" }, { id: 6, pillar: "TRABALHO" },
-    { id: 7, pillar: "RELACIONAMENTOS" }, { id: 8, pillar: "RELACIONAMENTOS" }, { id: 9, pillar: "RELACIONAMENTOS" },
-    { id: 10, pillar: "FINANCEIRO" }, { id: 11, pillar: "FINANCEIRO" }, { id: 12, pillar: "FINANCEIRO" },
-    { id: 13, pillar: "IDENTIDADE" }, { id: 14, pillar: "IDENTIDADE" }, { id: 15, pillar: "IDENTIDADE" },
-    { id: 16, pillar: "LAZER" }, { id: 17, pillar: "LAZER" }, { id: 18, pillar: "LAZER" },
-    { id: 19, pillar: "ESPIRITUALIDADE" }, { id: 20, pillar: "ESPIRITUALIDADE" }, { id: 21, pillar: "ESPIRITUALIDADE" },
+    { id: 1, pillar: "SAUDE" }, { id: 2, pillar: "SAUDE" },
+    { id: 3, pillar: "TRABALHO" }, { id: 4, pillar: "TRABALHO" },
+    { id: 5, pillar: "RELACIONAMENTOS" }, { id: 6, pillar: "RELACIONAMENTOS" },
+    { id: 7, pillar: "FINANCEIRO" }, { id: 8, pillar: "FINANCEIRO" },
+    { id: 9, pillar: "IDENTIDADE" }, { id: 10, pillar: "IDENTIDADE" },
+    { id: 11, pillar: "LAZER" }, { id: 12, pillar: "LAZER" },
+    { id: 13, pillar: "ESPIRITUALIDADE" }, { id: 14, pillar: "ESPIRITUALIDADE" },
 ];
 
 export function calculateDiagnosis(answers: Record<number, number>): DiagnosisResult {

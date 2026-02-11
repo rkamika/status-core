@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getDiagnosisById, unlockDiagnosis } from "@/lib/storage";
 import { getSystemSetting, validatePromoCode, PromoCode } from "@/lib/admin";
+import { supabase } from "@/lib/supabase";
 import { trackFBEvent } from "@/components/meta-pixel";
 import { trackPurchase, trackBeginCheckout } from "@/lib/gtm";
 import { Logo } from "@/components/logo";
@@ -28,6 +29,13 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
     const [preferenceId, setPreferenceId] = useState<string | null>(null);
+    const [sessionEmail, setSessionEmail] = useState<string | undefined>();
+
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data }) => {
+            if (data.user?.email) setSessionEmail(data.user.email);
+        });
+    }, []);
 
     // Pricing & Promo State
     const [basePrice, setBasePrice] = useState(97.00);
@@ -58,7 +66,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                     content_category: 'Diagnostic',
                     value: basePrice,
                     currency: 'BRL'
-                }, `ic_${id}`, id);
+                }, `ic_${id}`, id, { email: sessionEmail });
             }
 
             if (settingsPrice) {
@@ -109,7 +117,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             content_category: 'Diagnostic',
             value: finalPrice,
             currency: 'BRL'
-        }, `pi_${id}`, id);
+        }, `pi_${id}`, id, { email: sessionEmail });
 
         // Track Purchase (GTM)
         trackPurchase({
@@ -391,7 +399,17 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                 preferenceId={preferenceId}
                                                 diagnosisId={id}
                                                 amount={finalPrice}
-                                                onSuccess={async () => {
+                                                onSuccess={async (paymentId, payerEmail) => {
+                                                    // Track Purchase (Pixel/CAPI)
+                                                    trackFBEvent('Purchase', {
+                                                        content_name: 'Platinum Report',
+                                                        content_category: 'Diagnostic',
+                                                        value: finalPrice,
+                                                        currency: 'BRL',
+                                                        content_ids: [id],
+                                                        content_type: 'product'
+                                                    }, `pur_${paymentId}`, id, { email: payerEmail });
+
                                                     await unlockDiagnosis(id);
                                                     setIsComplete(true);
                                                     setTimeout(() => {
