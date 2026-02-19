@@ -17,6 +17,7 @@ import { getDictionary } from "@/lib/get-dictionary";
 import { saveDiagnosis, generateId } from "@/lib/storage";
 import { SavedDiagnosis } from "@/lib/types";
 import { Logo } from "@/components/logo";
+import { SocialProof } from "@/components/social-proof";
 
 export default function PreviewPage({ params }: { params: Promise<{ lang: Locale }> }) {
     const { lang } = use(params);
@@ -116,6 +117,7 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
 
     return (
         <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
+            <SocialProof lang={lang} type="purchase" />
             {/* Dynamic Glassmorphic Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <motion.div

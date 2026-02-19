@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { QUESTION_METADATA, Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Logo } from "@/components/logo";
+import { SocialProof } from "@/components/social-proof";
 import { trackFBEvent } from "@/components/meta-pixel";
 import { trackSignUp } from "@/lib/gtm";
 import { useEffect } from "react";
@@ -46,6 +47,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
 
     return (
         <div className="min-h-screen bg-background flex flex-col">
+            <SocialProof lang={lang} type="activity" />
             <header className="px-4 lg:px-6 h-16 flex items-center border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
                 <div className="container mx-auto flex items-center justify-between">
                     <Logo lang={lang} />

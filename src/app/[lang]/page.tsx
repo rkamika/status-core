@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Locale } from "@/lib/diagnostic";
 import { getDictionary } from "@/lib/get-dictionary";
 import { FloatingCTA } from "@/components/floating-cta";
+import { SocialProof } from "@/components/social-proof";
 import { Logo } from "@/components/logo";
 import { trackViewItem, trackEvent } from "@/lib/gtm";
 
@@ -20,6 +21,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
   return (
     <div className="flex flex-col min-h-screen bg-background selection:bg-primary/30">
       <FloatingCTA lang={lang} label={dict.landing.cta_button} />
+      <SocialProof lang={lang} type="activity" />
       <header className="px-4 lg:px-6 h-14 flex items-center border-b border-border/40 bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between">
           <Logo lang={lang} />

@@ -17,6 +17,7 @@ import { trackFBEvent } from "@/components/meta-pixel";
 import { trackPurchase, trackBeginCheckout } from "@/lib/gtm";
 import { Logo } from "@/components/logo";
 import { MercadoPagoBricks } from "@/components/mercado-pago-bricks";
+import { SocialProof } from "@/components/social-proof";
 import { Locale, SavedDiagnosis } from "@/lib/types";
 
 export default function CheckoutPage({ params }: { params: Promise<{ lang: Locale; id: string }> }) {
@@ -197,6 +198,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
     return (
         <div className="min-h-screen bg-background relative overflow-hidden">
+            <SocialProof lang={lang} type="purchase" />
             {/* Background glow */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <div
