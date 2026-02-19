@@ -36,11 +36,22 @@ export function SocialProof({ lang, type }: SocialProofProps) {
     const [currentData, setCurrentData] = useState({ name: "", city: "", count: 0 });
     const isEnabled = process.env.NEXT_PUBLIC_ENABLE_SOCIAL_PROOF !== "false";
 
-    const getNewData = () => {
+    const getNewData = (prevCount: number) => {
         const langData = DATA_BY_LANG[lang] || DATA_BY_LANG.en;
         const name = langData.names[Math.floor(Math.random() * langData.names.length)];
         const city = langData.cities[Math.floor(Math.random() * langData.cities.length)];
-        const count = Math.floor(Math.random() * (45 - 12 + 1)) + 12; // Random count between 12 and 45
+
+        // For activity, we want the number to be stable or slightly increasing
+        let count = prevCount;
+        if (count === 0) {
+            count = Math.floor(Math.random() * (45 - 28 + 1)) + 28;
+        } else {
+            // 30% chance to increase by 1 person
+            if (Math.random() > 0.7) {
+                count += 1;
+            }
+        }
+
         return { name, city, count };
     };
 
@@ -49,7 +60,7 @@ export function SocialProof({ lang, type }: SocialProofProps) {
 
         // Initial delay before first show
         const initialDelay = setTimeout(() => {
-            setCurrentData(getNewData());
+            setCurrentData(getNewData(0));
             setIsVisible(true);
         }, 5000);
 
@@ -59,7 +70,7 @@ export function SocialProof({ lang, type }: SocialProofProps) {
 
             // Small pause before switching data and showing again
             setTimeout(() => {
-                setCurrentData(getNewData());
+                setCurrentData(prev => getNewData(type === 'activity' ? prev.count : 0));
                 // Random chance to show (to make it feel less robotic)
                 if (Math.random() > 0.3) {
                     setIsVisible(true);
@@ -72,7 +83,7 @@ export function SocialProof({ lang, type }: SocialProofProps) {
             clearTimeout(initialDelay);
             clearInterval(interval);
         };
-    }, [lang, isEnabled]);
+    }, [lang, isEnabled, type]);
 
     if (!isEnabled) return null;
 
