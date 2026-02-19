@@ -156,12 +156,12 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                         </AnimatePresence>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 pb-2">
+                    <div className="flex items-center gap-3 pt-4 pb-2">
                         <Button
                             variant="ghost"
                             onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                             disabled={currentStep === 0}
-                            className="gap-2 text-muted-foreground hover:text-foreground h-12 px-6"
+                            className="gap-2 text-muted-foreground hover:text-foreground h-12 flex-1 sm:flex-initial sm:px-8"
                         >
                             <ChevronLeft className="h-4 w-4" />
                             {dict.common.back}
@@ -170,10 +170,10 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                         {isLastStep ? (
                             <Link
                                 href={`/${lang}/preview?answers=${encodeURIComponent(JSON.stringify(answers))}&q=${encodeURIComponent(qualitative)}`}
-                                className="w-full sm:w-auto"
+                                className="flex-[2] sm:flex-initial"
                                 onClick={() => trackSignUp()}
                             >
-                                <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 px-4 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-sm">
+                                <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-sm">
                                     {dict.common.finish}
                                     <ArrowRight className="h-4 w-4" />
                                 </Button>
@@ -183,7 +183,7 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                                 size="lg"
                                 onClick={() => setCurrentStep(currentStep + 1)}
                                 disabled={!hasAnsweredCurrent}
-                                className="w-full sm:w-auto gap-2 px-4 sm:px-10 h-12 font-bold text-sm"
+                                className="flex-[2] sm:w-auto sm:flex-initial gap-2 sm:px-10 h-12 font-bold text-sm"
                             >
                                 {dict.common.next}
                                 <ChevronRight className="h-4 w-4" />
