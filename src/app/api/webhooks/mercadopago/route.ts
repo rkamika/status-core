@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { unlockDiagnosis, getDiagnosisById } from '@/lib/storage';
 import { sendMetaCapiEvent } from '@/lib/meta-capi';
+import { sendGA4PurchaseEvent } from '@/lib/ga4-server';
 
 // Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
 const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
@@ -29,9 +30,13 @@ export async function POST(req: Request) {
                     console.log(`Unlocking diagnosis ${diagnosisId} via MercadoPago...`);
                     await unlockDiagnosis(diagnosisId);
 
-                    // Send Meta CAPI Purchase Event
+                    // Send Tracking Events (Server-Side)
                     const diagnosis = await getDiagnosisById(diagnosisId);
                     if (diagnosis) {
+                        const amount = data.transaction_amount || 0;
+                        const eventId = `pur_${diagnosisId}`;
+
+                        // 1. Meta CAPI
                         await sendMetaCapiEvent({
                             eventName: 'Purchase',
                             eventSourceUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${diagnosis.lang}/report/${diagnosisId}`,
@@ -40,13 +45,22 @@ export async function POST(req: Request) {
                                 externalId: diagnosisId,
                             },
                             customData: {
-                                value: data.transaction_amount,
+                                value: amount,
                                 currency: 'BRL',
                                 content_name: 'Platinum Report',
                                 content_ids: [diagnosisId],
                                 content_type: 'product'
                             },
-                            eventId: `pur_${diagnosisId}` // Consistent deduplication ID
+                            eventId: eventId
+                        });
+
+                        // 2. GA4 Measurement Protocol
+                        await sendGA4PurchaseEvent({
+                            client_id: diagnosisId, // Using diagnosis ID as a stable client reference for server events
+                            transaction_id: resourceId.toString(),
+                            value: amount,
+                            currency: 'BRL',
+                            item_name: 'Platinum Report'
                         });
                     }
                 }

@@ -119,15 +119,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             currency: 'BRL'
         }, `pi_${id}`, id, { email: sessionEmail });
 
-        // Track Purchase (GTM)
-        trackPurchase({
-            transaction_id: `gtm_${id}_${Date.now()}`,
-            value: finalPrice,
-            currency: 'BRL',
-            item_name: 'Platinum Report',
-            coupon: appliedPromo?.code,
-        });
-
         try {
             const response = await fetch('/api/checkout', {
                 method: 'POST',
@@ -409,6 +400,16 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                         content_ids: [id],
                                                         content_type: 'product'
                                                     }, `pur_${paymentId}`, id, { email: payerEmail });
+
+                                                    // Track Purchase (GA4/GTM) - Correct timing
+                                                    trackPurchase({
+                                                        transaction_id: paymentId,
+                                                        value: finalPrice,
+                                                        currency: 'BRL',
+                                                        item_name: 'Platinum Report',
+                                                        coupon: appliedPromo?.code,
+                                                        payment_method: 'mercado-pago'
+                                                    });
 
                                                     await unlockDiagnosis(id);
                                                     setIsComplete(true);
