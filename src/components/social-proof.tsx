@@ -34,11 +34,18 @@ const DATA_BY_LANG = {
 export function SocialProof({ lang, type }: SocialProofProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [currentData, setCurrentData] = useState({ name: "", city: "", count: 0 });
+    const [showCount, setShowCount] = useState(0);
     const isEnabled = process.env.NEXT_PUBLIC_ENABLE_SOCIAL_PROOF !== "false";
 
     const getNewData = (prevCount: number) => {
         const langData = DATA_BY_LANG[lang] || DATA_BY_LANG.en;
-        const name = langData.names[Math.floor(Math.random() * langData.names.length)];
+        const baseName = langData.names[Math.floor(Math.random() * langData.names.length)];
+
+        // Add random initial for privacy in purchases
+        const initials = "ABCDEFGHIJKLMNOPRSTUVZ";
+        const randomInitial = initials[Math.floor(Math.random() * initials.length)];
+        const name = type === 'purchase' ? `${baseName} ${randomInitial}.` : baseName;
+
         const city = langData.cities[Math.floor(Math.random() * langData.cities.length)];
 
         // For activity, we want the number to be stable or slightly increasing
@@ -60,20 +67,32 @@ export function SocialProof({ lang, type }: SocialProofProps) {
 
         // Initial delay before first show
         const initialDelay = setTimeout(() => {
-            setCurrentData(getNewData(0));
-            setIsVisible(true);
+            if (showCount < 2) {
+                setCurrentData(getNewData(0));
+                setIsVisible(true);
+                setShowCount(prev => prev + 1);
+            }
         }, 5000);
 
         // Loop interval
         const interval = setInterval(() => {
             setIsVisible(false);
 
+            // Stop if we've shown enough
+            if (showCount >= 2) {
+                clearInterval(interval);
+                return;
+            }
+
             // Small pause before switching data and showing again
             setTimeout(() => {
-                setCurrentData(prev => getNewData(type === 'activity' ? prev.count : 0));
-                // Random chance to show (to make it feel less robotic)
-                if (Math.random() > 0.3) {
-                    setIsVisible(true);
+                if (showCount < 2) {
+                    setCurrentData(prev => getNewData(type === 'activity' ? prev.count : 0));
+                    // Random chance to show (to make it feel less robotic)
+                    if (Math.random() > 0.3) {
+                        setIsVisible(true);
+                        setShowCount(prev => prev + 1);
+                    }
                 }
             }, 1000);
 
@@ -83,7 +102,7 @@ export function SocialProof({ lang, type }: SocialProofProps) {
             clearTimeout(initialDelay);
             clearInterval(interval);
         };
-    }, [lang, isEnabled, type]);
+    }, [lang, isEnabled, type, showCount]);
 
     if (!isEnabled) return null;
 
