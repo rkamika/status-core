@@ -30,6 +30,12 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
             content_name: 'Emotional Diagnostic Assessment',
             content_category: 'Diagnostic'
         }, 'view_assessment');
+
+        // Track AssessmentStarted (Pixel Priority [6])
+        trackFBEvent('AssessmentStarted', {
+            content_name: 'Emotional Diagnostic Assessment',
+            content_category: 'Diagnostic'
+        }, 'assessment_started');
     }, []);
 
     const isQualitativeStep = currentStep === questions.length;
@@ -173,7 +179,14 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                             <Link
                                 href={`/${lang}/preview?answers=${encodeURIComponent(JSON.stringify(answers))}&q=${encodeURIComponent(qualitative)}`}
                                 className="flex-[2] sm:flex-initial"
-                                onClick={() => trackSignUp()}
+                                onClick={() => {
+                                    trackSignUp();
+                                    // Track AssessmentCompleted (Pixel Priority [6])
+                                    trackFBEvent('AssessmentCompleted', {
+                                        content_name: 'Emotional Diagnostic Assessment',
+                                        content_category: 'Diagnostic'
+                                    }, 'assessment_completed');
+                                }}
                             >
                                 <Button size="lg" disabled={!hasAnsweredCurrent} className="w-full sm:w-auto gap-2 sm:px-10 h-12 font-bold shadow-xl shadow-primary/20 text-sm">
                                     {dict.common.finish}

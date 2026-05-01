@@ -84,24 +84,33 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
         }
     }, [isDemo]);
 
-    // Track Purchase on browser if unlocked via URL parameter (to deduplicate with CAPI)
+    // Track Purchase on browser if unlocked via URL parameter (Priority [6])
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('unlocked') === 'true' && savedDiagnosis && !isDemo) {
+                // Determine USD value for standardized tracking
+                let usdValue = 27.00;
+                if (lang === 'pt') {
+                    // For BRL, we could convert or just use a fixed USD equivalent for scaling
+                    // User requested "value in USD and currency: 'USD'"
+                    usdValue = 5.00; // Rough BRL 27 -> USD 5 conversion
+                }
+
                 trackFBEvent('Purchase', {
-                    value: 97.00, // Idealmente pegar do sistema, mas 97 é o padrão
-                    currency: 'BRL',
+                    value: usdValue,
+                    currency: 'USD',
                     content_name: 'Platinum Report',
                     content_ids: [id],
                     content_type: 'product'
                 }, `pur_${id}`, id);
+                
                 // Remove parameter to avoid multiple triggers
                 const newRelativePathQuery = window.location.pathname;
                 history.replaceState(null, '', newRelativePathQuery);
             }
         }
-    }, [savedDiagnosis, isDemo, id]);
+    }, [savedDiagnosis, isDemo, id, lang]);
 
     const demoAnswers = {
         // Saúde: 2, 1
@@ -1153,8 +1162,24 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                                                 "{diagnosis.v3Insights?.aiAnalysis?.stoicRefinement || demoAiAnalysis.stoicRefinement}"
                                             </p>
                                         </div>
-                                        <div className="pt-8 flex justify-center gap-4 relative z-10 no-print">
-                                            <Button className="rounded-full px-8 shadow-lg shadow-primary/20 uppercase font-black tracking-widest text-[10px]" onClick={handlePrint}>{dict.report.download_report}</Button>
+                                        <div className="pt-8 flex flex-col items-center gap-6 relative z-10 no-print">
+                                            {isDemo ? (
+                                                <div className="space-y-6 w-full max-w-md mx-auto">
+                                                    <Link href={actualDiagnosisId ? `/${lang}/checkout/${actualDiagnosisId}` : `/${lang}/assessment`} className="block w-full">
+                                                        <Button size="lg" className="w-full rounded-full shadow-xl shadow-primary/30 uppercase font-black tracking-widest text-xs h-16 bg-primary text-primary-foreground">
+                                                            {actualDiagnosisId 
+                                                                ? ((dict as any).demo_cta?.button || "Acessar Meu Relatório")
+                                                                : ((dict as any).demo_cta?.start_new || "Iniciar Meu Diagnóstico")}
+                                                            <ArrowRight className="ml-2 h-5 w-5" />
+                                                        </Button>
+                                                    </Link>
+                                                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
+                                                        {actualDiagnosisId ? 'Relatório pronto aguardando liberação' : 'Inicie sua jornada de clareza hoje'}
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <Button className="rounded-full px-8 shadow-lg shadow-primary/20 uppercase font-black tracking-widest text-[10px]" onClick={handlePrint}>{dict.report.download_report}</Button>
+                                            )}
                                         </div>
                                     </Card>
                                 </div>

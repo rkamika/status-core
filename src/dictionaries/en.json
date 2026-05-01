@@ -35,7 +35,7 @@
         "step3_desc": "Detailed report with immediate practical actions to restore your alignment.",
         "methodology_badge": "Methodology",
         "methodology_title": "The Science of 7 Pillars",
-        "methodology_desc": "It's not just a questionnaire. It's a systemic algorithm that assesses the interconnection between Health, Work, Relations, Finances, Identity, Leisure, and Meaning.",
+        "methodology_desc": "It's not just a questionnaire. It's a systemic algorithm that evaluates the interconnection between Health, Work, Relationships, Finances, Identity, Leisure, and Meaning. No pillar operates in a vacuum: a bottleneck in your health drains your performance; financial instability erodes your relationships. We map these connections to find your single leverage point for growth.",
         "enterprise_badge": "Enterprise",
         "enterprise_title": "STATUS CORE for Elite Teams",
         "enterprise_desc": "Reduce burnout and maximize operational clarity. Anonymous diagnostics for high-performance groups seeking the next level of alignment.",
@@ -234,8 +234,9 @@
         "pillars_tagline": "7 Pillars of Human Experience",
         "pillars_overview": "Pillars Overview",
         "platinum_v4": "PLATINUM v4",
-        "premium_desc": "Unlock the full Status Core v4 Platinum. Receive a 7-day tactical plan, antifragility analysis, and identify your biggest existential bottleneck.",
+        "premium_desc": "Unlock the full version of Status Core v4 Platinum. Receive a 7-day tactical plan, antifragility analysis, and identify your #1 performance blocker.",
         "view_demo_v4": "View Platinum Demo",
+        "reservation": "Your personalized report is reserved for 24 hours.",
         "pilar_neural_insight": "Systemic Intelligence (Neural Insights)",
         "pilar_antifragility": "Neural Antifragility Index",
         "pilar_strategic_plan": "7-Day Strategic Plan",
@@ -664,6 +665,13 @@
         "unlock_free": "Unlock for Free now",
         "access_granted": "Access Granted!",
         "redirecting": "Redirecting to your full report...",
-        "secure_checkout": "Secure Checkout"
+        "secure_checkout": "Secure Checkout",
+        "guarantee": "7-day money-back guarantee",
+        "have_promo": "Have a promo code? Click here"
+    },
+    "demo_cta": {
+        "title": "Ready to see YOUR results?",
+        "button": "Access My Report",
+        "start_new": "Start My Diagnosis"
     }
 }

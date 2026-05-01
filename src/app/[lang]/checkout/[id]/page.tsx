@@ -36,11 +36,11 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
         });
     }, []);
 
-    // Default Pricing Table
+    // Default Pricing Table (Updated per Priority [7])
     const PRICING = {
-        pt: { base: 97, anchor: 347, symbol: 'R$', currency: 'BRL' },
-        en: { base: 17, anchor: 67, symbol: '$', currency: 'USD' },
-        es: { base: 17, anchor: 67, symbol: '€', currency: 'EUR' },
+        pt: { base: 27, anchor: 97, symbol: 'R$', currency: 'BRL' },
+        en: { base: 27, anchor: 97, symbol: '$', currency: 'USD' },
+        es: { base: 27, anchor: 97, symbol: '$', currency: 'USD' },
     };
 
     const currentPricing = PRICING[lang] || PRICING.en;
@@ -52,6 +52,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
     const [promoError, setPromoError] = useState(false);
     const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+    const [showPromoField, setShowPromoField] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -128,7 +129,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const handleUnlock = async () => {
         setIsProcessing(true);
 
-        // Track Add Payment Info (Pixel)
+        // Track Checkout Reached (Pixel Priority [6])
+        trackFBEvent('CheckoutReached', {
+            content_name: 'Platinum Report',
+            content_category: 'Diagnostic',
+            value: finalPrice,
+            currency: currentPricing.currency
+        }, `cr_${id}`, id, { email: sessionEmail });
+
+        // Also track standard Pixel AddPaymentInfo
         trackFBEvent('AddPaymentInfo', {
             content_name: 'Platinum Report',
             content_category: 'Diagnostic',
@@ -364,28 +373,44 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                             {/* PROMO CODE BOX */}
                             <Card className="border-border dark:border-white/5 bg-card/70 dark:bg-zinc-900/30 backdrop-blur-xl shadow-xl p-6">
                                 <div className="space-y-4">
-                                    <h3 className="text-xs font-black uppercase tracking-widest italic flex items-center gap-2">
-                                        <Ticket className="h-4 w-4 text-primary" />
-                                        {(dict as any).checkout?.have_code || 'Possui um código?'}
-                                    </h3>
-                                    <div className="flex gap-2">
-                                        <Input
-                                            placeholder="PROMOCODE"
-                                            value={promoCode}
-                                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromoCode(e.target.value)}
-                                            className="bg-background/50 border-border uppercase font-bold tracking-widest"
-                                        />
-                                        <Button
-                                            variant="outline"
-                                            onClick={handleApplyPromo}
-                                            disabled={isApplyingPromo || !promoCode}
-                                            className="font-black uppercase tracking-widest text-[10px]"
+                                    {!showPromoField ? (
+                                        <button 
+                                            onClick={() => setShowPromoField(true)}
+                                            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 uppercase tracking-widest italic"
                                         >
-                                            {isApplyingPromo ? <RefreshCcw className="h-4 w-4 animate-spin" /> : ((dict as any).checkout?.apply || 'Apply')}
-                                        </Button>
-                                    </div>
-                                    {promoError && <p className="text-[10px] text-rose-500 font-black uppercase italic">{(dict as any).checkout?.invalid_code || 'Invalid code'}</p>}
-                                    {appliedPromo && <p className="text-[10px] text-emerald-500 font-black uppercase italic">{(dict as any).checkout?.code_applied || 'Applied'}: {appliedPromo.discount_percent}% OFF</p>}
+                                            <Ticket className="h-3 w-3" />
+                                            {(dict as any).checkout?.have_promo || 'Have a promo code? Click here'}
+                                        </button>
+                                    ) : (
+                                        <motion.div 
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                            className="space-y-4"
+                                        >
+                                            <h3 className="text-xs font-black uppercase tracking-widest italic flex items-center gap-2">
+                                                <Ticket className="h-4 w-4 text-primary" />
+                                                {(dict as any).checkout?.have_code || 'Possui um código?'}
+                                            </h3>
+                                            <div className="flex gap-2">
+                                                <Input
+                                                    placeholder="PROMOCODE"
+                                                    value={promoCode}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromoCode(e.target.value)}
+                                                    className="bg-background/50 border-border uppercase font-bold tracking-widest"
+                                                />
+                                                <Button
+                                                    variant="outline"
+                                                    onClick={handleApplyPromo}
+                                                    disabled={isApplyingPromo || !promoCode}
+                                                    className="font-black uppercase tracking-widest text-[10px]"
+                                                >
+                                                    {isApplyingPromo ? <RefreshCcw className="h-4 w-4 animate-spin" /> : ((dict as any).checkout?.apply || 'Apply')}
+                                                </Button>
+                                            </div>
+                                            {promoError && <p className="text-[10px] text-rose-500 font-black uppercase italic">{(dict as any).checkout?.invalid_code || 'Invalid code'}</p>}
+                                            {appliedPromo && <p className="text-[10px] text-emerald-500 font-black uppercase italic">{(dict as any).checkout?.code_applied || 'Applied'}: {appliedPromo.discount_percent}% OFF</p>}
+                                        </motion.div>
+                                    )}
                                 </div>
                             </Card>
 
@@ -394,9 +419,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                 <div className="space-y-6">
                                         <>
                                             <div className="p-4 rounded-xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 space-y-4">
-                                                <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
-                                                    <Shield className="h-4 w-4 text-primary" />
-                                                    {(dict as any).checkout?.secure_processing || 'SSL Encrypted Processing'}
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
+                                                        <Shield className="h-4 w-4 text-primary" />
+                                                        {(dict as any).checkout?.secure_processing || 'SSL Encrypted Processing'}
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-500/80 bg-emerald-500/5 p-2 rounded-lg border border-emerald-500/10">
+                                                        <Shield className="h-4 w-4" />
+                                                        {(dict as any).checkout?.guarantee || '7-day money-back guarantee'}
+                                                    </div>
                                                 </div>
                                             </div>
 

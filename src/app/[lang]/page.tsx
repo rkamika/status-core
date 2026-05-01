@@ -133,22 +133,7 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           </div>
         </section>
 
-        <section className="w-full py-12 md:py-20 bg-zinc-950/50 relative overflow-hidden">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="flex flex-col items-center gap-12">
-              <div className="text-center space-y-2 opacity-30 select-none">
-                <p className="text-[10px] font-black tracking-[0.5em] uppercase">{dict.landing.trusted_by}</p>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-24 items-center justify-items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
-                {["TECHCRUNCH", "WIRED", "FORBES", "FAST COMPANY"].map((brand) => (
-                  <div key={brand} className="font-heading font-black text-2xl md:text-3xl tracking-tighter hover:text-primary transition-colors">
-                    {brand}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Social proof section removed per Priority [5] */}
 
         <section className="w-full py-16 md:py-32 lg:py-40">
           <div className="container mx-auto px-4 md:px-6">

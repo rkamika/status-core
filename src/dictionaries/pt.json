@@ -35,7 +35,7 @@
         "step3_desc": "Relatório detalhado com ações práticas imediatas para restaurar seu alinhamento.",
         "methodology_badge": "Metodologia",
         "methodology_title": "A Ciência dos 7 Pilares",
-        "methodology_desc": "Não é apenas um questionário. É um algoritmo sistêmico que avalia a interconexão entre Saúde, Trabalho, Relações, Finanças, Identidade, Lazer e Sentido.",
+        "methodology_desc": "Não é apenas um questionário. É um algoritmo sistêmico que avalia a interconexão entre Saúde, Trabalho, Relacionamentos, Finanças, Identidade, Lazer e Sentido. Nenhum pilar opera no vácuo: um gargalo na sua saúde drena sua performance; a instabilidade financeira corrói seus relacionamentos. Mapeamos essas conexões para encontrar sua alavanca única de crescimento.",
         "enterprise_badge": "Enterprise",
         "enterprise_title": "STATUS CORE para Times de Elite",
         "enterprise_desc": "Reduza o burnout e maximize a clareza operacional. Diagnósticos anônimos para grupos de alta performance que buscam o próximo nível de alinhamento.",
@@ -234,8 +234,9 @@
         "pillars_tagline": "7 Pilares da Experiencia Humana",
         "pillars_overview": "Visão Geral dos Pilares",
         "platinum_v4": "PLATINUM v4",
-        "premium_desc": "Desbloqueie a versão completa do Status Core v4 Platinum. Receba um plano tático de 7 dias, análise de antifragilidade e identifique seu maior gargalo existencial.",
+        "premium_desc": "Desbloqueie a versão completa do Status Core v4 Platinum. Receba um plano tático de 7 dias, análise de antifragilidade e identifique seu bloqueador #1 de performance.",
         "view_demo_v4": "Ver Demo Platinum",
+        "reservation": "Seu relatório personalizado está reservado por 24 horas.",
         "pilar_neural_insight": "Inteligência Sistêmica (Neural Insights)",
         "pilar_antifragility": "Índice de Antifragilidade Neural",
         "pilar_strategic_plan": "Plano Estratégico de 7 Dias",
@@ -664,6 +665,13 @@
         "unlock_free": "Desbloquear Grátis agora",
         "access_granted": "Acesso Liberado!",
         "redirecting": "Redirecionando para seu relatório completo...",
-        "secure_checkout": "Checkout Seguro"
+        "secure_checkout": "Checkout Seguro",
+        "guarantee": "Garantia de 7 dias ou seu dinheiro de volta",
+        "have_promo": "Tem um cupom? Clique aqui"
+    },
+    "demo_cta": {
+        "title": "Pronto para ver o SEU resultado?",
+        "button": "Acessar Meu Relatório",
+        "start_new": "Iniciar Meu Diagnóstico"
     }
 }

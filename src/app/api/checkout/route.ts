@@ -39,35 +39,39 @@ export async function POST(req: Request) {
         // Determine price and currency based on language
         let unitAmount = 0;
         let currency = 'usd';
+        let stripeLocale: Stripe.Checkout.SessionCreateParams.Locale = 'en';
         
         // Fetch specific price from DB if exists
         const dbPrice = await getSystemSetting(`price_${lang}`);
         let basePrice = dbPrice ? parseFloat(dbPrice) : null;
 
-        // Legacy/Default Fallbacks
+        // Legacy/Default Fallbacks (Updated per Priority [7])
         if (lang === 'pt') {
             if (!basePrice) {
                 const settingsPrice = await getSystemSetting('report_price');
-                basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+                basePrice = settingsPrice ? parseFloat(settingsPrice) : 27.00; // Updated default
             }
             unitAmount = Math.round(basePrice * 100);
             currency = 'brl';
+            stripeLocale = 'pt-BR';
         } else if (lang === 'en') {
-            unitAmount = Math.round((basePrice || 17.00) * 100);
+            unitAmount = Math.round((basePrice || 27.00) * 100); // Updated default
             currency = 'usd';
+            stripeLocale = 'en';
         } else if (lang === 'es') {
-            unitAmount = Math.round((basePrice || 17.00) * 100);
-            currency = 'eur';
+            unitAmount = Math.round((basePrice || 27.00) * 100); // Updated default
+            currency = 'usd'; // Updated per Priority [7]
+            stripeLocale = 'es';
         } else {
             // Fallback
-            unitAmount = Math.round((basePrice || 17.00) * 100);
+            unitAmount = Math.round((basePrice || 27.00) * 100);
             currency = 'usd';
+            stripeLocale = 'en';
         }
 
         // Construct base URL for redirects
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-        console.log('Using base URL for redirects:', baseUrl);
-
+        
         // Send 'InitiateCheckout' event to Meta
         await sendMetaCapiEvent({
             eventName: 'InitiateCheckout',
@@ -83,19 +87,33 @@ export async function POST(req: Request) {
             eventId: `init_checkout_${diagnosisId}_${Date.now()}`
         });
 
-        const productName = lang === 'pt' 
-            ? `Status Core - Relatório Platinum (${diagnosis.label})` 
-            : `Status Core - Platinum Report (${diagnosis.label})`;
+        // Personalize product name based on state and lang (Priority [1])
+        const stateLabel = diagnosis.label; // diagnosis.label is already the translated label from the diagnosis engine
+        let productName = "";
+        let productDescription = "";
+
+        if (lang === 'pt') {
+            productName = `Desbloqueie seu Relatório ${stateLabel}`;
+            productDescription = "Acesso vitalício ao seu diagnóstico completo com plano de 7 dias e análise AI.";
+        } else if (lang === 'es') {
+            productName = `Desbloquea tu Informe ${stateLabel}`;
+            productDescription = "Acceso de por vida a su diagnóstico completo con plan de 7 días y análisis AI.";
+        } else {
+            productName = `Unlock Your ${stateLabel} Report`;
+            productDescription = "Lifetime access to your full diagnosis with 7-day plan and AI analysis.";
+        }
 
         // Create Stripe Checkout Session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
+            locale: stripeLocale,
             line_items: [
                 {
                     price_data: {
                         currency: currency,
                         product_data: {
                             name: productName,
+                            description: productDescription,
                         },
                         unit_amount: unitAmount,
                     },

@@ -236,36 +236,50 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                         </div>
                     </div>
 
+                    {/* Urgency Section (Priority [4]) */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 }}
+                        className="text-center"
+                    >
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-primary text-xs font-black uppercase tracking-widest animate-pulse">
+                            <RefreshCcw className="h-3 w-3" />
+                            {dict.preview.reservation || 'Seu relatório está reservado por 24 horas.'}
+                        </div>
+                    </motion.div>
+
                     {/* Bottom CTA Section */}
-                    <div className="grid md:grid-cols-2 gap-6 pt-12 max-w-5xl mx-auto">
+                    <div className="grid md:grid-cols-2 gap-6 pt-4 max-w-5xl mx-auto">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.6 }}
                         >
                             <Card className="bg-background/40 backdrop-blur-md border-border/40 hover:border-border transition-colors group h-full">
-                                <CardContent className="p-6 md:p-8 space-y-6">
-                                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <Star className="h-6 w-6 text-primary" />
+                                <CardContent className="p-6 md:p-10 space-y-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Star className="h-8 w-8 text-primary" />
+                                        </div>
+                                        <h3 className="text-2xl font-black font-heading italic uppercase tracking-tight">{dict.preview.what_is_next}</h3>
                                     </div>
-                                    <h3 className="text-xl font-bold font-heading">{dict.preview.what_is_next}</h3>
-                                    <ul className="space-y-3 text-sm text-muted-foreground">
-                                        <li className="flex items-center gap-3">
-                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_neural_insight}</span>
-                                        </li>
-                                        <li className="flex items-center gap-3">
-                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_strategic_plan}</span>
-                                        </li>
-                                        <li className="flex items-center gap-3">
-                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_antifragility}</span>
-                                        </li>
-                                        <li className="flex items-center gap-3">
-                                            <div className="w-1 h-1 rounded-full bg-primary/40" />
-                                            <span>{dict.preview.pilar_alpha_priority}</span>
-                                        </li>
+                                    <ul className="space-y-5">
+                                        {[
+                                            { icon: <Sparkles className="h-5 w-5" />, label: dict.preview.pilar_neural_insight },
+                                            { icon: <ArrowRight className="h-5 w-5" />, label: dict.preview.pilar_strategic_plan },
+                                            { icon: <Shield className="h-5 w-5" />, label: dict.preview.pilar_antifragility },
+                                            { icon: <CheckCircle2 className="h-5 w-5" />, label: dict.preview.pilar_alpha_priority },
+                                        ].map((item, idx) => (
+                                            <li key={idx} className="flex items-start gap-4 group/item">
+                                                <div className="mt-1 w-6 h-6 rounded-lg bg-primary/5 flex items-center justify-center text-primary group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-colors">
+                                                    {item.icon}
+                                                </div>
+                                                <span className="text-base font-bold text-foreground/80 group-hover/item:text-foreground transition-colors">
+                                                    {item.label}
+                                                </span>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </CardContent>
                             </Card>

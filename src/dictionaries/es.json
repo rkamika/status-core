@@ -35,7 +35,7 @@
         "step3_desc": "Informe detallado con acciones prácticas inmediatas para restaurar su alineación.",
         "methodology_badge": "Metodología",
         "methodology_title": "La Ciencia de los 7 Pilares",
-        "methodology_desc": "No es solo un cuestionario. Es un algoritmo sistémico que evalúa la interconexión entre Salud, Trabajo, Relaciones, Finanzas, Identidad, Ocio y Sentido.",
+        "methodology_desc": "No es solo un cuestionario. Es un algoritmo sistémico que evalúa la interconexión entre Salud, Trabajo, Relaciones, Finanzas, Identidad, Ocio y Sentido. Ningún pilar opera en el vacío: un cuello de botella en su salud drena su desempeño; la inestabilidad financiera erosiona sus relaciones. Mapeamos estas conexiones para encontrar su palanca única de crecimiento.",
         "enterprise_badge": "Enterprise",
         "enterprise_title": "STATUS CORE para Equipos de Élite",
         "enterprise_desc": "Reduce el burnout y maximiza la claridad operativa. Diagnósticos anónimos para grupos de alto rendimiento que buscan el siguiente nivel de alineación.",
@@ -234,8 +234,9 @@
         "pillars_tagline": "7 Pilares de la Experiencia Humana",
         "pillars_overview": "Visión Geral de los Pilares",
         "platinum_v4": "PLATINUM v4",
-        "premium_desc": "Desbloquea la versión completa de Status Core v4 Platinum. Recibe un plan táctico de 7 días, análisis de antifragilidad e identifica tu mayor cuello de botella existencial.",
+        "premium_desc": "Desbloquea la versión completa de Status Core v4 Platinum. Recibe un plan táctico de 7 días, análisis de antifragilidad e identifica tu bloqueador #1 de rendimiento.",
         "view_demo_v4": "Ver Demo Platinum",
+        "reservation": "Tu informe personalizado está reservado por 24 horas.",
         "pilar_neural_insight": "Inteligencia Sistémica (Neural Insights)",
         "pilar_antifragility": "Índice de Antifragilidad Neural",
         "pilar_strategic_plan": "Plan Estratégico de 7 Días",
@@ -664,6 +665,13 @@
         "unlock_free": "Desbloquear Gratis ahora",
         "access_granted": "¡Acceso Liberado!",
         "redirecting": "Redirigiendo a su informe completo...",
-        "secure_checkout": "Checkout Seguro"
+        "secure_checkout": "Checkout Seguro",
+        "guarantee": "Garantía de devolución de 7 días",
+        "have_promo": "¿Tienes un código? Haz clic aquí"
+    },
+    "demo_cta": {
+        "title": "¿Listo para ver TUS resultados?",
+        "button": "Acceder a Mi Informe",
+        "start_new": "Iniciar Mi Diagnóstico"
     }
 }
