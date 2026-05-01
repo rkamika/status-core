@@ -4,7 +4,7 @@ import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, ChevronRight, LayoutDashboard, Lock, Star } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronRight, LayoutDashboard, Lock, Star, RefreshCcw, Sparkles, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
