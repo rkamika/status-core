@@ -5,7 +5,8 @@
         "loading": "Loading...",
         "back": "Back",
         "next": "Next",
-        "finish": "Finish"
+        "finish": "Finish",
+        "start": "Start"
     },
     "header": {
         "methodology": "Methodology",
@@ -80,13 +81,13 @@
         "qualitative_placeholder": "Write here...",
         "questions_data": {
             "1": {
-                "text": "I feel I have enough physical energy to perform my activities without extreme exhaustion.",
+                "text": "How often do you feel that your emotions are in control of your decisions?",
                 "options": [
-                    "Totally exhausted",
-                    "Low energy",
-                    "Moderate",
-                    "Good energy",
-                    "Full energy"
+                    "Always",
+                    "Often",
+                    "Sometimes",
+                    "Rarely",
+                    "Never"
                 ]
             },
             "2": {

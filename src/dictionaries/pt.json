@@ -5,7 +5,8 @@
         "loading": "Carregando...",
         "back": "Voltar",
         "next": "Próximo",
-        "finish": "Finalizar"
+        "finish": "Finalizar",
+        "start": "Iniciar"
     },
     "header": {
         "methodology": "Metodologia",
@@ -80,13 +81,13 @@
         "qualitative_placeholder": "Escreva aqui...",
         "questions_data": {
             "1": {
-                "text": "Sinto que tenho energia física suficiente para realizar minhas atividades sem exaustão extrema.",
+                "text": "Com que frequência você sente que suas emoções estão no controle das suas decisões?",
                 "options": [
-                    "Exaustão total",
-                    "Baixa energia",
-                    "Regular",
-                    "Boa energia",
-                    "Energia plena"
+                    "Sempre",
+                    "Frequentemente",
+                    "Às vezes",
+                    "Raramente",
+                    "Nunca"
                 ]
             },
             "2": {

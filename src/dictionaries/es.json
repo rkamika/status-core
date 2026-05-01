@@ -5,7 +5,8 @@
         "loading": "Cargando...",
         "back": "Volver",
         "next": "Siguiente",
-        "finish": "Finalizar"
+        "finish": "Finalizar",
+        "start": "Iniciar"
     },
     "header": {
         "methodology": "Metodología",
@@ -21,14 +22,14 @@
     "landing": {
         "hero_badge": "Status Core V1.0",
         "hero_title": "Claridad Radical para tu Caos Interno",
-        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental e emocional actual para desbloquear tu próximo nível de performance.",
+        "hero_subtitle": "EL STATUS CORE identifica precisamente tu estado mental e emocional actual para desbloquear tu próximo nivel de performance.",
         "hero_anonymous": "100% Anónimo & Seguro • Sin necesidad de registro inicial",
         "cta_button": "Iniciar Diagnóstico Gratuito",
         "demo_link": "Ver Ejemplo de Informe",
         "how_it_works_title": "Cómo Funciona",
         "how_it_works_subtitle": "Tres pasos para entender qué está bloqueando tu potencial.",
         "step1_title": "01. Diagnóstico",
-        "step1_desc": "14 perguntas profundas baseadas em ciência cognitiva e performance de alto nível.",
+        "step1_desc": "14 preguntas profundas baseadas em ciência cognitiva e performance de alto nivel.",
         "step2_title": "02. Perfil Core",
         "step2_desc": "Identificamos en cuál de los 8 estados operativos te encuentras a través de nuestro motor de análisis.",
         "step3_title": "03. Plan de Salida",
@@ -41,7 +42,7 @@
         "enterprise_desc": "Reduce el burnout y maximiza la claridad operativa. Diagnósticos anónimos para grupos de alto rendimiento que buscan el siguiente nivel de alineación.",
         "contact_sales": "Contactar Ventas",
         "trusted_by": "Confiado por líderes con visión de futuro en",
-        "footer_tagline": "Inteligência Personal Avançada para Alta Performance.",
+        "footer_tagline": "Inteligencia Personal Avançada para Alta Performance.",
         "footer_copyright": "© 2025 Status Core Systems.",
         "team_name": "Equipo Status Core"
     },
@@ -51,7 +52,7 @@
         "empty_desc": "Aún no has realizado ninguna evaluación. Comienza ahora para descubrir tu estado actual en 7 pilares.",
         "start_assessment": "Iniciar Evaluación v4",
         "current_diagnosis": "Diagnóstico Actual",
-        "overview_v4": "Visión Geral v4",
+        "overview_v4": "Visión General v4",
         "new_diagnosis": "Nuevo Diagnóstico",
         "active_v4": "Activo v4",
         "performed_at": "Realizado el",
@@ -80,13 +81,13 @@
         "qualitative_placeholder": "Escriba aquí...",
         "questions_data": {
             "1": {
-                "text": "Siento que tengo suficiente energía física para realizar mis actividades sin un agotamiento extremo.",
+                "text": "¿Con qué frecuencia sientes que tus emociones tienen el control de tus decisiones?",
                 "options": [
-                    "Agotamiento total",
-                    "Baja energía",
-                    "Regular",
-                    "Buena energía",
-                    "Energía plena"
+                    "Siempre",
+                    "Frecuentemente",
+                    "A veces",
+                    "Raramente",
+                    "Nunca"
                 ]
             },
             "2": {
@@ -210,7 +211,7 @@
                 ]
             },
             "14": {
-                "text": "Mi vida tiene sentido para mí a un nível profundo, más allá del éxito material.",
+                "text": "Mi vida tiene sentido para mí a un nivel profundo, más allá del éxito material.",
                 "options": [
                     "Superficial",
                     "Sentido débil",
@@ -232,7 +233,7 @@
         "empty_desc": "Completa la evaluación para ver tu resultado.",
         "empty_button": "Iniciar Evaluación",
         "pillars_tagline": "7 Pilares de la Experiencia Humana",
-        "pillars_overview": "Visión Geral de los Pilares",
+        "pillars_overview": "Visión General de los Pilares",
         "platinum_v4": "PLATINUM v4",
         "premium_desc": "Desbloquea la versión completa de Status Core v4 Platinum. Recibe un plan táctico de 7 días, análisis de antifragilidad e identifica tu bloqueador #1 de rendimiento.",
         "view_demo_v4": "Ver Demo Platinum",
@@ -258,7 +259,7 @@
         "mindset_shift": "Cambio de Mentalidad",
         "mandatory": "Obligatorio",
         "strategy": "Estrategia",
-        "general_next_step": "Próximo Paso Geral",
+        "general_next_step": "Próximo Paso General",
         "qualitative_analysis": "Análisis de Contexto Personal",
         "stoic_wisdom": "Sabiduría Estoica",
         "stoic_lesson": "Lección para tu Estado",
@@ -298,7 +299,7 @@
         "archetype_desc": "Este perfil refleja un alto nivel de ejecución, pero con una estructura de soporte que comienza a mostrar signos de fatiga sistémica.",
         "profile_shared_by": "Perfil compartido por el 4% de los usuarios",
         "results_pilar_desc": "Un análisis profundo de cada área fundamental de tu existencia, priorizando tu mayor cuello de botella actual.",
-        "pilar_neural_insight": "Inteligência Sistémica (Neural Insights)",
+        "pilar_neural_insight": "Inteligencia Sistémica (Neural Insights)",
         "pilar_antifragility": "Índice de Antifragilidade Neural",
         "pilar_strategic_plan": "Plano Estratégico de 7 Dias",
         "pilar_bottleneck_neural": "Cuello de botella crítico identificado por el sistema neural",

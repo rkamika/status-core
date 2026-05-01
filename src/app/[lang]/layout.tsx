@@ -12,10 +12,18 @@ const outfit = Outfit({
   variable: "--font-heading",
 });
 
-export const metadata: Metadata = {
-  title: "STATUS CORE | Emotional Diagnostic",
-  description: "Identify your current emotional and mental state with clarity and precision.",
-};
+import { getDictionary } from "@/lib/get-dictionary";
+import { Locale } from "@/lib/diagnostic";
+
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang);
+  
+  return {
+    title: `${dict.common.title} | ${dict.common.tagline}`,
+    description: dict.landing.hero_subtitle,
+  };
+}
 
 import { ThemeProvider } from "@/components/theme-provider";
 import MetaPixel from "@/components/meta-pixel";
