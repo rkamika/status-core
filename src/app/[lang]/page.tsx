@@ -27,8 +27,10 @@ export default function LandingPage({ params }: { params: Promise<{ lang: Locale
           <Logo lang={lang} />
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <LanguageSelector currentLang={lang} />
+            <div className="hidden sm:flex items-center gap-2">
+              <ThemeToggle />
+              <LanguageSelector currentLang={lang} />
+            </div>
             <Link href={`/${lang}/login`} className="text-sm font-black hidden sm:block hover:text-primary uppercase tracking-widest opacity-40 hover:opacity-100 transition-all ml-4">{dict.header.login}</Link>
             <Link href={`/${lang}/assessment`} className="shrink-0">
               <Button variant="default" size="sm" className="font-bold px-4 sm:px-6 shadow-lg shadow-primary/20 text-xs sm:text-sm whitespace-nowrap min-w-0">

@@ -321,8 +321,10 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                         <Logo lang={lang} size={28} />
                     </div>
                     <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <LanguageSelector currentLang={lang} />
+                        <div className="hidden sm:flex items-center gap-2">
+                            <ThemeToggle />
+                            <LanguageSelector currentLang={lang} />
+                        </div>
                         <Button onClick={handlePrint} variant="outline" size="sm" className="hidden sm:flex gap-2 border-primary/40 text-primary font-bold hover:bg-primary/5">
                             <Download className="h-3.5 w-3.5" /> {dict.report.download_report}
                         </Button>

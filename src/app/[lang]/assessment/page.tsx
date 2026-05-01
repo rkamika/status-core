@@ -58,8 +58,10 @@ export default function AssessmentPage({ params }: { params: Promise<{ lang: Loc
                 <div className="container mx-auto flex items-center justify-between">
                     <Logo lang={lang} />
                     <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <LanguageSelector currentLang={lang} />
+                        <div className="hidden sm:flex items-center gap-2">
+                            <ThemeToggle />
+                            <LanguageSelector currentLang={lang} />
+                        </div>
                         <div className="text-sm font-medium text-muted-foreground">
                             {dict.assessment.progress}: {Math.round(progress)}%
                         </div>

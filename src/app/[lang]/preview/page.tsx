@@ -139,8 +139,10 @@ export default function PreviewPage({ params }: { params: Promise<{ lang: Locale
                 <div className="container mx-auto flex items-center justify-between">
                     <Logo lang={lang} />
                     <div className="flex items-center gap-2">
-                        <ThemeToggle />
-                        <LanguageSelector currentLang={lang} />
+                        <div className="hidden sm:flex items-center gap-2">
+                            <ThemeToggle />
+                            <LanguageSelector currentLang={lang} />
+                        </div>
                     </div>
                 </div>
             </header>
