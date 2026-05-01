@@ -643,5 +643,27 @@
         "title": "¿Listo para ver TU resultado?",
         "button": "Acceder a Mi Informe",
         "start_new": "Iniciar Mi Diagnóstico"
+    },
+    "checkout": {
+        "title": "Desbloquear Inteligencia",
+        "subtitle": "Reciba ahora su diagnóstico v4 con plan de 7 días y análisis AI.",
+        "order_summary": "Resumen del Pedido",
+        "exclusive_offer": "Oferta Exclusiva",
+        "subtotal": "Subtotal",
+        "coupon": "Cupón",
+        "total_savings": "Su Ahorro Total",
+        "total": "Total",
+        "taxes_included": "*Impuestos incluidos y acceso inmediato.",
+        "lifetime_access": "* Acceso de por vida a su informe generado.",
+        "have_code": "¿Tienes un código?",
+        "apply": "Aplicar",
+        "invalid_code": "Código inválido o expirado",
+        "code_applied": "Código aplicado",
+        "secure_processing": "Procesamiento Cifrado SSL",
+        "complete_payment": "Completar Pago",
+        "unlock_free": "Desbloquear Gratis ahora",
+        "access_granted": "¡Acceso Liberado!",
+        "redirecting": "Redirigiendo a su informe completo...",
+        "secure_checkout": "Checkout Seguro"
     }
 }

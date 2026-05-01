@@ -40,20 +40,27 @@ export async function POST(req: Request) {
         let unitAmount = 0;
         let currency = 'usd';
         
+        // Fetch specific price from DB if exists
+        const dbPrice = await getSystemSetting(`price_${lang}`);
+        let basePrice = dbPrice ? parseFloat(dbPrice) : null;
+
+        // Legacy/Default Fallbacks
         if (lang === 'pt') {
-            const settingsPrice = await getSystemSetting('report_price');
-            const basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+            if (!basePrice) {
+                const settingsPrice = await getSystemSetting('report_price');
+                basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+            }
             unitAmount = Math.round(basePrice * 100);
             currency = 'brl';
         } else if (lang === 'en') {
-            unitAmount = 1700; // 17.00 USD in cents
+            unitAmount = Math.round((basePrice || 17.00) * 100);
             currency = 'usd';
         } else if (lang === 'es') {
-            unitAmount = 1700; // 17.00 EUR in cents
+            unitAmount = Math.round((basePrice || 17.00) * 100);
             currency = 'eur';
         } else {
             // Fallback
-            unitAmount = 1700;
+            unitAmount = Math.round((basePrice || 17.00) * 100);
             currency = 'usd';
         }
 

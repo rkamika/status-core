@@ -643,5 +643,27 @@
         "title": "Ready to see YOUR result?",
         "button": "Access My Report",
         "start_new": "Start My Assessment"
+    },
+    "checkout": {
+        "title": "Unlock Intelligence",
+        "subtitle": "Get your v4 diagnosis now with 7-day plan and AI analysis.",
+        "order_summary": "Order Summary",
+        "exclusive_offer": "Exclusive Offer",
+        "subtotal": "Subtotal",
+        "coupon": "Coupon",
+        "total_savings": "Your Total Savings",
+        "total": "Total",
+        "taxes_included": "*Taxes included and immediate access.",
+        "lifetime_access": "* Lifetime access to your generated report.",
+        "have_code": "Have a code?",
+        "apply": "Apply",
+        "invalid_code": "Invalid or expired code",
+        "code_applied": "Code applied",
+        "secure_processing": "SSL Encrypted Processing",
+        "complete_payment": "Complete Payment",
+        "unlock_free": "Unlock for Free now",
+        "access_granted": "Access Granted!",
+        "redirecting": "Redirecting to your full report...",
+        "secure_checkout": "Secure Checkout"
     }
 }

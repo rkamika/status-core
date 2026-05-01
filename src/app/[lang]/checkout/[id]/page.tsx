@@ -36,9 +36,18 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
         });
     }, []);
 
+    // Default Pricing Table
+    const PRICING = {
+        pt: { base: 97, anchor: 347, symbol: 'R$', currency: 'BRL' },
+        en: { base: 17, anchor: 67, symbol: '$', currency: 'USD' },
+        es: { base: 17, anchor: 67, symbol: '€', currency: 'EUR' },
+    };
+
+    const currentPricing = PRICING[lang] || PRICING.en;
+
     // Pricing & Promo State
-    const [basePrice, setBasePrice] = useState(97.00);
-    const [anchorPrice, setAnchorPrice] = useState<number | null>(null);
+    const [basePrice, setBasePrice] = useState(currentPricing.base);
+    const [anchorPrice, setAnchorPrice] = useState<number | null>(currentPricing.anchor);
     const [promoCode, setPromoCode] = useState("");
     const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
     const [promoError, setPromoError] = useState(false);
@@ -48,9 +57,18 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
         const loadData = async () => {
             const [savedDiagnosis, settingsPrice, settingsAnchor] = await Promise.all([
                 getDiagnosisById(id),
-                getSystemSetting('report_price'),
-                getSystemSetting('original_price')
+                getSystemSetting(`price_${lang}`),
+                getSystemSetting(`anchor_${lang}`)
             ]);
+
+            // Fallback for PT legacy keys
+            let finalSettingsPrice = settingsPrice;
+            let finalSettingsAnchor = settingsAnchor;
+            
+            if (lang === 'pt') {
+                if (!finalSettingsPrice) finalSettingsPrice = await getSystemSetting('report_price');
+                if (!finalSettingsAnchor) finalSettingsAnchor = await getSystemSetting('original_price');
+            }
 
             if (!savedDiagnosis) {
                 router.push(`/${lang}/assessment`);
@@ -63,22 +81,22 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                 trackFBEvent('InitiateCheckout', {
                     content_name: 'Platinum Report',
                     content_category: 'Diagnostic',
-                    value: basePrice,
-                    currency: 'BRL'
+                    value: finalSettingsPrice ? parseFloat(finalSettingsPrice) : currentPricing.base,
+                    currency: currentPricing.currency
                 }, `ic_${id}`, id, { email: sessionEmail });
             }
 
-            if (settingsPrice) {
-                setBasePrice(parseFloat(settingsPrice));
+            if (finalSettingsPrice) {
+                setBasePrice(parseFloat(finalSettingsPrice));
             }
-            if (settingsAnchor) {
-                setAnchorPrice(parseFloat(settingsAnchor));
+            if (finalSettingsAnchor) {
+                setAnchorPrice(parseFloat(finalSettingsAnchor));
             }
 
             // Track Begin Checkout (GTM)
             trackBeginCheckout({
-                value: settingsPrice ? parseFloat(settingsPrice) : 97.00,
-                currency: 'BRL',
+                value: finalSettingsPrice ? parseFloat(finalSettingsPrice) : currentPricing.base,
+                currency: currentPricing.currency,
                 item_name: 'Platinum Report'
             });
         };
@@ -115,7 +133,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
             content_name: 'Platinum Report',
             content_category: 'Diagnostic',
             value: finalPrice,
-            currency: 'BRL'
+            currency: currentPricing.currency
         }, `pi_${id}`, id, { email: sessionEmail });
 
         try {
@@ -177,10 +195,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                     </motion.div>
                     <div className="space-y-2">
                         <h2 className="text-3xl font-bold">
-                            {lang === 'pt' ? 'Acesso Liberado!' : lang === 'es' ? '¡Acceso Liberado!' : 'Access Granted!'}
+                            {(dict as any).checkout?.access_granted || 'Acesso Liberado!'}
                         </h2>
                         <p className="text-muted-foreground">
-                            {lang === 'pt' ? 'Redirecionando para seu relatório completo...' : lang === 'es' ? 'Redirigiendo a su informe completo...' : 'Redirecting to your full report...'}
+                            {(dict as any).checkout?.redirecting || 'Redirecionando...'}
                         </p>
                     </div>
                 </motion.div>
@@ -204,7 +222,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                     <div className="container mx-auto flex items-center justify-between">
                         <Logo lang={lang} />
                         <Badge variant="outline" className="border-primary/20 text-primary">
-                            <Shield className="h-3 w-3 mr-1" /> Checkout Seguro
+                            <Shield className="h-3 w-3 mr-1" /> {(dict as any).checkout?.secure_checkout || 'Checkout Seguro'}
                         </Badge>
                     </div>
                 </header>
@@ -219,10 +237,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                         >
                             <div className="space-y-2">
                                 <h1 className="text-3xl md:text-4xl font-bold font-heading tracking-tight italic uppercase">
-                                    {lang === 'pt' ? 'Desbloquear Inteligência' : lang === 'es' ? 'Desbloquear Inteligencia' : 'Unlock Intelligence'}
+                                    {(dict as any).checkout?.title || 'Desbloquear Inteligência'}
                                 </h1>
                                 <p className="text-muted-foreground font-medium italic">
-                                    {lang === 'pt' ? 'Receba agora seu diagnóstico v4 com plano de 7 dias e análise AI.' : lang === 'es' ? 'Reciba ahora su diagnóstico v4 con plan de 7 días y análisis AI.' : 'Get your v4 diagnosis now with 7-day plan and AI analysis.'}
+                                    {(dict as any).checkout?.subtitle || 'Receba agora seu diagnóstico v4.'}
                                 </p>
                             </div>
 
@@ -262,15 +280,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                     <div className="flex justify-between items-start">
                                         <div className="space-y-1">
                                             <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[10px] font-black uppercase italic tracking-tighter mb-2">
-                                                <Sparkles className="h-3 w-3 mr-1" /> Oferta Exclusiva
+                                                <Sparkles className="h-3 w-3 mr-1" /> {(dict as any).checkout?.exclusive_offer || 'Oferta Exclusiva'}
                                             </Badge>
-                                            <h3 className="text-sm font-black uppercase tracking-widest italic opacity-60">Resumo do Pedido</h3>
+                                            <h3 className="text-sm font-black uppercase tracking-widest italic opacity-60">{(dict as any).checkout?.order_summary || 'Resumo do Pedido'}</h3>
                                         </div>
                                         <div className="text-right">
                                             {anchorPrice && anchorPrice > finalPrice && (
                                                 <div className="flex flex-col items-end">
                                                     <span className="text-xs font-bold text-muted-foreground/50 line-through">
-                                                        R$ {anchorPrice.toFixed(2)}
+                                                        {currentPricing.symbol} {anchorPrice.toFixed(2)}
                                                     </span>
                                                     <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] font-bold mt-1">
                                                         -{Math.round(((anchorPrice - finalPrice) / anchorPrice) * 100)}% OFF
@@ -282,8 +300,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center text-xs font-bold opacity-60 italic">
-                                            <span>Subtotal</span>
-                                            <span>R$ {basePrice.toFixed(2)}</span>
+                                            <span>{(dict as any).checkout?.subtotal || 'Subtotal'}</span>
+                                            <span>{currentPricing.symbol} {basePrice.toFixed(2)}</span>
                                         </div>
 
                                         {appliedPromo && (
@@ -293,25 +311,25 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                 className="flex justify-between items-center text-emerald-500 text-xs font-bold italic"
                                             >
                                                 <span className="flex items-center gap-1">
-                                                    <Ticket className="h-3 w-3" /> Cupom: {appliedPromo.code}
+                                                    <Ticket className="h-3 w-3" /> {(dict as any).checkout?.coupon || 'Cupom'}: {appliedPromo.code}
                                                 </span>
-                                                <span>- R$ {discountAmount.toFixed(2)}</span>
+                                                <span>- {currentPricing.symbol} {discountAmount.toFixed(2)}</span>
                                             </motion.div>
                                         )}
 
                                         {anchorPrice && anchorPrice > finalPrice && (
                                             <div className="p-2 rounded-lg bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-between text-emerald-500">
-                                                <span className="text-[10px] font-black uppercase tracking-tighter italic mr-2">Sua Economia Total:</span>
-                                                <span className="text-sm font-black italic">R$ {(anchorPrice - finalPrice).toFixed(2)}</span>
+                                                <span className="text-[10px] font-black uppercase tracking-tighter italic mr-2">{(dict as any).checkout?.total_savings || 'Sua Economia Total'}:</span>
+                                                <span className="text-sm font-black italic">{currentPricing.symbol} {(anchorPrice - finalPrice).toFixed(2)}</span>
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="pt-4 border-t border-border/50 flex justify-between items-end">
                                         <div className="space-y-1">
-                                            <span className="text-base font-black uppercase tracking-widest italic">Total</span>
+                                            <span className="text-base font-black uppercase tracking-widest italic">{(dict as any).checkout?.total || 'Total'}</span>
                                             <div className="text-[9px] font-medium text-muted-foreground italic max-w-[120px] leading-tight opacity-40">
-                                                *Impostos inclusos e acesso imediato.
+                                                {(dict as any).checkout?.taxes_included || '*Impostos inclusos.'}
                                             </div>
                                         </div>
                                         <div className="relative group">
@@ -320,7 +338,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                             <span className={`text-4xl md:text-5xl font-black italic relative z-10 tracking-tighter ${isFree ? 'text-primary' : 'text-foreground'}`}>
                                                 {isFree ? 'FREE' : (
                                                     <span className="flex items-baseline">
-                                                        <span className="text-xl mr-1">R$</span>
+                                                        <span className="text-xl mr-1">{currentPricing.symbol}</span>
                                                         {finalPrice.toFixed(2)}
                                                     </span>
                                                 )}
@@ -348,7 +366,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                 <div className="space-y-4">
                                     <h3 className="text-xs font-black uppercase tracking-widest italic flex items-center gap-2">
                                         <Ticket className="h-4 w-4 text-primary" />
-                                        {lang === 'pt' ? 'Possui um código?' : lang === 'es' ? '¿Tienes un código?' : 'Have a code?'}
+                                        {(dict as any).checkout?.have_code || 'Possui um código?'}
                                     </h3>
                                     <div className="flex gap-2">
                                         <Input
@@ -363,11 +381,11 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                             disabled={isApplyingPromo || !promoCode}
                                             className="font-black uppercase tracking-widest text-[10px]"
                                         >
-                                            {isApplyingPromo ? <RefreshCcw className="h-4 w-4 animate-spin" /> : 'Apply'}
+                                            {isApplyingPromo ? <RefreshCcw className="h-4 w-4 animate-spin" /> : ((dict as any).checkout?.apply || 'Apply')}
                                         </Button>
                                     </div>
-                                    {promoError && <p className="text-[10px] text-rose-500 font-black uppercase italic">Invalid or expired code</p>}
-                                    {appliedPromo && <p className="text-[10px] text-emerald-500 font-black uppercase italic">Code applied: {appliedPromo.discount_percent}% OFF</p>}
+                                    {promoError && <p className="text-[10px] text-rose-500 font-black uppercase italic">{(dict as any).checkout?.invalid_code || 'Invalid code'}</p>}
+                                    {appliedPromo && <p className="text-[10px] text-emerald-500 font-black uppercase italic">{(dict as any).checkout?.code_applied || 'Applied'}: {appliedPromo.discount_percent}% OFF</p>}
                                 </div>
                             </Card>
 
@@ -378,7 +396,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                             <div className="p-4 rounded-xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 space-y-4">
                                                 <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
                                                     <Shield className="h-4 w-4 text-primary" />
-                                                    {lang === 'pt' ? 'Processamento Criptografado SSL' : 'SSL Encrypted Processing'}
+                                                    {(dict as any).checkout?.secure_processing || 'SSL Encrypted Processing'}
                                                 </div>
                                             </div>
 
@@ -393,8 +411,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                 ) : (
                                                     <>
                                                         {isFree
-                                                            ? (lang === 'pt' ? 'Desbloquear Grátis agora' : 'Unlock for Free now')
-                                                            : (lang === 'pt' ? 'Finalizar Pagamento' : 'Complete Payment')}
+                                                            ? ((dict as any).checkout?.unlock_free || 'Unlock for Free now')
+                                                            : ((dict as any).checkout?.complete_payment || 'Complete Payment')}
                                                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                                     </>
                                                 )}
@@ -402,7 +420,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
                                             <div className="text-center">
                                                 <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-40">
-                                                    {lang === 'pt' ? '* Acesso vitalício ao seu relatório gerado.' : '* Lifetime access to your generated report.'}
+                                                    {(dict as any).checkout?.lifetime_access || '* Lifetime access.'}
                                                 </span>
                                             </div>
                                         </>
