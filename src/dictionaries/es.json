@@ -637,6 +637,11 @@
         "demo_link_success": "(Enlace a Demo: Ir ao Dashboard)",
         "back_to_home": "Volver al Inicio",
         "no_passwords": "Sin contraseñas",
-        "agreement": "Al continuar, aceptas nuestros {terms} e {privacy}."
+        "agreement": "Al continuar, aceptas nuestros {terms} y {privacy}."
+    },
+    "demo_cta": {
+        "title": "¿Listo para ver TU resultado?",
+        "button": "Acceder a Mi Informe",
+        "start_new": "Iniciar Mi Diagnóstico"
     }
 }

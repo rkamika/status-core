@@ -52,6 +52,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
     const router = useRouter();
 
     const isDemo = id === "demo";
+    const [actualDiagnosisId, setActualDiagnosisId] = useState<string | null>(null);
     const [savedDiagnosis, setSavedDiagnosis] = useState<SavedDiagnosis | null>(null);
     const [isLoading, setIsLoading] = useState(!isDemo);
     const [isAiLoading, setIsAiLoading] = useState(false);
@@ -73,6 +74,15 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
         };
         loadDiagnosis();
     }, [id, isDemo, lang, router]);
+
+    // Check for actual diagnosis ID if in demo mode
+    useEffect(() => {
+        if (isDemo) {
+            import('@/lib/storage').then(m => {
+                setActualDiagnosisId(m.getCurrentDiagnosisId());
+            });
+        }
+    }, [isDemo]);
 
     // Track Purchase on browser if unlocked via URL parameter (to deduplicate with CAPI)
     useEffect(() => {
@@ -1163,6 +1173,35 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                     })()}
                 </div >
             </main >
+
+            {/* FLOATING DEMO CTA */}
+            {isDemo && (
+                <div className="fixed bottom-6 left-0 right-0 z-[60] px-4 flex justify-center no-print">
+                    <motion.div 
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 1, duration: 0.5 }}
+                        className="bg-background/80 backdrop-blur-2xl border border-primary/20 p-4 sm:p-6 rounded-[2rem] shadow-2xl flex flex-col sm:flex-row items-center gap-4 sm:gap-8 max-w-2xl w-full"
+                    >
+                        <div className="flex-1 text-center sm:text-left">
+                            <h4 className="text-sm sm:text-lg font-black uppercase tracking-tighter italic">
+                                {(dict as any).demo_cta?.title || "Pronto para ver o SEU resultado?"}
+                            </h4>
+                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-60">
+                                {actualDiagnosisId ? (lang === 'pt' ? 'Relatório pronto aguardando liberação' : 'Report ready awaiting unlocking') : (lang === 'pt' ? 'Inicie sua jornada de clareza hoje' : 'Start your clarity journey today')}
+                            </p>
+                        </div>
+                        <Link href={actualDiagnosisId ? `/${lang}/checkout/${actualDiagnosisId}` : `/${lang}/assessment`} className="w-full sm:w-auto">
+                            <Button size="lg" className="w-full sm:w-auto gap-2 shadow-xl shadow-primary/20 font-bold h-12 sm:h-14 px-6 sm:px-8">
+                                {actualDiagnosisId 
+                                    ? ((dict as any).demo_cta?.button || "Acessar Meu Relatório")
+                                    : ((dict as any).demo_cta?.start_new || "Iniciar Meu Diagnóstico")}
+                                <ArrowRight className="h-4 w-4" />
+                            </Button>
+                        </Link>
+                    </motion.div>
+                </div>
+            )}
         </div >
     );
 }

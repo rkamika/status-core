@@ -638,5 +638,10 @@
         "back_to_home": "Back to Home",
         "no_passwords": "No passwords",
         "agreement": "By continuing, you agree to our {terms} and {privacy}."
+    },
+    "demo_cta": {
+        "title": "Ready to see YOUR result?",
+        "button": "Access My Report",
+        "start_new": "Start My Assessment"
     }
 }
