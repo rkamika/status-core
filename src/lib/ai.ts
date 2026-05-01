@@ -31,6 +31,10 @@ export async function getAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysis
     This must be the most valuable part of the report. It should read like chapters of a high-end strategy book.
     Address the user's qualitative context directly: "${data.qualitativeContext || "No context provided"}"
     
+    STRICT LANGUAGE RULE: You MUST respond EXCLUSIVELY in ${data.lang}. 
+    DO NOT use terms from other languages. Use the labels exactly as provided in the data.
+    If the language is English, do not include Portuguese translations or keys.
+    
     Data:
     pillars: ${JSON.stringify(data.pillarScores)}
     
@@ -46,6 +50,7 @@ export async function getAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysis
     You MUST weave this context into your Executive Summary and Action Plan to make it feel deeply personal and not just a generic score analysis.
     
     LANGUAGE REQUIREMENT: You MUST respond in ${data.lang}. All text in the JSON fields must be in ${data.lang}.
+    DO NOT include terms in other languages. For example, if the language is English, DO NOT use Portuguese terms like "(TRABALHO)" or "(SAUDE)". Use ONLY the labels provided in the data.
     
     Data:
     pillars: ${JSON.stringify(data.pillarScores)}
@@ -56,8 +61,10 @@ export async function getAIAnalysis(data: AIAnalysisRequest): Promise<AIAnalysis
     1. Executive Summary: 2 paragraphs in a premium, wise, and direct tone. Analyze the correlations and the "ripple effect". If context is provided, address it directly.
     2. 7-Day Action Plan: EXACTLY 7 practical, high-impact actions (Day 1 to Day 7). Use the "pilar" field to map each day to one of the 7 pillars.
        - IMPORTANT: Translate the "day" field (e.g., "Dia 1", "Day 1", "Día 1") into the user's language.
-       - IMPORTANT: Translate the "pilar" field to one of these: ${Object.values(data.pillarScores).map(p => p.label).join(', ')}.
+       - IMPORTANT: Use ONLY the provided labels for the "pilar" field.
     3. Stoic Refinement: A deep stoic reflection tailored to these specific results and context.
+    
+    STRICT RULE: Every single word of your response must be in ${data.lang}. No exceptions.
     
     Response Format (JSON only):
     {

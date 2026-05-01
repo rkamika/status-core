@@ -208,7 +208,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            pillarScores: diagnosis.pillarScores,
+                            pillarScores: diagnosis.pillarScores.map(p => ({ label: p.label, value: p.value })),
                             qualitativeContext,
                             lang,
                             type: 'brief'
@@ -235,7 +235,7 @@ export default function ReportPage({ params }: { params: Promise<{ id: string, l
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            pillarScores: diagnosis.pillarScores,
+                            pillarScores: diagnosis.pillarScores.map(p => ({ label: p.label, value: p.value })),
                             qualitativeContext,
                             lang,
                             type: 'deep'
