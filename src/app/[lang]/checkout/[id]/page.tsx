@@ -16,7 +16,6 @@ import { supabase } from "@/lib/supabase";
 import { trackFBEvent } from "@/components/meta-pixel";
 import { trackPurchase, trackBeginCheckout } from "@/lib/gtm";
 import { Logo } from "@/components/logo";
-import { MercadoPagoBricks } from "@/components/mercado-pago-bricks";
 import { SocialProof } from "@/components/social-proof";
 import { Locale, SavedDiagnosis } from "@/lib/types";
 
@@ -29,7 +28,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
     const [diagnosis, setDiagnosis] = useState<any>(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [isComplete, setIsComplete] = useState(false);
-    const [preferenceId, setPreferenceId] = useState<string | null>(null);
     const [sessionEmail, setSessionEmail] = useState<string | undefined>();
 
     useEffect(() => {
@@ -129,12 +127,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
 
             const data = await response.json();
             if (data.error) throw new Error(data.error);
-
-            if (data.provider === 'mercadopago' && data.preferenceId) {
-                // Instead of redirecting to checkoutUrl, we set the preferenceId to show Bricks
-                setPreferenceId(data.preferenceId);
-                return;
-            }
 
             if (data.checkoutUrl) {
                 // For Stripe or other redirect-based providers
@@ -382,59 +374,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                             {/* MAIN CTA / BRICKS */}
                             <Card className="border-border dark:border-white/5 bg-card/70 dark:bg-zinc-900/30 backdrop-blur-xl shadow-xl p-6">
                                 <div className="space-y-6">
-                                    {preferenceId ? (
-                                        <div className="space-y-6">
-                                            <div className="flex items-center gap-2 text-xs font-bold text-primary italic">
-                                                <Lock className="h-4 w-4" />
-                                                {lang === 'pt' ? 'Pagamento Seguro Local' : 'Secure Local Payment'}
-                                            </div>
-                                            <MercadoPagoBricks
-                                                preferenceId={preferenceId}
-                                                diagnosisId={id}
-                                                amount={finalPrice}
-                                                onSuccess={async (paymentId, payerEmail) => {
-                                                    // Track Purchase (Pixel/CAPI)
-                                                    trackFBEvent('Purchase', {
-                                                        content_name: 'Platinum Report',
-                                                        content_category: 'Diagnostic',
-                                                        value: finalPrice,
-                                                        currency: 'BRL',
-                                                        content_ids: [id],
-                                                        content_type: 'product'
-                                                    }, `pur_${paymentId}`, id, { email: payerEmail });
-
-                                                    // Track Purchase (GA4/GTM) - Correct timing
-                                                    trackPurchase({
-                                                        transaction_id: paymentId,
-                                                        value: finalPrice,
-                                                        currency: 'BRL',
-                                                        item_name: 'Platinum Report',
-                                                        coupon: appliedPromo?.code,
-                                                        payment_method: 'mercado-pago'
-                                                    });
-
-                                                    await unlockDiagnosis(id);
-                                                    setIsComplete(true);
-                                                    setTimeout(() => {
-                                                        router.push(`/${lang}/report/${id}?unlocked=true`);
-                                                    }, 2000);
-                                                }}
-                                                onError={(err) => {
-                                                    console.error("Bricks UI Error:", err);
-                                                    alert(lang === 'pt' ? "Erro no processamento. Tente novamente." : "Processing error. Try again.");
-                                                    setPreferenceId(null);
-                                                }}
-                                            />
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-[10px] uppercase font-black tracking-widest opacity-40 hover:opacity-100"
-                                                onClick={() => setPreferenceId(null)}
-                                            >
-                                                {lang === 'pt' ? '← Voltar para resumo' : '← Back to summary'}
-                                            </Button>
-                                        </div>
-                                    ) : (
                                         <>
                                             <div className="p-4 rounded-xl bg-muted/30 dark:bg-white/[0.02] border border-border dark:border-white/5 space-y-4">
                                                 <div className="flex items-center gap-2 text-xs font-bold text-foreground/70">
@@ -467,7 +406,6 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                 </span>
                                             </div>
                                         </>
-                                    )}
                                 </div>
                             </Card>
                         </motion.div>
