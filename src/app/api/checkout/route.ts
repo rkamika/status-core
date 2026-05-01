@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
-import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { getDiagnosisById } from '@/lib/storage';
 import { getSystemSetting } from '@/lib/admin';
 import { sendMetaCapiEvent } from '@/lib/meta-capi';
@@ -12,16 +11,10 @@ const stripe = process.env.STRIPE_SECRET_KEY
     ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-01-27.acacia' as any })
     : null;
 
-const mpConfig = process.env.MERCADOPAGO_ACCESS_TOKEN
-    ? new MercadoPagoConfig({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN })
-    : null;
 export async function POST(req: Request) {
     try {
-        if (!stripe || !mpConfig) {
-            console.error('Payment system not configured correctly:', {
-                stripe: !!stripe,
-                mercadopago: !!mpConfig
-            });
+        if (!stripe) {
+            console.error('Stripe system not configured correctly');
             return NextResponse.json({ error: 'Payment system not configured' }, { status: 503 });
         }
 
@@ -29,7 +22,6 @@ export async function POST(req: Request) {
         console.log('Processing checkout request:', { diagnosisId, lang });
 
         const headersList = await headers();
-        const country = headersList.get('x-vercel-ip-country') || 'US';
         const ip = headersList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
         const userAgent = headersList.get('user-agent') || '';
 
@@ -44,55 +36,86 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Diagnosis not found' }, { status: 404 });
         }
 
-        // Get current price from system settings
-        const settingsPrice = await getSystemSetting('report_price');
-        const basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+        // Determine price and currency based on language
+        let unitAmount = 0;
+        let currency = 'usd';
+        
+        if (lang === 'pt') {
+            const settingsPrice = await getSystemSetting('report_price');
+            const basePrice = settingsPrice ? parseFloat(settingsPrice) : 97.00;
+            unitAmount = Math.round(basePrice * 100);
+            currency = 'brl';
+        } else if (lang === 'en') {
+            unitAmount = 1700; // 17.00 USD in cents
+            currency = 'usd';
+        } else if (lang === 'es') {
+            unitAmount = 1700; // 17.00 EUR in cents
+            currency = 'eur';
+        } else {
+            // Fallback
+            unitAmount = 1700;
+            currency = 'usd';
+        }
 
         // Construct base URL for redirects
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
         console.log('Using base URL for redirects:', baseUrl);
 
-        // Default Payment Provider -> MercadoPago (for all markets)
-        const preference = new Preference(mpConfig);
-        const result = await preference.create({
-            body: {
-                items: [
-                    {
-                        id: diagnosisId,
-                        title: lang === 'pt'
-                            ? `Status Core - Relatório Platinum (${diagnosis.label})`
-                            : `Status Core - Platinum Report (${diagnosis.label})`,
-                        quantity: 1,
-                        unit_price: basePrice,
-                        currency_id: 'BRL',
-                    }
-                ],
-                back_urls: {
-                    success: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
-                    failure: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-                    pending: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
-                },
-                auto_return: 'approved',
-                external_reference: diagnosisId,
-                notification_url: `${baseUrl}/api/webhooks/mercadopago`,
-            }
+        // Send 'InitiateCheckout' event to Meta
+        await sendMetaCapiEvent({
+            eventName: 'InitiateCheckout',
+            eventSourceUrl: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+            userData: { ip, userAgent, fbp, fbc, externalId: diagnosisId },
+            customData: {
+                currency: currency.toUpperCase(),
+                value: unitAmount / 100,
+                content_ids: [diagnosisId],
+                content_name: 'Platinum Report',
+                content_category: 'Report'
+            },
+            eventId: `init_checkout_${diagnosisId}_${Date.now()}`
         });
 
-        console.log('Mercado Pago preference created for:', { diagnosisId, lang });
+        const productName = lang === 'pt' 
+            ? `Status Core - Relatório Platinum (${diagnosis.label})` 
+            : `Status Core - Platinum Report (${diagnosis.label})`;
 
-        console.log('Mercado Pago preference created for:', { diagnosisId, lang });
+        // Create Stripe Checkout Session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price_data: {
+                        currency: currency,
+                        product_data: {
+                            name: productName,
+                        },
+                        unit_amount: unitAmount,
+                    },
+                    quantity: 1,
+                },
+            ],
+            mode: 'payment',
+            success_url: `${baseUrl}/${lang}/report/${diagnosisId}?unlocked=true`,
+            cancel_url: `${baseUrl}/${lang}/checkout/${diagnosisId}`,
+            metadata: {
+                diagnosisId: diagnosisId,
+                lang: lang
+            },
+        });
+
+        console.log('Stripe checkout session created for:', { diagnosisId, lang });
 
         return NextResponse.json({
-            provider: 'mercadopago',
-            checkoutUrl: result.init_point,
-            preferenceId: result.id,
+            provider: 'stripe',
+            checkoutUrl: session.url,
+            sessionId: session.id,
         });
 
     } catch (error: any) {
         console.error('Detailed Checkout API Error:', {
             message: error.message,
-            stack: error.stack,
-            mpError: error.cause || error.response?.data
+            stack: error.stack
         });
         return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
     }

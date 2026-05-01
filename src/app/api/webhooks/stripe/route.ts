@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
-import { unlockDiagnosis, getDiagnosisById } from '@/lib/storage';
+import { getDiagnosisById } from '@/lib/storage';
 import { sendMetaCapiEvent } from '@/lib/meta-capi';
+import { sendGA4PurchaseEvent } from '@/lib/ga4-server';
 
 // Initialize clients at top level, but safely to prevent build-time crashes if keys are missing
 const stripe = process.env.STRIPE_SECRET_KEY
@@ -38,27 +39,54 @@ export async function POST(req: Request) {
 
         if (diagnosisId) {
             console.log(`Unlocking diagnosis ${diagnosisId} via Stripe...`);
-            await unlockDiagnosis(diagnosisId);
+            
+            // Use admin client to bypass RLS on server
+            const { supabaseAdmin } = await import('@/lib/supabase-admin');
+            const { error: unlockError } = await supabaseAdmin
+                .from('diagnoses')
+                .update({
+                    is_unlocked: true,
+                    unlocked_at: new Date().toISOString()
+                })
+                .eq('id', diagnosisId);
 
-            // Send Meta CAPI Purchase Event
-            const diagnosis = await getDiagnosisById(diagnosisId);
-            if (diagnosis) {
-                await sendMetaCapiEvent({
-                    eventName: 'Purchase',
-                    eventSourceUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${diagnosis.lang}/report/${diagnosisId}`,
-                    userData: {
-                        email: session.customer_details?.email || undefined,
-                        externalId: diagnosisId,
-                    },
-                    customData: {
-                        value: session.amount_total ? session.amount_total / 100 : 0, // Stripe uses cents
-                        currency: session.currency?.toUpperCase() || 'USD',
-                        content_name: 'Platinum Report',
-                        content_ids: [diagnosisId],
-                        content_type: 'product'
-                    },
-                    eventId: `pur_${diagnosisId}` // Consistent deduplication ID
-                });
+            if (unlockError) {
+                console.error('[Stripe Webhook] Admin Unlock Error:', unlockError);
+            } else {
+                console.log('[Stripe Webhook] Diagnosis unlocked successfully');
+
+                // Send Meta CAPI Purchase Event & GA4
+                const diagnosis = await getDiagnosisById(diagnosisId);
+                if (diagnosis) {
+                    const amount = session.amount_total ? session.amount_total / 100 : 0;
+                    const currency = session.currency?.toUpperCase() || 'USD';
+
+                    await sendMetaCapiEvent({
+                        eventName: 'Purchase',
+                        eventSourceUrl: `${process.env.NEXT_PUBLIC_APP_URL}/${diagnosis.lang}/report/${diagnosisId}`,
+                        userData: {
+                            email: session.customer_details?.email || undefined,
+                            externalId: diagnosisId,
+                        },
+                        customData: {
+                            value: amount, // Stripe uses cents
+                            currency: currency,
+                            content_name: 'Platinum Report',
+                            content_ids: [diagnosisId],
+                            content_type: 'product'
+                        },
+                        eventId: `pur_${diagnosisId}` // Consistent deduplication ID
+                    });
+
+                    // GA4 Measurement Protocol
+                    await sendGA4PurchaseEvent({
+                        client_id: diagnosisId, // Using diagnosis ID as a stable client reference for server events
+                        transaction_id: session.id,
+                        value: amount,
+                        currency: currency,
+                        item_name: 'Platinum Report'
+                    });
+                }
             }
         }
     }
