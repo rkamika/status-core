@@ -245,8 +245,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                             className="space-y-6"
                         >
                             <div className="space-y-2">
-                                <h1 className="text-3xl md:text-4xl font-bold font-heading tracking-tight italic uppercase">
-                                    {(dict as any).checkout?.title || 'Desbloquear Inteligência'}
+                                <h1 className="text-3xl md:text-4xl font-black font-heading tracking-tight italic uppercase leading-none">
+                                    {lang === 'pt' ? 'Desbloquear Relatório de ' : lang === 'es' ? 'Desbloquear Informe de ' : 'Unlock Your '}
+                                    <span style={{ color: diagnosis.color }}>{diagnosis.label}</span>
                                 </h1>
                                 <p className="text-muted-foreground font-medium italic">
                                     {(dict as any).checkout?.subtitle || 'Receba agora seu diagnóstico v4.'}
@@ -337,8 +338,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                     <div className="pt-4 border-t border-border/50 flex justify-between items-end">
                                         <div className="space-y-1">
                                             <span className="text-base font-black uppercase tracking-widest italic">{(dict as any).checkout?.total || 'Total'}</span>
-                                            <div className="text-[9px] font-medium text-muted-foreground italic max-w-[120px] leading-tight opacity-40">
-                                                {(dict as any).checkout?.taxes_included || '*Impostos inclusos.'}
+                                            <div className="text-[10px] font-black text-primary italic max-w-[150px] leading-tight uppercase tracking-tighter opacity-80">
+                                                {(dict as any).checkout?.taxes_included}
                                             </div>
                                         </div>
                                         <div className="relative group">
@@ -449,9 +450,25 @@ export default function CheckoutPage({ params }: { params: Promise<{ lang: Local
                                                 )}
                                             </Button>
 
-                                            <div className="text-center">
-                                                <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-widest opacity-40">
-                                                    {(dict as any).checkout?.lifetime_access || '* Lifetime access.'}
+                                            <div className="flex flex-col items-center gap-4">
+                                                <div className="flex items-center gap-4 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
+                                                    {/* Using stylized text for card brands to ensure reliability without external assets */}
+                                                    <div className="flex items-center gap-1 text-[10px] font-black italic tracking-tighter">
+                                                        <CreditCard className="h-4 w-4" /> VISA
+                                                    </div>
+                                                    <div className="w-px h-3 bg-muted-foreground/30" />
+                                                    <div className="flex items-center gap-1 text-[10px] font-black italic tracking-tighter">
+                                                        <div className="flex -space-x-1">
+                                                            <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                                                            <div className="w-3 h-3 rounded-full bg-amber-500/50" />
+                                                        </div>
+                                                        MASTERCARD
+                                                    </div>
+                                                    <div className="w-px h-3 bg-muted-foreground/30" />
+                                                    <div className="text-[8px] font-bold uppercase tracking-widest">Stripe Secure</div>
+                                                </div>
+                                                <span className="text-[10px] text-muted-foreground font-black uppercase tracking-widest opacity-40">
+                                                    {(dict as any).checkout?.lifetime_access}
                                                 </span>
                                             </div>
                                         </>
