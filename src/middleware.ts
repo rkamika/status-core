@@ -4,7 +4,7 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
 const locales = ["pt", "en", "es"];
-const defaultLocale = "pt";
+const defaultLocale = "en";
 
 function getLocale(request: NextRequest): string | undefined {
     const negotiatorHeaders: Record<string, string> = {};
@@ -12,14 +12,8 @@ function getLocale(request: NextRequest): string | undefined {
 
     const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
 
-    // For the Brazilian market, we prioritize PT if it's anywhere in the accepted list
-    // or as a hard fallback.
-    const preferredLanguages = languages.includes('pt') || languages.some(l => l.startsWith('pt-'))
-        ? ["pt", ...languages.filter(l => !l.startsWith('pt'))]
-        : languages;
-
     try {
-        return matchLocale(preferredLanguages, locales, defaultLocale);
+        return matchLocale(languages, locales, defaultLocale);
     } catch (e) {
         return defaultLocale;
     }
