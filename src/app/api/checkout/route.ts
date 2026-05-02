@@ -105,7 +105,6 @@ export async function POST(req: Request) {
 
         // Create Stripe Checkout Session
         const session = await stripe.checkout.sessions.create({
-            automatic_payment_methods: { enabled: true },
             locale: stripeLocale,
             line_items: [
                 {
